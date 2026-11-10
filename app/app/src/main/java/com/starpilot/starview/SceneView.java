@@ -763,7 +763,7 @@ public final class SceneView extends SurfaceView {
 
     /* JADX INFO: Access modifiers changed from: private */
     /* compiled from: SceneView.kt */
-    final class Car {
+    static final class Car {
         private final FilamentAsset asset;
         private final MaterialInstance body;
         private long firstShownMs;

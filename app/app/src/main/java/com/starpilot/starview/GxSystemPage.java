@@ -1136,14 +1136,15 @@ public final class GxSystemPage extends GxPage {
         List var18 = null; // declarations Vineflower left out
         boolean var4 = var2 instanceof JSONObject;
         JSONArray var5 = null;
+        JSONObject var2j;
         if (var4) {
-            var2 = var2;
+            var2j = (JSONObject) var2;
         } else {
-            var2 = null;
+            var2j = null;
         }
 
-        if (var2 != null) {
-            var5 = var2.optJSONArray("branches");
+        if (var2j != null) {
+            var5 = var2j.optJSONArray("branches");
         }
 
         label83: {
@@ -1191,8 +1192,8 @@ public final class GxSystemPage extends GxPage {
         if (var1 == null && !var18.isEmpty()) {
             var0.branches = var18;
             GxPage var8 = var0;
-            Intrinsics.checkNotNull(var2);
-            var0.currentBranch = StringsKt.trim(GxPage.str$default(var8, ((JSONObject) var2), "currentBranch", null, 2, null)).toString();
+            Intrinsics.checkNotNull(var2j);
+            var0.currentBranch = StringsKt.trim(GxPage.str$default(var8, ((JSONObject) var2j), "currentBranch", null, 2, null)).toString();
             var0.branchListFallback = false;
             boolean var10;
             if (var0.targetBranch.length() == 0) {
@@ -1216,7 +1217,7 @@ public final class GxSystemPage extends GxPage {
                 var0.otherOpen = var4;
             }
 
-            var0.isOnroad = var2.optBoolean("isOnroad");
+            var0.isOnroad = var2j.optBoolean("isOnroad");
             var0.branchLoading = false;
             var0.paint();
         } else if (var0.fastStatus == null) {
@@ -1303,15 +1304,11 @@ public final class GxSystemPage extends GxPage {
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     public static final Unit loadFastStatus$lambda$45(GxSystemPage var0, Function1 var1, String var2, Object var3) {
         var0.statusInFlight = false;
-        if (var3 instanceof JSONObject) {
-            JSONObject var3s = (JSONObject)var3;
-        } else {
-            var3 = null;
-        }
+        JSONObject var3j = var3 instanceof JSONObject ? (JSONObject) var3 : null;
 
         Object var10 = null;
-        if (var2 == null && var3 != null && var3.opt("running") instanceof Boolean) {
-            String var11 = StringsKt.trim(GxPage.str$default(var0, ((JSONObject) var3), "stage", null, 2, null)).toString().toLowerCase(Locale.ROOT);
+        if (var2 == null && var3j != null && var3j.opt("running") instanceof Boolean) {
+            String var11 = StringsKt.trim(GxPage.str$default(var0, ((JSONObject) var3j), "stage", null, 2, null)).toString().toLowerCase(Locale.ROOT);
             Intrinsics.checkNotNullExpressionValue(var11, "toLowerCase(...)");
             if (Intrinsics.areEqual(var11, "rebooting") && !var0.rebootPending) {
                 var0.rebootPending = true;
@@ -1329,7 +1326,7 @@ public final class GxSystemPage extends GxPage {
             }
 
             boolean var4;
-            if (!var0.rebootPending || var3.optBoolean("running") || Intrinsics.areEqual(var11, "rebooting") || !var0.statusUnavailable && var6 < 30000L) {
+            if (!var0.rebootPending || var3j.optBoolean("running") || Intrinsics.areEqual(var11, "rebooting") || !var0.statusUnavailable && var6 < 30000L) {
                 var4 = false;
             } else {
                 var4 = true;
@@ -1342,9 +1339,9 @@ public final class GxSystemPage extends GxPage {
                 var5 = false;
             }
 
-            var0.fastStatus = ((JSONObject) var3);
+            var0.fastStatus = ((JSONObject) var3j);
             var0.statusUnavailable = false;
-            var0.isOnroad = var3.optBoolean("isOnroad");
+            var0.isOnroad = var3j.optBoolean("isOnroad");
             if (var4) {
                 clearRebootPending$default(var0, false, 1, null);
                 var2 = (String)var10;
@@ -1358,8 +1355,8 @@ public final class GxSystemPage extends GxPage {
         } else {
             if (var2 == null) {
                 label82: {
-                    if (var3 != null) {
-                        var2 = GxPage.str$default(var0, ((JSONObject) var3), "error", null, 2, null);
+                    if (var3j != null) {
+                        var2 = GxPage.str$default(var0, ((JSONObject) var3j), "error", null, 2, null);
                         if (var2 != null) {
                             CharSequence var17 = var2;
                             CharSequence var13 = var17;
@@ -2304,7 +2301,8 @@ public final class GxSystemPage extends GxPage {
             }
 
             var8 = var14;
-            if (var8.isEmpty()) {
+            ArrayList var8L = var14;
+            if (var8L.isEmpty()) {
                 if (!this.versionCommits.isEmpty()) {
                     int var22 = this.versionCommits.size();
                     var8 = var22 + " versions loaded";
@@ -2315,9 +2313,9 @@ public final class GxSystemPage extends GxPage {
                 var50 = (String)var8;
             } else {
                 int var23 = this.versionCommits.size();
-                String var52 = CollectionsKt.<GxSystemPage.DayGroup>last((List<? extends GxSystemPage.DayGroup>)var8).getLabel();
-                if (var8.size() > 1) {
-                    var8 = ((GxSystemPage.DayGroup)var8.get(0)).getLabel();
+                String var52 = CollectionsKt.<GxSystemPage.DayGroup>last((List<? extends GxSystemPage.DayGroup>)var8L).getLabel();
+                if (var8L.size() > 1) {
+                    var8 = ((GxSystemPage.DayGroup)var8L.get(0)).getLabel();
                     var8 = " – " + var8;
                 } else {
                     var8 = "";
@@ -2416,10 +2414,10 @@ public final class GxSystemPage extends GxPage {
 
             GxPage.text$default(var53, (String)var8, (ViewGroup)var66, 0.0F, 0, false, 28, null);
             if (var7) {
-                var8 = var11.iterator();
+                Iterator var8i = var11.iterator();
 
-                while (var8.hasNext()) {
-                    buildPicker$versionRow(this, var7, var1, var2, (JSONObject)var8.next(), 0);
+                while (var8i.hasNext()) {
+                    buildPicker$versionRow(this, var7, var1, var2, (JSONObject)var8i.next(), 0);
                 }
             } else {
                 for (GxSystemPage.DayGroup var48 : (Iterable<GxSystemPage.DayGroup>) var10) {
@@ -2959,10 +2957,11 @@ public final class GxSystemPage extends GxPage {
         } else {
             boolean var11 = var9 instanceof JSONObject;
             Collection var12 = null;
+            JSONObject var9j;
             if (var11) {
-                var9 = var9;
+                var9j = (JSONObject) var9;
             } else {
-                var9 = null;
+                var9j = null;
             }
 
             if (var8 != null) {
@@ -2977,14 +2976,14 @@ public final class GxSystemPage extends GxPage {
                 return Unit.INSTANCE;
             } else {
                 Object var23 = var12;
-                if (var9 != null) {
-                    var23 = var9.optJSONArray("commits");
+                if (var9j != null) {
+                    var23 = var9j.optJSONArray("commits");
                 }
 
-                if (var9 != null
-                    && Intrinsics.areEqual(GxPage.str$default(var1, ((JSONObject) var9), "branch", null, 2, null), var2)
-                    && var9.optInt("page", -1) == var3
-                    && GxSystemKt.GxSystem_SHA.matches(GxPage.str$default(var1, ((JSONObject) var9), "head", null, 2, null))) {
+                if (var9j != null
+                    && Intrinsics.areEqual(GxPage.str$default(var1, ((JSONObject) var9j), "branch", null, 2, null), var2)
+                    && var9j.optInt("page", -1) == var3
+                    && GxSystemKt.GxSystem_SHA.matches(GxPage.str$default(var1, ((JSONObject) var9j), "head", null, 2, null))) {
                     boolean var10;
                     if (var4.length() > 0) {
                         var10 = true;
@@ -2992,7 +2991,7 @@ public final class GxSystemPage extends GxPage {
                         var10 = false;
                     }
 
-                    if ((!var10 || Intrinsics.areEqual(GxPage.str$default(var1, ((JSONObject) var9), "head", null, 2, null), var4)) && var23 != null) {
+                    if ((!var10 || Intrinsics.areEqual(GxPage.str$default(var1, ((JSONObject) var9j), "head", null, 2, null), var4)) && var23 != null) {
                         Iterable var16 = var1.objects(((JSONArray) var23));
                         var12 = new ArrayList();
 
@@ -3025,10 +3024,10 @@ public final class GxSystemPage extends GxPage {
                             var1.versionCommits.addAll(var25);
                         }
 
-                        var11 = var9.optBoolean("cached");
+                        var11 = var9j.optBoolean("cached");
                         var4 = "";
                         if (var11) {
-                            Instant var33 = var1.parseDate(GxPage.str$default(var1, ((JSONObject) var9), "cachedAt", null, 2, null));
+                            Instant var33 = var1.parseDate(GxPage.str$default(var1, ((JSONObject) var9j), "cachedAt", null, 2, null));
                             if (var33 != null) {
                                 var4 = var1.stampFmt.format(var33);
                                 var4 = " from " + var4;
@@ -3039,9 +3038,9 @@ public final class GxSystemPage extends GxPage {
                             var1.versionNotice = "";
                         }
 
-                        var1.versionHead = GxPage.str$default(var1, ((JSONObject) var9), "head", null, 2, null);
+                        var1.versionHead = GxPage.str$default(var1, ((JSONObject) var9j), "head", null, 2, null);
                         var1.versionPage = var3;
-                        if (var9.optBoolean("hasMore") && !var25.isEmpty()) {
+                        if (var9j.optBoolean("hasMore") && !var25.isEmpty()) {
                             var11 = true;
                         } else {
                             var11 = false;
@@ -3698,97 +3697,72 @@ public final class GxSystemPage extends GxPage {
         }).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:47:0x008f, code lost:
-    
-        if (r6 == null) goto L27;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r1v10, types: [T, java.lang.String] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* recovered by hand from the bytecode (jadx lost its try blocks) */
     public static final void backupToggles$lambda$140(String str, String str2, final GxSystemPage gxSystemPage) {
-        Response execute;
-        Response response;
-        byte[] bArr;
-        String str3;
-        Object m1191constructorimpl;
-        String str4;
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
         try {
-            execute = GxPage.Companion.client(60L).newCall(new Request.Builder().url(str).post(RequestBody.Companion.create(new byte[0], (MediaType) null, 0, 0)).build()).execute();
+            Response response = GxPage.Companion.client(60L).newCall(new Request.Builder().url(str).post(RequestBody.Companion.create(new byte[0], (MediaType) null, 0, 0)).build()).execute();
+            Throwable cause = null;
             try {
-                response = execute;
+                byte[] bArr;
                 ResponseBody body = response.body();
                 if (body == null || (bArr = body.bytes()) == null) {
                     bArr = new byte[0];
                 }
-                str3 = null;
+                if (!response.isSuccessful()) {
+                    Object res;
+                    try {
+                        Result.Companion companion = Result.Companion;
+                        res = KtCompat.resultOf(new JSONObject(new String(bArr, Charsets.UTF_8)).optString("message"));
+                    } catch (Throwable th) {
+                        Result.Companion companion2 = Result.Companion;
+                        res = KtCompat.resultOf(ResultKt.createFailure(th));
+                    }
+                    if (KtCompat.isFailure(res)) {
+                        res = null;
+                    }
+                    String s = (String) res;
+                    if (s != null && StringsKt.isBlank(s)) {
+                        s = null;
+                    }
+                    if (s == null) {
+                        s = "Failed to create toggle backup.";
+                    }
+                    throw new IllegalStateException(s);
+                }
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("_display_name", str2);
+                contentValues.put("mime_type", "application/json");
+                contentValues.put("relative_path", "Download/StarView");
+                Uri insert = gxSystemPage.getAct().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+                if (insert == null) {
+                    throw new IllegalStateException("cannot create file");
+                }
+                OutputStream outputStream = gxSystemPage.getAct().getContentResolver().openOutputStream(insert);
+                if (outputStream == null) {
+                    throw new IllegalStateException("cannot write file");
+                }
+                Throwable cause2 = null;
+                try {
+                    outputStream.write(bArr);
+                } catch (Throwable th) {
+                    cause2 = th;
+                    throw th;
+                } finally {
+                    CloseableKt.closeFinally(outputStream, cause2);
+                }
+            } catch (Throwable th) {
+                cause = th;
+                throw th;
             } finally {
+                CloseableKt.closeFinally(response, cause);
             }
+            objectRef.element = "Toggle backup downloaded to Downloads/StarView/" + str2;
         } catch (Exception e) {
             String message = e.getMessage();
-            T t = message;
-            if (message == null) {
-                t = "Backup failed.";
-            }
-            objectRef.element = t;
+            objectRef.element = message == null ? "Backup failed." : message;
         }
-        if (!response.isSuccessful()) {
-            try {
-                Result.Companion companion = Result.Companion;
-                m1191constructorimpl = KtCompat.resultOf(new JSONObject(new String(bArr, Charsets.UTF_8)).optString("message"));
-            } catch (Throwable th) {
-                Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
-            }
-            if (KtCompat.isFailure(m1191constructorimpl)) {
-                m1191constructorimpl = null;
-            }
-            String str5 = (String) m1191constructorimpl;
-            if (str5 != null) {
-                String str6 = str5;
-                if (!StringsKt.isBlank(str6)) {
-                    str3 = str6;
-                }
-                str4 = str3;
-            }
-            str4 = "Failed to create toggle backup.";
-            throw new IllegalStateException(str4);
-        }
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("_display_name", str2);
-        contentValues.put("mime_type", "application/json");
-        contentValues.put("relative_path", "Download/StarView");
-        Uri insert = gxSystemPage.getAct().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-        if (insert == null) {
-            throw new IllegalStateException("cannot create file");
-        }
-        OutputStream openOutputStream = gxSystemPage.getAct().getContentResolver().openOutputStream(insert);
-        if (openOutputStream == null) {
-            throw new IllegalStateException("cannot write file");
-        }
-        OutputStream outputStream = openOutputStream;
-        Throwable outputStream$c = null;
-        try {
-            outputStream.write(bArr);
-            Unit unit = Unit.INSTANCE;
-            Unit unit2 = Unit.INSTANCE;
-            CloseableKt.closeFinally(execute, null);
-            objectRef.element = "Toggle backup downloaded to Downloads/StarView/" + str2;
-            gxSystemPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda30
-                @Override // java.lang.Runnable
-                public final void run() {
-                    GxSystemPage.backupToggles$lambda$140$lambda$139(gxSystemPage, objectRef);
-                }
-            });
-        } catch (Throwable outputStream$t) {
-            outputStream$c = outputStream$t;
-            throw outputStream$t;
-        } finally {
-            CloseableKt.closeFinally(outputStream, outputStream$c);
-        }
+        gxSystemPage.getMain().post(() -> GxSystemPage.backupToggles$lambda$140$lambda$139(gxSystemPage, objectRef));
     }
 
     /* VF: from Vineflower (jadx: ) */

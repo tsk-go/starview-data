@@ -2565,7 +2565,7 @@ public final class GxPersonalitiesPage extends GxPage {
     }
 
     /* compiled from: GxHome.kt */
-    private final class Graph extends View {
+    private static final class Graph extends View {
         private final String category;
         private final Paint dot;
         private final Paint dotRing;

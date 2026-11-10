@@ -358,7 +358,7 @@ public final class VasmEditorCard extends LinearLayout {
     }
 
     /* compiled from: GalaxyVasm.kt */
-    private final class Board extends View {
+    private static final class Board extends View {
         private int drag;
         private String dragSide;
         private final Paint p;

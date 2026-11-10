@@ -954,7 +954,7 @@ public abstract class GxPage extends FrameLayout {
     }
 
     /* compiled from: GxKit.kt */
-    public final class Row {
+    public static final class Row {
         private final TextView desc;
         final /* synthetic */ GxPage this$0;
         private final TextView titleView;

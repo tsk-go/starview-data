@@ -2280,7 +2280,7 @@ public final class GxRecordingsPage extends GxPage {
 
     /* JADX INFO: Access modifiers changed from: private */
     /* compiled from: GxRecordings.kt */
-    final class RoutePlayer {
+    static final class RoutePlayer {
         private String cam;
         private final LinearLayout camBox;
         private List<String> cameras;
@@ -2422,7 +2422,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$15;
-                    _init_$lambda$15 = GxRecordingsPage.RoutePlayer._init_$lambda$15(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
+                    _init_$lambda$15 = GxRecordingsPage.RoutePlayer._init_$lambda$15(GxRecordingsPage.RoutePlayer.this.this$0, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$15;
                 }
             }, 2, null);
@@ -2456,7 +2456,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$19;
-                    _init_$lambda$19 = GxRecordingsPage.RoutePlayer._init_$lambda$19(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
+                    _init_$lambda$19 = GxRecordingsPage.RoutePlayer._init_$lambda$19(GxRecordingsPage.RoutePlayer.this.this$0, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$19;
                 }
             }), gap());
@@ -2466,7 +2466,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$20;
-                    _init_$lambda$20 = GxRecordingsPage.RoutePlayer._init_$lambda$20(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
+                    _init_$lambda$20 = GxRecordingsPage.RoutePlayer._init_$lambda$20(GxRecordingsPage.RoutePlayer.this.this$0, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$20;
                 }
             }, 2, null), gap());
@@ -2485,7 +2485,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$23;
-                    _init_$lambda$23 = GxRecordingsPage.RoutePlayer._init_$lambda$23(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
+                    _init_$lambda$23 = GxRecordingsPage.RoutePlayer._init_$lambda$23(GxRecordingsPage.RoutePlayer.this.this$0, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$23;
                 }
             }, 2, null);
@@ -2496,7 +2496,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$25;
-                    _init_$lambda$25 = GxRecordingsPage.RoutePlayer._init_$lambda$25(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
+                    _init_$lambda$25 = GxRecordingsPage.RoutePlayer._init_$lambda$25(GxRecordingsPage.RoutePlayer.this.this$0, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$25;
                 }
             }, 2, null), gap());
@@ -2506,7 +2506,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$27;
-                    _init_$lambda$27 = GxRecordingsPage.RoutePlayer._init_$lambda$27(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
+                    _init_$lambda$27 = GxRecordingsPage.RoutePlayer._init_$lambda$27(GxRecordingsPage.RoutePlayer.this.this$0, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$27;
                 }
             }, 2, null);
@@ -3238,7 +3238,7 @@ public final class GxRecordingsPage extends GxPage {
 
     /* JADX INFO: Access modifiers changed from: private */
     /* compiled from: GxRecordings.kt */
-    final class ScreenPlayer {
+    static final class ScreenPlayer {
         private final FrameLayout frame;
         private final MediaController mc;
         private GxRecordingsScreen rec;
@@ -3298,7 +3298,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     LinearLayout.LayoutParams _init_$lambda$7;
-                    _init_$lambda$7 = GxRecordingsPage.ScreenPlayer._init_$lambda$7(GxRecordingsPage.this);
+                    _init_$lambda$7 = GxRecordingsPage.ScreenPlayer._init_$lambda$7(GxRecordingsPage.ScreenPlayer.this.this$0);
                     return _init_$lambda$7;
                 }
             };
@@ -3308,7 +3308,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$8;
-                    _init_$lambda$8 = GxRecordingsPage.ScreenPlayer._init_$lambda$8(GxRecordingsPage.this, GxRecordingsPage.ScreenPlayer.this);
+                    _init_$lambda$8 = GxRecordingsPage.ScreenPlayer._init_$lambda$8(GxRecordingsPage.ScreenPlayer.this.this$0, GxRecordingsPage.ScreenPlayer.this);
                     return _init_$lambda$8;
                 }
             }), (ViewGroup.LayoutParams) lp.invoke());
@@ -3318,7 +3318,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$10;
-                    _init_$lambda$10 = GxRecordingsPage.ScreenPlayer._init_$lambda$10(GxRecordingsPage.this, GxRecordingsPage.ScreenPlayer.this);
+                    _init_$lambda$10 = GxRecordingsPage.ScreenPlayer._init_$lambda$10(GxRecordingsPage.ScreenPlayer.this.this$0, GxRecordingsPage.ScreenPlayer.this);
                     return _init_$lambda$10;
                 }
             }, 2, null), (ViewGroup.LayoutParams) lp.invoke());
@@ -3328,7 +3328,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$12;
-                    _init_$lambda$12 = GxRecordingsPage.ScreenPlayer._init_$lambda$12(GxRecordingsPage.this, GxRecordingsPage.ScreenPlayer.this);
+                    _init_$lambda$12 = GxRecordingsPage.ScreenPlayer._init_$lambda$12(GxRecordingsPage.ScreenPlayer.this.this$0, GxRecordingsPage.ScreenPlayer.this);
                     return _init_$lambda$12;
                 }
             }, 2, null);
@@ -3453,7 +3453,7 @@ public final class GxRecordingsPage extends GxPage {
 
     /* JADX INFO: Access modifiers changed from: private */
     /* compiled from: GxRecordings.kt */
-    final class Sheet {
+    static final class Sheet {
         private final LinearLayout body;
         private final Dialog dialog;
         final /* synthetic */ GxRecordingsPage this$0;

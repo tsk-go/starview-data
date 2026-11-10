@@ -2682,7 +2682,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
 
     /* JADX INFO: Access modifiers changed from: private */
     /* compiled from: SettingsActivity.kt */
-    final class ComboPage extends ScrollView {
+    static final class ComboPage extends ScrollView {
         private final List<View> parts;
         final /* synthetic */ SettingsActivity this$0;
 
@@ -3942,7 +3942,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         if (arrayList.isEmpty()) {
             arrayList.add(settingsActivity.offline("No settings match \"" + lowerCase + "\"."));
         }
-        final ComboPage comboPage = settingsActivity.new ComboPage(settingsActivity, arrayList);
+        final ComboPage comboPage = new ComboPage(settingsActivity, arrayList);
         View view = togglesPage$inset(settingsActivity, pageBox$default(settingsActivity, comboPage, true, false, 4, null));
         view.setTag(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda99
             @Override // java.lang.Runnable
