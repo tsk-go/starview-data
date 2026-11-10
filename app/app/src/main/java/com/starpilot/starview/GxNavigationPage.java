@@ -783,7 +783,7 @@ public final class GxNavigationPage extends GxPage {
         $this$buildDest_u24lambda_u2425.bottomMargin = getUi().dp(8);
         Unit unit = Unit.INSTANCE;
         linearLayout3.addView(editText, $this$buildDest_u24lambda_u2425);
-        Pair<String, ? extends Function0<Unit>>[] pairArr = {TuplesKt.to("Set Destination", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda56
+        Pair[] pairArr = {TuplesKt.to("Set Destination", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda56
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildDest$lambda$26;
@@ -2036,7 +2036,7 @@ public final class GxNavigationPage extends GxPage {
                 }
 
                 var38.add(TuplesKt.to(var24, new GxNavigationPage$$ExternalSyntheticLambda65(this)));
-                Pair[] var25 = var38.toArray(new Pair[0]);
+                Pair[] var25 = (Pair[]) var38.toArray(new Pair[0]);
                 var4 = this.buttons(Arrays.copyOf(var25, var25.length), (ViewGroup)var6, this.navigationStarted ^ true);
                 if (this.navigationStarted) {
                     View var27 = var4.getChildAt(0);
@@ -2389,7 +2389,7 @@ public final class GxNavigationPage extends GxPage {
         String[] strArr = new String[2];
         strArr[0] = home ? "Remove Home" : "Set as Home";
         strArr[1] = work ? "Remove Work" : "Set as Work";
-        pick(str$default, CollectionsKt.listOf((Object[]) strArr), new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda61
+        pick(str$default, CollectionsKt.listOf(strArr), new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda61
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit homeWork$lambda$93;
@@ -3185,7 +3185,7 @@ public final class GxNavigationPage extends GxPage {
             }
 
             var12 = GxPage.str$default(this, var14, "lastUpdate", null, 2, null);
-            if (var12.length() == 0) {
+            if (((String) var12).length() == 0) {
                 var22 = (((boolean)true) ? 1 : 0);
             } else {
                 var22 = (((boolean)false) ? 1 : 0);
@@ -3674,11 +3674,11 @@ public final class GxNavigationPage extends GxPage {
                 Iterable var150 = var149;
                 var146 = CollectionsKt.joinToString(CollectionsKt.sortedWith(var150, new Comparator() {
                     @Override
-                    public final int compare(Object var1, Object var2) {
-                        var1 = var1.toLowerCase(Locale.ROOT);
+                    public final int compare(Object var1o, Object var2o) {
+                        String var1 = ((String) var1o).toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
                         Comparable var4 = ((Comparable) var1);
-                        var2 = var2.toLowerCase(Locale.ROOT);
+                        String var2 = ((String) var2o).toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
                         return ComparisonsKt.compareValues((Comparable)var4, (Comparable)var2);
                     }
@@ -3709,7 +3709,7 @@ public final class GxNavigationPage extends GxPage {
 
             var12 = GxPage.str$default(this, var14, "scheduleLabel", null, 2, null);
             int var35;
-            if (var12.length() == 0) {
+            if (((String) var12).length() == 0) {
                 var35 = 1;
             } else {
                 var35 = 0;
@@ -3999,7 +3999,7 @@ public final class GxNavigationPage extends GxPage {
                                         var62 = null;
                                     }
 
-                                    Switch var63 = this.toggle(
+                                    Switch var63 = (Switch) this.toggle(
                                             var77,
                                             var62,
                                             this.selectedDraft.contains(var74),
@@ -5084,7 +5084,7 @@ public final class GxNavigationPage extends GxPage {
 
         var11 = GxPage.str$default(this, var14, "visionDebugSession", null, 2, null);
         int var23;
-        if (var11.length() == 0) {
+        if (((String) var11).length() == 0) {
             var23 = 1;
         } else {
             var23 = 0;
