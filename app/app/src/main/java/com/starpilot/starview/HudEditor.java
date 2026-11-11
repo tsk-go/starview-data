@@ -274,36 +274,7 @@ public final class HudEditor extends FrameLayout {
                 return panel$lambda$19;
             }
         }));
-        // 2.85.4: the narrower panel has the four buttons in two rows of two (Undo Reset / Presets Done)
-        java.util.ArrayList<TextView> btns = new java.util.ArrayList<>();
-        for (int bi = 0; bi < actions.getChildCount(); bi++) {
-            View child = actions.getChildAt(bi);
-            if (child instanceof TextView) {
-                btns.add((TextView) child);
-            }
-        }
-        actions.removeAllViews();
-        actions.setOrientation(1);
-        for (int r = 0; r * 2 < btns.size(); r++) {
-            LinearLayout row = new LinearLayout(ctx);
-            row.setOrientation(0);
-            for (int ci = 0; ci < 2 && r * 2 + ci < btns.size(); ci++) {
-                TextView b = btns.get(r * 2 + ci);
-                b.setMinWidth(0);
-                b.setMinimumWidth(0);
-                b.setPadding(this.ui.dp(10), this.ui.dp(10), this.ui.dp(10), this.ui.dp(10));
-                LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(0, -2, 1.0f);
-                if (ci == 0) {
-                    blp.setMarginEnd(this.ui.dp(8));
-                }
-                row.addView(b, blp);
-            }
-            LinearLayout.LayoutParams rlp = new LinearLayout.LayoutParams(-1, -2);
-            if (r > 0) {
-                rlp.topMargin = this.ui.dp(8);
-            }
-            actions.addView(row, rlp);
-        }
+        hybButtonRows(actions, ctx);
         p.addView(actions);
         LinearLayout tabs = new LinearLayout(ctx);
         tabs.setOrientation(0);
@@ -565,6 +536,54 @@ public final class HudEditor extends FrameLayout {
         return $this$roundBtn_u24lambda_u2436;
     }
 
+    /** Hybrid build (app/hybrid/patches.py): 2.84.1's panel() calls it once the four buttons are in actions.
+     *  2.85.4: the narrower panel has them in two rows of two (Undo Reset / Presets Done). */
+    final void hybButtonRows(LinearLayout actions, Context ctx) {
+    java.util.ArrayList<TextView> btns = new java.util.ArrayList<>();
+    for (int bi = 0; bi < actions.getChildCount(); bi++) {
+        View child = actions.getChildAt(bi);
+        if (child instanceof TextView) {
+            btns.add((TextView) child);
+        }
+    }
+    actions.removeAllViews();
+    actions.setOrientation(1);
+    for (int r = 0; r * 2 < btns.size(); r++) {
+        LinearLayout row = new LinearLayout(ctx);
+        row.setOrientation(0);
+        for (int ci = 0; ci < 2 && r * 2 + ci < btns.size(); ci++) {
+            TextView b = btns.get(r * 2 + ci);
+            b.setMinWidth(0);
+            b.setMinimumWidth(0);
+            b.setPadding(this.ui.dp(10), this.ui.dp(10), this.ui.dp(10), this.ui.dp(10));
+            LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(0, -2, 1.0f);
+            if (ci == 0) {
+                blp.setMarginEnd(this.ui.dp(8));
+            }
+            row.addView(b, blp);
+        }
+        LinearLayout.LayoutParams rlp = new LinearLayout.LayoutParams(-1, -2);
+        if (r > 0) {
+            rlp.topMargin = this.ui.dp(8);
+        }
+        actions.addView(row, rlp);
+    }
+    }
+
+    /** Hybrid build: 2.84.1's editTab() calls it right after the Size row. 2.85.8: a free-size widget (the
+     *  see-through map) gets Width / Height (and zoom) instead of the scale: the Size header and row go again. */
+    final void hybFreeSize(HudLayout.Item it, HudLayout.State s) {
+        if (!it.getFree()) {
+            return;
+        }
+        int n = this.content.getChildCount();
+        if (n >= 2) {
+            this.content.removeViewAt(n - 1);
+            this.content.removeViewAt(n - 2);
+        }
+        freeControls(it, s);
+    }
+
     private final void editTab() {
         final HudLayout.Item it = this.selected;
         if (it == null) {
@@ -580,9 +599,6 @@ public final class HudEditor extends FrameLayout {
         $this$editTab_u24lambda_u2437.setTypeface(Typeface.DEFAULT_BOLD);
         $this$editTab_u24lambda_u2437.setPadding(this.ui.dp(4), this.ui.dp(4), 0, this.ui.dp(12));
         linearLayout.addView($this$editTab_u24lambda_u2437);
-        if (it.getFree()) {
-            freeControls(it, s);
-        } else {
         this.content.addView(this.ui.header("Size"));
         LinearLayout size = new LinearLayout(getContext());
         size.setOrientation(0);
@@ -610,7 +626,7 @@ public final class HudEditor extends FrameLayout {
             }
         }));
         this.content.addView(size, CarUi.lp$default(this.ui, 0, this.ui.dp(12), 1, null));
-        }
+        hybFreeSize(it, s);
         this.content.addView(this.ui.header("Position"));
         this.content.addView(CarUi.button$default(this.ui, "Center it left to right", false, new Function0() { // from class: com.starpilot.starview.HudEditor$$ExternalSyntheticLambda7
             @Override // kotlin.jvm.functions.Function0
@@ -856,6 +872,30 @@ public final class HudEditor extends FrameLayout {
         private float startT;
         private float startW;
         private float startH;
+
+        /** Hybrid build: 2.84.1's onTouchEvent calls it when a corner drag starts (r = the widget's box). */
+        final void hybStartH(RectF r) {
+            this.startH = r.height();
+        }
+
+        /** Hybrid build: 2.84.1's onTouchEvent calls it in a corner drag before it scales the widget; true = done.
+         *  2.85.8: a free-size widget: sideways = width, up / down = height (dp), its content not stretched. */
+        final boolean hybFreeResize(HudLayout.Item it3, HudLayout.State s2, float dx, float dy) {
+            if (!it3.getFree()) {
+                return false;
+            }
+            // 2.85.8: a free-size widget: sideways = width, up / down = height (dp), content not stretched
+            float px = this.this$0.d * this.this$0.layout.getWindowScale();
+            RectF r3 = this.this$0.layout.rect(this.this$0.root, it3);
+            float left = r3 != null ? r3.left : 0.0f;
+            float top = r3 != null ? r3.top : 0.0f;
+            float maxW = (this.this$0.root.getWidth() - left) / px;
+            float maxH = (this.this$0.root.getHeight() - top) / px;
+            s2.setW(Math.round(RangesKt.coerceIn((this.startW + dx) / px, 120.0f, Math.max(120.0f, maxW))));
+            s2.setH(Math.round(RangesKt.coerceIn((this.startH + dy) / px, 100.0f, Math.max(100.0f, maxH))));
+            return true;
+        }
+
         final /* synthetic */ HudEditor this$0;
 
         /* VF: from Vineflower (jadx: ) */
@@ -1062,7 +1102,7 @@ public final class HudEditor extends FrameLayout {
                             this.startT = r.top;
                             this.startScale = s.getScale();
                             this.startW = r.width();
-                            this.startH = r.height();
+                            hybStartH(r);
                             ViewParent parent = getParent();
                             if (parent != null) {
                                 parent.requestDisallowInterceptTouchEvent(true);
@@ -1120,17 +1160,7 @@ public final class HudEditor extends FrameLayout {
                                     float sy = ((Number) snap.component2()).floatValue();
                                     this.this$0.layout.place(s2, sx, sy, this.this$0.root.getWidth(), this.this$0.root.getHeight());
                                 }
-                            } else if (it3.getFree()) {
-                                // 2.85.8: a free-size widget: sideways = width, up / down = height (dp), content not stretched
-                                float px = this.this$0.d * this.this$0.layout.getWindowScale();
-                                RectF r3 = this.this$0.layout.rect(this.this$0.root, it3);
-                                float left = r3 != null ? r3.left : 0.0f;
-                                float top = r3 != null ? r3.top : 0.0f;
-                                float maxW = (this.this$0.root.getWidth() - left) / px;
-                                float maxH = (this.this$0.root.getHeight() - top) / px;
-                                s2.setW(Math.round(RangesKt.coerceIn((this.startW + dx) / px, 120.0f, Math.max(120.0f, maxW))));
-                                s2.setH(Math.round(RangesKt.coerceIn((this.startH + dy) / px, 100.0f, Math.max(100.0f, maxH))));
-                            } else {
+                            } else if (!hybFreeResize(it3, s2, dx, dy)) {
                                 s2.setScale(RangesKt.coerceIn((this.startScale * (this.startW + dx)) / Math.max(1.0f, this.startW), 0.5f, 2.5f));
                             }
                             this.this$0.layout.apply(this.this$0.root);

@@ -4,6 +4,9 @@ plugins {
 }
 
 android {
+  // Resource IDs as in the original 2.84.1 APK (its compiled code has them as plain numbers): the hybrid build
+  // (tools/hybrid) takes that code for every class we didn't change on purpose.
+  androidResources { additionalParameters += listOf("--stable-ids", file("stable-ids.txt").absolutePath) }
   namespace = "com.starpilot.starview"
   compileSdk = 35
 

@@ -166,8 +166,7 @@ public final class MapPane extends FrameLayout {
         this.setBackgroundColor(Color.rgb(27, 30, 36));
         this.addView(this.map, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
         View var3 = this.banner;
-        // 2.85.0: the full screen's turn banner is a card at the top centre, like the one on the road view
-        android.widget.FrameLayout.LayoutParams var4 = new android.widget.FrameLayout.LayoutParams(Math.min(this.dpi(600), var1.getResources().getDisplayMetrics().widthPixels - this.dpi(160)), this.dpi(92), 49);
+        android.widget.FrameLayout.LayoutParams var4 = new android.widget.FrameLayout.LayoutParams(-1, this.dpi(92), 48);
         var4.setMargins(this.dpi(10), this.dpi(10), this.dpi(10), 0);
         Unit var10 = Unit.INSTANCE;
         this.addView(var3, (android.view.ViewGroup.LayoutParams)var4);
@@ -271,6 +270,15 @@ public final class MapPane extends FrameLayout {
         this.previewShown = "";
         this.lastButtons = "";
         this.hideInfo = new MapPane$$ExternalSyntheticLambda18(this);
+        hybInit();
+    }
+
+    /** Hybrid build (app/hybrid/patches.py): end of 2.84.1's constructor. 2.85.0: the full screen's turn banner is a
+     *  card at the top centre, like the one on the road view. */
+    final void hybInit() {
+        android.widget.FrameLayout.LayoutParams lp = new android.widget.FrameLayout.LayoutParams(Math.min(this.dpi(600), getResources().getDisplayMetrics().widthPixels - this.dpi(160)), this.dpi(92), 49);
+        lp.setMargins(this.dpi(10), this.dpi(10), this.dpi(10), 0);
+        this.banner.setLayoutParams(lp);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2401,6 +2409,17 @@ public final class MapPane extends FrameLayout {
 
     /* compiled from: MapPane.kt */
     private static final class Banner extends View {
+        /** Hybrid build (app/hybrid/patches.py): called from 2.84.1's onDraw right after the card's background.
+         *  2.85.0: StarPort's purple edge around the card. */
+        final void hybEdge(Canvas c, float w, float h) {
+            this.p.setStyle(android.graphics.Paint.Style.STROKE);
+            this.p.setStrokeWidth(this.this$0.dp(2.0F));
+            this.p.setColor(NavOverlay.INSTANCE.getBORDER());
+            float edge = this.this$0.dp(1.0F);
+            c.drawRoundRect(new RectF(edge, edge, w - edge, h - edge), this.this$0.dp(16.0F), this.this$0.dp(16.0F), this.p);
+            this.p.setStyle(android.graphics.Paint.Style.FILL);
+        }
+
         private final Paint p;
         final /* synthetic */ MapPane this$0;
         private final Paint tp;
@@ -2425,12 +2444,7 @@ public final class MapPane extends FrameLayout {
             // 2.85.0: StarPort's dark card with the purple edge (was green)
             this.p.setColor(NavOverlay.INSTANCE.getBG());
             var1.drawRoundRect(new RectF(0.0F, 0.0F, var2, var7), this.this$0.dp(16.0F), this.this$0.dp(16.0F), this.p);
-            this.p.setStyle(android.graphics.Paint.Style.STROKE);
-            this.p.setStrokeWidth(this.this$0.dp(2.0F));
-            this.p.setColor(NavOverlay.INSTANCE.getBORDER());
-            float edge = this.this$0.dp(1.0F);
-            var1.drawRoundRect(new RectF(edge, edge, var2 - edge, var7 - edge), this.this$0.dp(16.0F), this.this$0.dp(16.0F), this.p);
-            this.p.setStyle(android.graphics.Paint.Style.FILL);
+            hybEdge(var1, var2, var7);
             JSONObject var10 = this.this$0.getT().navState();
             if (var10 == null) {
                 this.tp.setTextSize(this.this$0.dp(22.0F));
