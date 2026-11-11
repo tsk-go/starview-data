@@ -580,6 +580,9 @@ public final class HudEditor extends FrameLayout {
         $this$editTab_u24lambda_u2437.setTypeface(Typeface.DEFAULT_BOLD);
         $this$editTab_u24lambda_u2437.setPadding(this.ui.dp(4), this.ui.dp(4), 0, this.ui.dp(12));
         linearLayout.addView($this$editTab_u24lambda_u2437);
+        if (it.getFree()) {
+            freeControls(it, s);
+        } else {
         this.content.addView(this.ui.header("Size"));
         LinearLayout size = new LinearLayout(getContext());
         size.setOrientation(0);
@@ -607,6 +610,7 @@ public final class HudEditor extends FrameLayout {
             }
         }));
         this.content.addView(size, CarUi.lp$default(this.ui, 0, this.ui.dp(12), 1, null));
+        }
         this.content.addView(this.ui.header("Position"));
         this.content.addView(CarUi.button$default(this.ui, "Center it left to right", false, new Function0() { // from class: com.starpilot.starview.HudEditor$$ExternalSyntheticLambda7
             @Override // kotlin.jvm.functions.Function0
@@ -663,6 +667,8 @@ public final class HudEditor extends FrameLayout {
         $s.setCw(Float.NaN);
         $s.setCh(Float.NaN);
         $s.setScale(1.0f);
+        $s.setW(Float.NaN);
+        $s.setH(Float.NaN);
         this$0.changed();
         return Unit.INSTANCE;
     }
@@ -671,6 +677,48 @@ public final class HudEditor extends FrameLayout {
     public static final Unit editTab$lambda$44(HudEditor this$0, HudLayout.Item $it) {
         this$0.remove($it);
         return Unit.INSTANCE;
+    }
+
+    /** 2.85.8: a free-size widget's Width / Height steppers and (the see-through map) its zoom. */
+    private final void freeControls(final HudLayout.Item it, final HudLayout.State s) {
+        this.content.addView(this.ui.header("Size"));
+        this.content.addView(this.ui.note("Drag the corner: sideways for the width, up or down for the height. The map keeps its scale - a bigger box shows more of it."));
+        freeRow("Width", Math.round(this.layout.freeW(it) * 100.0f / it.getDefW()) + " %", () -> { setFree(it, s, 20.0f, 0.0f); return Unit.INSTANCE; }, () -> { setFree(it, s, -20.0f, 0.0f); return Unit.INSTANCE; });
+        freeRow("Height", Math.round(this.layout.freeH(it) * 100.0f / it.getDefH()) + " %", () -> { setFree(it, s, 0.0f, 20.0f); return Unit.INSTANCE; }, () -> { setFree(it, s, 0.0f, -20.0f); return Unit.INSTANCE; });
+        if (it.getId() == R.id.navMap) {
+            this.content.addView(this.ui.header("Map zoom"));
+            this.content.addView(this.ui.note("Stays this way while driving (at highway speed it still pulls back a little to show farther ahead)."));
+            String z = String.format(java.util.Locale.US, "%.2f", s.getZoom()).replaceAll("0+$", "").replaceAll("\\.$", "") + "x";
+            freeRow("Zoom", z, () -> { setZoom(s, s.getZoom() * 1.25f); return Unit.INSTANCE; }, () -> { setZoom(s, s.getZoom() / 1.25f); return Unit.INSTANCE; });
+        }
+    }
+
+    private final void freeRow(String name, String value, Function0<Unit> plus, Function0<Unit> minus) {
+        LinearLayout row = new LinearLayout(getContext());
+        row.setOrientation(0);
+        row.setGravity(16);
+        row.addView(this.ui.stepper("−", minus));
+        TextView tv = new TextView(getContext());
+        tv.setText(name + "\n" + value);
+        tv.setTextSize(18.0f);
+        tv.setTextColor(-1);
+        tv.setGravity(17);
+        row.addView(tv, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        row.addView(this.ui.stepper("+", plus));
+        this.content.addView(row, CarUi.lp$default(this.ui, 0, this.ui.dp(10), 1, null));
+    }
+
+    private final void setFree(HudLayout.Item it, HudLayout.State s, float dw, float dh) {
+        remember();
+        s.setW(RangesKt.coerceIn(this.layout.freeW(it) + dw, 120.0f, 1400.0f));
+        s.setH(RangesKt.coerceIn(this.layout.freeH(it) + dh, 100.0f, 900.0f));
+        changed();
+    }
+
+    private final void setZoom(HudLayout.State s, float z) {
+        remember();
+        s.setZoom(RangesKt.coerceIn(z, 0.33f, 4.0f));
+        changed();
     }
 
     private final void remember() {
@@ -807,6 +855,7 @@ public final class HudEditor extends FrameLayout {
         private float startScale;
         private float startT;
         private float startW;
+        private float startH;
         final /* synthetic */ HudEditor this$0;
 
         /* VF: from Vineflower (jadx: ) */
@@ -1013,6 +1062,7 @@ public final class HudEditor extends FrameLayout {
                             this.startT = r.top;
                             this.startScale = s.getScale();
                             this.startW = r.width();
+                            this.startH = r.height();
                             ViewParent parent = getParent();
                             if (parent != null) {
                                 parent.requestDisallowInterceptTouchEvent(true);
@@ -1070,6 +1120,16 @@ public final class HudEditor extends FrameLayout {
                                     float sy = ((Number) snap.component2()).floatValue();
                                     this.this$0.layout.place(s2, sx, sy, this.this$0.root.getWidth(), this.this$0.root.getHeight());
                                 }
+                            } else if (it3.getFree()) {
+                                // 2.85.8: a free-size widget: sideways = width, up / down = height (dp), content not stretched
+                                float px = this.this$0.d * this.this$0.layout.getWindowScale();
+                                RectF r3 = this.this$0.layout.rect(this.this$0.root, it3);
+                                float left = r3 != null ? r3.left : 0.0f;
+                                float top = r3 != null ? r3.top : 0.0f;
+                                float maxW = (this.this$0.root.getWidth() - left) / px;
+                                float maxH = (this.this$0.root.getHeight() - top) / px;
+                                s2.setW(Math.round(RangesKt.coerceIn((this.startW + dx) / px, 120.0f, Math.max(120.0f, maxW))));
+                                s2.setH(Math.round(RangesKt.coerceIn((this.startH + dy) / px, 100.0f, Math.max(100.0f, maxH))));
                             } else {
                                 s2.setScale(RangesKt.coerceIn((this.startScale * (this.startW + dx)) / Math.max(1.0f, this.startW), 0.5f, 2.5f));
                             }

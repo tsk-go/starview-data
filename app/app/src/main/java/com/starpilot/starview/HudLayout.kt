@@ -19,11 +19,15 @@ import kotlin.math.max
  */
 class HudLayout(ctx: Context) {
   class Anchor(val gravity: Int, val dx: Int, val dy: Int)             // dp offsets from the anchored edges
-  class Item(val id: Int, val key: String, val label: String, val anchor: Anchor, val canHide: Boolean = true, val defaultOn: Boolean = true)
+  /** free (2.85.8): width and height are set on their own (dp in [State.w] / [State.h], default [defW] x [defH]) and the
+   *  view is really that size - its content is not stretched (the see-through map shows more or less of the map). */
+  class Item(val id: Int, val key: String, val label: String, val anchor: Anchor, val canHide: Boolean = true, val defaultOn: Boolean = true,
+             val free: Boolean = false, val defW: Int = 0, val defH: Int = 0)
   /** x, y: top-left as a fraction of the window it was placed in; cw, ch (2.29.1): that window's size at full HUD scale
    *  (px; NaN = placed before 2.29.1, when the app was always full-screen landscape). */
   class State(var on: Boolean = true, var x: Float = Float.NaN, var y: Float = Float.NaN, var scale: Float = 1f,
-              var cw: Float = Float.NaN, var ch: Float = Float.NaN)
+              var cw: Float = Float.NaN, var ch: Float = Float.NaN,
+              var w: Float = Float.NaN, var h: Float = Float.NaN, var zoom: Float = 1f)   // 2.85.8: free size (dp), map zoom
 
   private val prefs = ctx.getSharedPreferences("starview_hud", Context.MODE_PRIVATE)
   private val d = ctx.resources.displayMetrics.density
@@ -38,7 +42,7 @@ class HudLayout(ctx: Context) {
     Item(R.id.wheel, "wheel", "Steering wheel", Anchor(Gravity.TOP or Gravity.END, 24, 20)),
     Item(R.id.egpu, "egpu", "eGPU status", Anchor(Gravity.TOP or Gravity.END, 24, 188)),
     Item(R.id.navCard, "navCard", "Navigation - turn card", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 72)),
-    Item(R.id.navMap, "navMap", "Navigation - see-through map", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 228)),
+    Item(R.id.navMap, "navMap", "Navigation - see-through map", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 228), free = true, defW = 250, defH = 440),
     Item(R.id.nudgeHint, "nudgeHint", "Exit nudge prompt", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 100)),
     Item(R.id.slowCard, "slowCard", "Why it's slowing", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 200)),
     Item(R.id.laneCard, "laneCard", "Lane tracker (test)", Anchor(Gravity.TOP or Gravity.END, 24, 250)),
@@ -111,7 +115,8 @@ class HudLayout(ctx: Context) {
   fun snapshot(): String {
     val o = JSONObject()
     for ((k, s) in states) o.put(k, JSONObject().put("on", s.on).put("x", if (s.x.isNaN()) JSONObject.NULL else s.x.toDouble()).put("y", if (s.y.isNaN()) JSONObject.NULL else s.y.toDouble()).put("s", s.scale.toDouble())
-      .put("cw", if (s.cw.isNaN()) JSONObject.NULL else s.cw.toDouble()).put("ch", if (s.ch.isNaN()) JSONObject.NULL else s.ch.toDouble()))
+      .put("cw", if (s.cw.isNaN()) JSONObject.NULL else s.cw.toDouble()).put("ch", if (s.ch.isNaN()) JSONObject.NULL else s.ch.toDouble())
+      .put("w", if (s.w.isNaN()) JSONObject.NULL else s.w.toDouble()).put("h", if (s.h.isNaN()) JSONObject.NULL else s.h.toDouble()).put("z", s.zoom.toDouble()))
     return o.toString()
   }
 
@@ -121,7 +126,8 @@ class HudLayout(ctx: Context) {
     runCatching {
       val o = JSONObject(raw)
       for (k in o.keys()) { val e = o.getJSONObject(k); states[k] = State(e.optBoolean("on", true), e.optDouble("x", Double.NaN).toFloat(), e.optDouble("y", Double.NaN).toFloat(), e.optDouble("s", 1.0).toFloat(),
-        e.optDouble("cw", Double.NaN).toFloat(), e.optDouble("ch", Double.NaN).toFloat()) }
+        e.optDouble("cw", Double.NaN).toFloat(), e.optDouble("ch", Double.NaN).toFloat(),
+        e.optDouble("w", Double.NaN).toFloat(), e.optDouble("h", Double.NaN).toFloat(), e.optDouble("z", 1.0).toFloat()) }
     }
   }
 
@@ -130,6 +136,14 @@ class HudLayout(ctx: Context) {
   fun reset() { states.clear(); prefs.edit().remove(KEY).remove("layout_day").remove("layout_night").apply() }
 
   private fun defaultOn(key: String) = items.firstOrNull { it.key == key }?.defaultOn ?: true
+
+  /** A free-size widget's width / height (dp): the saved one, else its default. */
+  fun freeW(item: Item): Float = states[item.key]?.w?.takeIf { !it.isNaN() } ?: item.defW.toFloat()
+  fun freeH(item: Item): Float = states[item.key]?.h?.takeIf { !it.isNaN() } ?: item.defH.toFloat()
+  private fun dp(v: Float) = (v * d).toInt()
+  /** The view's own size (px, before scale): a free-size widget's set size right away (the view lays out a frame later). */
+  private fun pxW(v: View, item: Item) = if (item.free) dp(freeW(item)) else if (v.width > 0) v.width else v.measuredWidth
+  private fun pxH(v: View, item: Item) = if (item.free) dp(freeH(item)) else if (v.height > 0) v.height else v.measuredHeight
   fun state(key: String): State = states.getOrPut(key) { State(defaultOn(key)) }
   fun enabled(key: String) = states[key]?.on ?: defaultOn(key)
 
@@ -183,9 +197,16 @@ class HudLayout(ctx: Context) {
       val v = root.findViewById<View>(it.id) ?: continue
       val lp = v.layoutParams as? FrameLayout.LayoutParams ?: continue
       val s = states[it.key]
-      val sc = (s?.scale ?: 1f) * windowScale
+      if (it.free) {
+        // 2.85.8: a free-size widget is really its width x height (scale stays 1); an old uniform size becomes w x h once
+        if (s != null && s.scale != 1f && s.w.isNaN()) { s.w = it.defW * s.scale; s.h = it.defH * s.scale; s.scale = 1f }
+        val fw = dp(freeW(it)); val fh = dp(freeH(it))
+        if (lp.width != fw || lp.height != fh) { lp.width = fw; lp.height = fh; v.layoutParams = lp }
+        (v as? NavMapView)?.zoom = s?.zoom ?: 1f
+      }
+      val sc = (if (it.free) 1f else (s?.scale ?: 1f)) * windowScale
       // the size as drawn (scaled about the top-left corner), so right / bottom anchored widgets keep their margin
-      val w = ((if (v.width > 0) v.width else v.measuredWidth) * sc).toInt(); val h = ((if (v.height > 0) v.height else v.measuredHeight) * sc).toInt()
+      val w = (pxW(v, it) * sc).toInt(); val h = (pxH(v, it) * sc).toInt()
       val (dx, dy) = defaultPos(it, rw, rh, w, h)
       // a saved spot is kept on screen when the window gets smaller
       val sp = if (s == null || s.x.isNaN() || s.y.isNaN()) null else savedPos(s, rw, rh, w, h)
@@ -200,8 +221,8 @@ class HudLayout(ctx: Context) {
   fun rect(root: FrameLayout, item: Item): android.graphics.RectF? {
     val v = root.findViewById<View>(item.id) ?: return null
     val lp = v.layoutParams as? FrameLayout.LayoutParams ?: return null
-    val sc = (states[item.key]?.scale ?: 1f) * windowScale
-    val w = (if (v.width > 0) v.width else v.measuredWidth) * sc; val h = (if (v.height > 0) v.height else v.measuredHeight) * sc
+    val sc = (if (item.free) 1f else (states[item.key]?.scale ?: 1f)) * windowScale
+    val w = pxW(v, item) * sc; val h = pxH(v, item) * sc
     return android.graphics.RectF(lp.leftMargin.toFloat(), lp.topMargin.toFloat(), lp.leftMargin + w, lp.topMargin + h)
   }
 }
