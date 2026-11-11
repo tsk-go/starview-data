@@ -1,5 +1,7 @@
 package com.starpilot.starview
 
+import android.app.ActivityOptions
+import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -17,9 +19,12 @@ import java.util.concurrent.TimeUnit
 
 /**
  * Updates StarView from the GitHub releases of tsk-go/starview-data (built and signed there by the "StarView app"
- * workflow from the source in app/). Nothing runs in the background: only when "Check for updates" is tapped.
- * The APK is installed with the system installer, which shows its own confirmation and only accepts an APK signed
- * with the same key as the installed app.
+ * workflow from the source in app/). "Check for updates" checks when tapped; from 2.85.8 "Install updates
+ * automatically" (on unless switched off) asks GitHub once a minute - a conditional request (ETag), so "nothing new" is
+ * a tiny 304 that GitHub doesn't count against its limit - and installs a new version at once, even while driving.
+ * Android 12+ lets an app update itself without the confirmation screen (setRequireUserAction); the system installer
+ * still only accepts an APK signed with the same key as the installed app. After the install Android has closed
+ * StarView: [Relaunch] opens it again (and the comma's starviewd does too, when the tablet's connection stays gone).
  */
 object AppUpdate {
   const val REPO = "tsk-go/starview-data"
@@ -34,6 +39,62 @@ object AppUpdate {
 
   @Volatile var busy = false
     private set
+
+  private const val PREFS = "starview_update"
+  fun autoOn(ctx: Context): Boolean = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean("auto", true)
+  fun setAuto(ctx: Context, on: Boolean) { ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean("auto", on).apply() }
+
+  @Volatile private var autoStarted = false
+  private var etag: String? = null
+  private var lastSeen: Release? = null
+  private var tried: String? = null; private var triedAt = 0L
+
+  /** The automatic updates: one daemon thread for the app's life, a check a minute (first one 20 s after start). */
+  fun startAuto(ctx: Context) {
+    if (autoStarted) return
+    autoStarted = true
+    val app = ctx.applicationContext
+    Thread({
+      var wait = 20_000L
+      while (true) {
+        try { Thread.sleep(wait) } catch (e: InterruptedException) { return@Thread }
+        wait = 60_000L
+        try {
+          if (!autoOn(app) || busy) continue
+          // never the "allow installs" settings screen from here (it could come up while driving): the button asks for it
+          if (Build.VERSION.SDK_INT >= 26 && !app.packageManager.canRequestPackageInstalls()) continue
+          val rel = latestIfChanged() ?: continue
+          val now = System.currentTimeMillis()
+          if (!newer(rel.version, installed(app))) continue
+          if (rel.version == tried && now - triedAt < 30 * 60_000L) continue   // one try per version per half hour
+          tried = rel.version; triedAt = now
+          Log.i(TAG, "auto: installing ${rel.version}")
+          main.post { Toast.makeText(app, "Updating StarView to ${rel.version} - it restarts in a few seconds", Toast.LENGTH_LONG).show() }
+          install(app, rel) { msg, failed -> if (failed) Log.w(TAG, "auto: $msg") }
+        } catch (e: RateLimited) {
+          wait = 15 * 60_000L
+        } catch (e: Exception) {
+          Log.w(TAG, "auto: $e")
+        }
+      }
+    }, "starview-autoupdate").apply { isDaemon = true; priority = Thread.MIN_PRIORITY }.start()
+  }
+
+  private class RateLimited : RuntimeException()
+
+  /** The newest app release, asked with the last ETag: the same release again when GitHub says "not modified". */
+  private fun latestIfChanged(): Release? {
+    val b = Request.Builder().url("https://api.github.com/repos/$REPO/releases?per_page=10").header("Accept", "application/vnd.github+json")
+    etag?.let { b.header("If-None-Match", it) }
+    http.newCall(b.build()).execute().use { r ->
+      if (r.code == 304) return lastSeen
+      if (r.code == 403 || r.code == 429) throw RateLimited()
+      if (!r.isSuccessful) throw RuntimeException("GitHub said HTTP ${r.code}")
+      val rel = pick(org.json.JSONArray(r.body!!.string()))
+      etag = r.header("ETag"); lastSeen = rel
+      return rel
+    }
+  }
 
   fun installed(ctx: Context): String =
     try { ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName ?: "0" } catch (e: Exception) { "0" }
@@ -55,7 +116,11 @@ object AppUpdate {
       .header("Accept", "application/vnd.github+json").build()
     http.newCall(req).execute().use { r ->
       if (!r.isSuccessful) throw RuntimeException("GitHub said HTTP ${r.code}")
-      val list = org.json.JSONArray(r.body!!.string())
+      return pick(org.json.JSONArray(r.body!!.string())) ?: throw RuntimeException("no StarView release on GitHub yet")
+    }
+  }
+
+  private fun pick(list: org.json.JSONArray): Release? {
       var best: Release? = null
       for (k in 0 until list.length()) {
         val o = list.getJSONObject(k)
@@ -64,14 +129,13 @@ object AppUpdate {
         val assets = o.optJSONArray("assets") ?: continue
         for (i in 0 until assets.length()) {
           val a = assets.getJSONObject(i)
-          if (!a.optString("name").endsWith(".apk")) continue
+          if (!a.optString("name").endsWith(".apk") || a.optString("state", "uploaded") != "uploaded") continue
           val rel = Release(tag.removePrefix("v"), a.optString("browser_download_url"), a.optLong("size"), o.optString("body"), o.optString("html_url"))
           if (best == null || newer(rel.version, best.version)) best = rel
           break
         }
       }
-      return best ?: throw RuntimeException("no StarView release on GitHub yet")
-    }
+      return best
   }
 
   /** Checks on a thread of its own; [done] runs on the main thread with the release (null = failed) and a message. */
@@ -131,14 +195,17 @@ object AppUpdate {
         val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
         params.setAppPackageName(app.packageName)
         params.setSize(apk.length())
+        // 2.85.8: no confirmation screen - an app updating itself may (Android 12+, UPDATE_PACKAGES_WITHOUT_USER_ACTION)
+        if (Build.VERSION.SDK_INT >= 31) params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED)
         val id = pi.createSession(params)
         pi.openSession(id).use { s ->
           apk.inputStream().use { inp -> s.openWrite("base.apk", 0, apk.length()).use { out -> inp.copyTo(out, 256 * 1024); s.fsync(out) } }
           val flags = PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_MUTABLE else 0)
           val cb = PendingIntent.getBroadcast(app, id, Intent(app, AppUpdateReceiver::class.java), flags)
+          Relaunch.arm(app, 45_000L)      // a last resort if nothing else opens StarView after the install
           s.commit(cb.intentSender)
         }
-        main.post { status("Confirm the install on the system screen. StarView restarts as ${rel.version}.", false) }
+        main.post { status("Installing - StarView closes and opens again as ${rel.version}.", false) }
       } catch (e: Exception) {
         Log.w(TAG, "install: $e")
         apk.delete()
@@ -173,7 +240,61 @@ fun appUpdateRow(ctx: Context, ui: CarUi): android.view.View {
     }
   }
   row.addView(btn)
-  return row
+  // 2.85.8: automatic updates (on unless switched off), with what it means while driving
+  val col = android.widget.LinearLayout(ctx).apply { orientation = android.widget.LinearLayout.VERTICAL }
+  col.addView(row)
+  val (arow, _) = ui.row("Install updates automatically",
+    "A new StarView installs as soon as it's published (checked every minute) - even while driving. Warning: StarView " +
+    "closes during the install and opens again by itself; the driving screen is gone for about 10-30 seconds. " +
+    "Switch off to update only with the button above.", 0, null, null)
+  val sw = ui.bigSwitch()
+  sw.isChecked = AppUpdate.autoOn(ctx)
+  sw.setOnCheckedChangeListener { _, on -> AppUpdate.setAuto(ctx, on) }
+  arow.addView(sw)
+  col.addView(arow, android.widget.LinearLayout.LayoutParams(-1, -2).apply { topMargin = ui.dp(3) })
+  return col
+}
+
+/**
+ * Opening StarView again after it updated itself (Android closes the app to replace it and doesn't reopen it):
+ * MY_PACKAGE_REPLACED starts it at once when Android allows that, and an alarm-clock alarm (its PendingIntent may
+ * start an activity from the background) a moment later in case it didn't. Before the install a second alarm is set
+ * further out, in case the broadcast never comes. MainActivity cancels both when it starts. The comma's starviewd is
+ * the backstop: car on and no tablet connection for a few seconds -> it starts StarView over adb.
+ */
+object Relaunch {
+  private const val MARK = "relaunch_pending"
+  private fun pi(ctx: Context): PendingIntent {
+    val i = Intent(ctx, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    val opts = if (Build.VERSION.SDK_INT >= 34) ActivityOptions.makeBasic()
+      .setPendingIntentCreatorBackgroundActivityStartMode(ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED).toBundle() else null
+    return PendingIntent.getActivity(ctx, 7701, i, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE, opts)
+  }
+  fun arm(ctx: Context, inMs: Long) {
+    try {
+      java.io.File(ctx.filesDir, MARK).writeText(System.currentTimeMillis().toString())
+      val am = ctx.getSystemService(AlarmManager::class.java)
+      am.setAlarmClock(AlarmManager.AlarmClockInfo(System.currentTimeMillis() + inMs, null), pi(ctx))
+    } catch (e: Exception) { Log.w("StarView/Update", "relaunch arm: $e") }
+  }
+  fun pending(ctx: Context) = java.io.File(ctx.filesDir, MARK).exists()
+  fun cancel(ctx: Context) {
+    try {
+      java.io.File(ctx.filesDir, MARK).delete()
+      ctx.getSystemService(AlarmManager::class.java).cancel(pi(ctx))
+    } catch (e: Exception) { Log.w("StarView/Update", "relaunch cancel: $e") }
+  }
+}
+
+/** The app was just replaced by a newer version: open it again (only after an update StarView installed itself). */
+class AppReplacedReceiver : BroadcastReceiver() {
+  override fun onReceive(ctx: Context, intent: Intent) {
+    if (intent.action != Intent.ACTION_MY_PACKAGE_REPLACED || !Relaunch.pending(ctx)) return
+    Log.i("StarView/Update", "updated to ${AppUpdate.installed(ctx)}: opening StarView")
+    Relaunch.arm(ctx, 2_000L)
+    try { ctx.startActivity(Intent(ctx, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+    catch (e: Exception) { Log.w("StarView/Update", "reopen: $e") }
+  }
 }
 
 /** The system installer's answer: asks the user to confirm, or says why it failed. */
@@ -181,6 +302,7 @@ class AppUpdateReceiver : BroadcastReceiver() {
   override fun onReceive(ctx: Context, intent: Intent) {
     when (val st = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)) {
       PackageInstaller.STATUS_PENDING_USER_ACTION -> {
+        Relaunch.cancel(ctx)          // still running: the alarm would bring StarView over the confirmation screen
         @Suppress("DEPRECATION")
         val confirm = if (Build.VERSION.SDK_INT >= 33) intent.getParcelableExtra(Intent.EXTRA_INTENT, Intent::class.java)
                       else intent.getParcelableExtra<Intent>(Intent.EXTRA_INTENT)
@@ -188,6 +310,7 @@ class AppUpdateReceiver : BroadcastReceiver() {
       }
       PackageInstaller.STATUS_SUCCESS -> {}
       else -> {
+        Relaunch.cancel(ctx)
         val msg = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE) ?: "status $st"
         Log.w("StarView/Update", "installer: $st $msg")
         if (st != PackageInstaller.STATUS_FAILURE_ABORTED) Toast.makeText(ctx, "StarView update not installed: $msg", Toast.LENGTH_LONG).show()
