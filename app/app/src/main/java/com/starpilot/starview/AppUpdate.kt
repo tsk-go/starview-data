@@ -209,9 +209,9 @@ object AppUpdate {
           apk.inputStream().use { inp -> s.openWrite("base.apk", 0, apk.length()).use { out -> inp.copyTo(out, 256 * 1024); s.fsync(out) } }
           val flags = PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_MUTABLE else 0)
           val cb = PendingIntent.getBroadcast(app, id, Intent(app, AppUpdateReceiver::class.java), flags)
-          // 2.85.12: reopened only if StarView was on screen - updating while another app is in front (or the screen is
-          // off) stays quiet: no StarView popping up over it; the next open (or the comma at car on) shows the new one
-          if (inFront()) Relaunch.arm(app, 45_000L) else Relaunch.cancel(app)
+          // 2.85.12: StarView on screen -> it comes back on screen. Another app in front (or the screen off) -> it comes
+          // back behind that app (its comma link, turn signals, lane prompts, RTK corrections run again), not over it
+          Relaunch.arm(app, 45_000L, back = !inFront())
           s.commit(cb.intentSender)
         }
         main.post { status("Installing - StarView closes and opens again as ${rel.version}.", false) }
@@ -287,14 +287,19 @@ object Relaunch {
       .setPendingIntentCreatorBackgroundActivityStartMode(ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED).toBundle() else null
     return PendingIntent.getActivity(ctx, 7701, i, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE, opts)
   }
-  fun arm(ctx: Context, inMs: Long) {
+  /** [back]: StarView wasn't on screen - it is started behind the app in front (no alarm: that would open it on top). */
+  fun arm(ctx: Context, inMs: Long, back: Boolean = false) {
     try {
-      java.io.File(ctx.filesDir, MARK).writeText(System.currentTimeMillis().toString())
+      java.io.File(ctx.filesDir, MARK).writeText(if (back) "back" else "front")
+      if (back) return
       val am = ctx.getSystemService(AlarmManager::class.java)
       am.setAlarmClock(AlarmManager.AlarmClockInfo(System.currentTimeMillis() + inMs, null), pi(ctx))
     } catch (e: Exception) { Log.w("StarView/Update", "relaunch arm: $e") }
   }
   fun pending(ctx: Context) = java.io.File(ctx.filesDir, MARK).exists()
+  fun back(ctx: Context) = try { java.io.File(ctx.filesDir, MARK).readText().trim() == "back" } catch (e: Exception) { false }
+  /** The extra that makes MainActivity go straight behind the app in front (moveTaskToBack) once it's created. */
+  const val EXTRA_BACK = "sv_back"
   fun cancel(ctx: Context) {
     try {
       java.io.File(ctx.filesDir, MARK).delete()
@@ -326,10 +331,14 @@ class AppReplacedReceiver : BroadcastReceiver() {
         wm.addView(v, lp); dot = v
       } catch (e: Exception) { Log.w("StarView/Update", "reopen window: $e") }
     } else Log.w("StarView/Update", "reopen: 'display over other apps' not allowed - StarView may stay closed")
-    Relaunch.arm(app, 2_500L)
+    val back = Relaunch.back(app)
+    if (!back) Relaunch.arm(app, 2_500L)
     main.postDelayed({
-      try { app.startActivity(Intent(app, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
-      catch (e: Exception) { Log.w("StarView/Update", "reopen: $e") }
+      try {
+        val i = Intent(app, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        if (back) i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION).putExtra(Relaunch.EXTRA_BACK, true)
+        app.startActivity(i)
+      } catch (e: Exception) { Log.w("StarView/Update", "reopen: $e") }
     }, 500L)
     main.postDelayed({
       dot?.let { try { wm.removeView(it) } catch (e: Exception) {} }
