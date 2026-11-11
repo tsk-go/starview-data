@@ -29,6 +29,8 @@ or new code.
 
 ## Docs (`docs/`)
 
+- `docs/SETUP.md`: the whole build - parts, how each is connected and set up (tablet, USB hub and power, drive
+  archive stick, RTK GPS, relay box, phone and StarLock, key fob radio, eGPU, offline mode) and what we learned.
 - `docs/STARVIEW-APP.md`: the running record of the app - how releases and automatic updates work, the owner's
   direction for the driving screen, how to find crashes and freezes on the tablet, and every version with what changed
   and why. Kept the same as `claude/starview-app-source.md` in the StarView project on claude.ai.
