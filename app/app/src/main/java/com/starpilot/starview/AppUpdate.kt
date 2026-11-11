@@ -252,6 +252,14 @@ fun appUpdateRow(ctx: Context, ui: CarUi): android.view.View {
   sw.setOnCheckedChangeListener { _, on -> AppUpdate.setAuto(ctx, on) }
   arow.addView(sw)
   col.addView(arow, android.widget.LinearLayout.LayoutParams(-1, -2).apply { topMargin = ui.dp(3) })
+  // 2.85.10: without "display over other apps" Android keeps StarView closed after it updated itself
+  if (!Overlay.allowed(ctx)) {
+    val (orow, _) = ui.row("Open again after an update",
+      "Android only lets StarView reopen by itself if it may display over other apps. Tap Allow and switch it on " +
+      "(or the comma can: adb shell appops set com.starpilot.starview SYSTEM_ALERT_WINDOW allow).", 0, null, null)
+    orow.addView(ui.button("Allow", false) { Overlay.ask(ctx) })
+    col.addView(orow, android.widget.LinearLayout.LayoutParams(-1, -2).apply { topMargin = ui.dp(3) })
+  }
   return col
 }
 
@@ -290,10 +298,45 @@ object Relaunch {
 class AppReplacedReceiver : BroadcastReceiver() {
   override fun onReceive(ctx: Context, intent: Intent) {
     if (intent.action != Intent.ACTION_MY_PACKAGE_REPLACED || !Relaunch.pending(ctx)) return
-    Log.i("StarView/Update", "updated to ${AppUpdate.installed(ctx)}: opening StarView")
-    Relaunch.arm(ctx, 2_000L)
-    try { ctx.startActivity(Intent(ctx, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
-    catch (e: Exception) { Log.w("StarView/Update", "reopen: $e") }
+    Log.w("StarView/Update", "updated to ${AppUpdate.installed(ctx)}: opening StarView")
+    val app = ctx.applicationContext
+    // 2.85.10: Android (2.85.9 on the tablet) doesn't let an app in the background open its screen, and the alarm didn't
+    // either. An app allowed to "display over other apps" may, while one of its windows is on screen (Android 15+): a
+    // 1-pixel see-through window for a few seconds, then the driving screen. The comma can allow it over adb.
+    val pending = goAsync()
+    val main = Handler(Looper.getMainLooper())
+    val wm = app.getSystemService(android.view.WindowManager::class.java)
+    var dot: android.view.View? = null
+    if (Overlay.allowed(app)) {
+      try {
+        val v = android.view.View(app)
+        val lp = android.view.WindowManager.LayoutParams(1, 1, android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+          android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+          android.graphics.PixelFormat.TRANSLUCENT)
+        lp.gravity = android.view.Gravity.TOP or android.view.Gravity.START
+        wm.addView(v, lp); dot = v
+      } catch (e: Exception) { Log.w("StarView/Update", "reopen window: $e") }
+    } else Log.w("StarView/Update", "reopen: 'display over other apps' not allowed - StarView may stay closed")
+    Relaunch.arm(app, 2_500L)
+    main.postDelayed({
+      try { app.startActivity(Intent(app, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+      catch (e: Exception) { Log.w("StarView/Update", "reopen: $e") }
+    }, 500L)
+    main.postDelayed({
+      dot?.let { try { wm.removeView(it) } catch (e: Exception) {} }
+      pending.finish()
+    }, 4_000L)
+  }
+}
+
+/** "Display over other apps" for StarView: what lets it open its screen again after it updated itself. */
+object Overlay {
+  fun allowed(ctx: Context): Boolean = Build.VERSION.SDK_INT < 23 || android.provider.Settings.canDrawOverlays(ctx)
+  fun ask(ctx: Context) {
+    try {
+      ctx.startActivity(Intent(android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+        android.net.Uri.parse("package:" + ctx.packageName)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    } catch (e: Exception) { Log.w("StarView/Update", "overlay settings: $e") }
   }
 }
 
