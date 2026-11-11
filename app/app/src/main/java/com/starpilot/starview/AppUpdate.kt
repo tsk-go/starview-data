@@ -69,7 +69,7 @@ object AppUpdate {
           if (rel.version == tried && now - triedAt < 30 * 60_000L) continue   // one try per version per half hour
           tried = rel.version; triedAt = now
           Log.i(TAG, "auto: installing ${rel.version}")
-          main.post { Toast.makeText(app, "Updating StarView to ${rel.version} - it restarts in a few seconds", Toast.LENGTH_LONG).show() }
+          if (inFront()) main.post { Toast.makeText(app, "Updating StarView to ${rel.version} - it restarts in a few seconds", Toast.LENGTH_LONG).show() }
           install(app, rel) { msg, failed -> if (failed) Log.w(TAG, "auto: $msg") }
         } catch (e: RateLimited) {
           wait = 15 * 60_000L
@@ -81,6 +81,13 @@ object AppUpdate {
   }
 
   private class RateLimited : RuntimeException()
+
+  /** StarView is what's on screen (one of its activities visible), not just running behind another app. */
+  fun inFront(): Boolean = try {
+    val i = android.app.ActivityManager.RunningAppProcessInfo()
+    android.app.ActivityManager.getMyMemoryState(i)
+    i.importance == android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+  } catch (e: Exception) { true }
 
   /** The newest app release, asked with the last ETag: the same release again when GitHub says "not modified". */
   private fun latestIfChanged(): Release? {
@@ -202,7 +209,9 @@ object AppUpdate {
           apk.inputStream().use { inp -> s.openWrite("base.apk", 0, apk.length()).use { out -> inp.copyTo(out, 256 * 1024); s.fsync(out) } }
           val flags = PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_MUTABLE else 0)
           val cb = PendingIntent.getBroadcast(app, id, Intent(app, AppUpdateReceiver::class.java), flags)
-          Relaunch.arm(app, 45_000L)      // a last resort if nothing else opens StarView after the install
+          // 2.85.12: reopened only if StarView was on screen - updating while another app is in front (or the screen is
+          // off) stays quiet: no StarView popping up over it; the next open (or the comma at car on) shows the new one
+          if (inFront()) Relaunch.arm(app, 45_000L) else Relaunch.cancel(app)
           s.commit(cb.intentSender)
         }
         main.post { status("Installing - StarView closes and opens again as ${rel.version}.", false) }
