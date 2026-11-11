@@ -294,6 +294,7 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
   @JvmField var light = false
   /** 2.85.8: the owner's zoom from the screen editor (1 = ~180 m ahead in town); set by HudLayout.apply. */
   @JvmField var zoom = 1f
+  private var shownZoom = 1f
 
   /** A street on screen: x0, y0, x1, y1, ... */
   private class Street(val pts: FloatArray, val name: String, val major: Boolean)
@@ -311,7 +312,9 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
     if (!::t.isInitialized) return
     // redraw 5x a second while it is on screen (also while there is no position yet)
     removeCallbacks(redraw)
-    if (visibility == VISIBLE && !NavOverlay.editing) postDelayed(redraw, 200)
+    // 2.85.9: also while the screen editor is open (slower) - it used to stop then and never start again after Done,
+    // so a new zoom only showed once something else redrew the map (opening the full map, restarting the app)
+    if (visibility == VISIBLE) postDelayed(redraw, if (NavOverlay.editing) 500L else 200L)
     val w = width.toFloat(); val h = height.toFloat()
     if (w <= 0f || h <= 0f) return
     // 2.85.8: the map's scale no longer follows the box: width and height are set on their own and only show more or less
@@ -329,6 +332,7 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
       // the view shows ~200 m ahead in town, up to ~700 m at highway speed
       val ahead = (180.0 + t.vEgo * 10.0).coerceIn(180.0, 700.0)
       val target = (177f * u * zoom / ahead).toFloat()   // px per metre: 1 dp per metre in town at zoom 1, the owner's zoom on top
+      if (zoom != shownZoom) { shownZoom = zoom; scale = Float.NaN }   // a new zoom from the editor shows at once, not eased
       scale = if (scale.isNaN()) target else scale + (target - scale) * 0.15f
       val k = scale
       fun sx(de: Double, dn: Double) = cx + ((de * cb - dn * sb) * k).toFloat()

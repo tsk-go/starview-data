@@ -7608,6 +7608,10 @@ public final class MainActivity extends AppCompatActivity {
         frameLayout.removeView(ed);
         this.hudEditor = null;
         NavOverlay.editing = false;
+        // 2.85.9: redraw the see-through map now with its new size / zoom (and restart its 5x-a-second redraw)
+        if (this.navMap != null) {
+            this.navMap.invalidate();
+        }
         if (this.backupArmed) {
             SettingsBackup.INSTANCE.auto(this);
         }
