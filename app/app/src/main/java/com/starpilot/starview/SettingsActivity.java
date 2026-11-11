@@ -11000,6 +11000,16 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         techStreamPage$load(this$0, $h, $w);
     }
 
+    /** Hybrid build (app/hybrid/patches.py): Settings > Tablet > About, right after the version row (2.84.1's code
+     *  calls it). 2.84.2: Check for updates, and the automatic updates switch. */
+    final void hybAboutRows(LinearLayout col) {
+        CarUi u = this.ui;
+        if (u == null) {
+            return;
+        }
+        col.addView(AppUpdateKt.appUpdateRow(this, u), CarUi.lp$default(u, 0, 0, 3, null));
+    }
+
     private final View tabletAboutPage() {
         String v;
         CarUi carUi;
@@ -11027,7 +11037,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi4 = null;
         }
         col.addView(linearLayout, CarUi.lp$default(carUi4, 0, 0, 3, null));
-        col.addView(AppUpdateKt.appUpdateRow(this, carUi4), CarUi.lp$default(carUi4, 0, 0, 3, null));
+        hybAboutRows(col);
         CarUi carUi5 = this.ui;
         if (carUi5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");

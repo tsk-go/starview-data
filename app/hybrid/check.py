@@ -181,6 +181,10 @@ def main(root):
           errors.append(f"static call to instance method {c.name}->{what} (used in {where})")
         if op in ("virtual", "interface", "direct") and "static" in flags:
           errors.append(f"instance call to static method {c.name}->{what} (used in {where})")
+        if op == "direct" and not what.startswith("<init>") and "private" not in flags:
+          errors.append(f"invoke-direct on non-private method {c.name}->{what} (used in {where})")
+        if op in ("virtual", "interface") and "private" in flags:
+          errors.append(f"invoke-{op} on private method {c.name}->{what} (used in {where})")
         oc = CLS[owner]
         if op == "interface" and "interface" not in oc.flags:
           errors.append(f"invoke-interface on class {owner}->{what} (used in {where})")
@@ -195,6 +199,8 @@ def main(root):
         if not accessible(ref_cls, c, flags):
           errors.append(f"not accessible: {' '.join(flags)} {c.name}->{what[0]} (used in {where})")
         static_op = op.startswith("s")
+        if "put" in op and "final" in flags and ref_cls != c.name:
+          errors.append(f"{op} to final field {c.name}->{what[0]} from another class (used in {where})")
         if static_op != ("static" in flags):
           errors.append(f"{op} on {'static' if 'static' in flags else 'instance'} field {c.name}->{what[0]} (used in {where})")
   # every concrete app class implements every abstract method of its supertypes

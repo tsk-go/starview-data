@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Hybrid StarView APK: 2.84.1's own compiled code for every class we didn't change on purpose, our build for the rest
-# (see merge.py for why). Resources, manifest, native libraries and assets stay exactly as Gradle built them; only
+# Hybrid StarView APK: 2.84.1's own compiled code for every class and method we didn't change on purpose, our build
+# for the rest (see merge.py, methodmerge.py and decisions.py for why). Resources, manifest, native libraries and assets stay exactly as Gradle built them; only
 # the classes*.dex files are replaced. The result still has to be signed (apksigner).
 #
 #   build.sh GRADLE_APK BASE_APK APKTOOL_JAR OUT_APK
@@ -17,9 +17,11 @@ trap 'rm -rf "$w"' EXIT
 
 java -jar "$apktool" d -r -f -o "$w/o" "$base_apk" >/dev/null
 java -jar "$apktool" d -r -f -o "$w/r" "$gradle_apk" >/dev/null
+python3 "$here/guard.py" "$w/r"                   # every change since the recovery ships (run from the repo root)
 python3 "$here/merge.py" "$w/o" "$w/r" "$w/m"
 python3 "$here/check.py" "$w/m" | tail -40        # prints every problem; exit code below
 python3 "$here/check.py" "$w/m" >/dev/null || { echo "hybrid: link check failed" >&2; exit 1; }
+python3 "$here/verify.py" "$w/o" "$w/m" || { echo "hybrid: register check failed" >&2; exit 1; }
 
 cp -r "$w/r" "$w/b"
 rm -rf "$w"/b/smali*
