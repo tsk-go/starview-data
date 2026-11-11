@@ -40,20 +40,22 @@ object NavOverlay {
   const val LANES_SHOW_M = 800.0
   const val FAR_TURN_M = 1500.0
 
-  val BG = Color.argb(245, 15, 13, 23)
-  val BORDER = Color.argb(190, 160, 126, 220)
-  val SUB = Color.rgb(222, 214, 244)
-  val TRIP = Color.rgb(214, 210, 226)
-  val ETA = Color.rgb(235, 225, 255)
-  val TRACK = Color.argb(60, 160, 126, 220)
-  val FILL = Color.rgb(178, 150, 255)
-  val CHIP = Color.rgb(44, 37, 70)
-  val CHIP_TEXT = Color.rgb(199, 174, 247)
-  val LANE_ON = Color.rgb(78, 62, 128)
-  val LANE_OFF = Color.rgb(34, 30, 46)
-  val LANE_DIM = Color.rgb(112, 104, 134)
-  val ROUTE = Color.rgb(164, 139, 255)
-  val ROUTE_CASE = Color.argb(165, 30, 18, 60)
+  // 2.85.5: classic and clean (neutral dark card, white text, the usual navigation blue) instead of StarPort's purple
+  val BG = Color.argb(240, 18, 19, 22)
+  val BORDER = Color.argb(60, 255, 255, 255)
+  val SUB = Color.rgb(228, 230, 235)
+  val TRIP = Color.rgb(200, 203, 210)
+  val ETA = Color.WHITE
+  val TRACK = Color.argb(40, 255, 255, 255)
+  val FILL = Color.rgb(66, 133, 244)
+  val CHIP = Color.argb(34, 255, 255, 255)
+  val CHIP_TEXT = Color.rgb(228, 230, 235)
+  val LANE_ON = Color.argb(70, 255, 255, 255)
+  val LANE_OFF = Color.argb(18, 255, 255, 255)
+  val LANE_DIM = Color.rgb(120, 124, 132)
+  val ROUTE = Color.rgb(66, 133, 244)
+  val ROUTE_CASE = Color.argb(200, 13, 60, 140)
+  val CAR = Color.rgb(66, 133, 244)
 
   /** A lane arrow from the route ("slight right") as NavIcons' modifier ("slightRight"). */
   fun laneModifier(a: String): String = when (a) {
@@ -117,6 +119,8 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
   var collapsed = false
   private val p = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
   private val dim = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply { colorFilter = PorterDuffColorFilter(NavOverlay.LANE_DIM, PorterDuff.Mode.SRC_IN) }
+  /** Icons at full strength, whatever the last shape's color was (they used to take its transparency). */
+  private val ip = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
   private val tp = Paint(Paint.ANTI_ALIAS_FLAG)
   private val rect = RectF()
   private var totalKey = ""
@@ -138,7 +142,7 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
     p.style = Paint.Style.FILL; p.color = NavOverlay.BG
     rect.set(u, u, w - u, h - u)
     c.drawRoundRect(rect, 18 * u, 18 * u, p)
-    p.style = Paint.Style.STROKE; p.strokeWidth = 2 * u; p.color = NavOverlay.BORDER
+    p.style = Paint.Style.STROKE; p.strokeWidth = 1.5f * u; p.color = NavOverlay.BORDER
     c.drawRoundRect(rect, 18 * u, 18 * u, p)
     p.style = Paint.Style.FILL
 
@@ -159,7 +163,7 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
     if (lanes == null) {
       icon(if (arrived) "arrive" else type, if (arrived) "" else mod)?.let {
         rect.set(pad, (header - iconS) / 2 + 2 * u, pad + iconS, (header + iconS) / 2 + 2 * u)
-        c.drawBitmap(it, null, rect, p)
+        c.drawBitmap(it, null, rect, ip)
       }
     }
     val x = if (lanes != null) pad + 2 * u else pad + iconS + 14 * u
@@ -224,7 +228,7 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
     rect.set(x, y, x + lw + s + 26 * u, y + 28 * u)
     p.color = NavOverlay.CHIP; c.drawRoundRect(rect, 14 * u, 14 * u, p)
     tp.color = NavOverlay.CHIP_TEXT; c.drawText("Then", x + 12 * u, y + 19.5f * u, tp)
-    icon(type, mod)?.let { rect.set(x + lw + 18 * u, y + 4 * u, x + lw + 18 * u + s, y + 4 * u + s); c.drawBitmap(it, null, rect, p) }
+    icon(type, mod)?.let { rect.set(x + lw + 18 * u, y + 4 * u, x + lw + 18 * u + s, y + 4 * u + s); c.drawBitmap(it, null, rect, ip) }
   }
 
   /** One cell per lane with its arrow: the lanes to be in lit, the others dim. */
@@ -242,7 +246,7 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
       val dir = if (lane.ok && lane.use.isNotEmpty()) lane.use else lane.arrows.firstOrNull() ?: "straight"
       icon("turn", NavOverlay.laneModifier(dir))?.let {
         rect.set(x + (cell - s) / 2, top + (height - s) / 2, x + (cell + s) / 2, top + (height + s) / 2)
-        c.drawBitmap(it, null, rect, if (lane.ok) p else dim)
+        c.drawBitmap(it, null, rect, if (lane.ok) ip else dim)
       }
       x += cell + gap
     }
@@ -489,7 +493,7 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
   }
 
   private fun car(c: Canvas, cx: Float, cy: Float, u: Float) {
-    fill.style = Paint.Style.FILL; fill.color = Color.argb(235, 74, 92, 214)
+    fill.style = Paint.Style.FILL; fill.color = NavOverlay.CAR
     c.drawCircle(cx, cy, 14 * u, fill)
     fill.style = Paint.Style.STROKE; fill.strokeWidth = 1.5f * u; fill.color = Color.argb(215, 255, 255, 255)
     c.drawCircle(cx, cy, 14 * u, fill)
