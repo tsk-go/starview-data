@@ -7,6 +7,10 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.PorterDuffXfermode
+import android.graphics.LinearGradient
+import android.graphics.PathMeasure
+import android.graphics.Shader
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.util.AttributeSet
@@ -261,7 +265,11 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
   }
 }
 
-/** The see-through map (HUD widget "navMap"): street lines from the tablet's offline map and the route, heading up. */
+/**
+ * The see-through map (HUD widget "navMap"), heading up: street lines from the tablet's offline map and the route on a
+ * faint shade whose edges fade out (no frame), street names written along the streets - like StarPort's map and
+ * Tesla's corner map.
+ */
 class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
   lateinit var t: Telemetry
   private val d = resources.displayMetrics.density
@@ -269,15 +277,25 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
   private val route = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND }
   private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
   private val label = Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 11.5f * resources.displayMetrics.density; typeface = Typeface.DEFAULT_BOLD }
+  private val fade = Paint(Paint.ANTI_ALIAS_FLAG).apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN) }
   private val path = Path()
+  private val measure = PathMeasure()
   private val labelBoxes = ArrayList<RectF>()
   private var scale = Float.NaN          // px per metre, eased toward the speed's zoom
   private val redraw = Runnable { invalidate() }   // one pending redraw at most
+  private var fadeX: LinearGradient? = null
+  private var fadeY: LinearGradient? = null
+  private var fadeFor = 0L
+
+  /** A street on screen: x0, y0, x1, y1, ... */
+  private class Street(val pts: FloatArray, val name: String, val major: Boolean)
+  private val streets = ArrayList<Street>()
 
   private companion object {
     const val EARTH = 40075016.686
     val SKIP = setOf("sidewalk", "footway", "cycleway", "path", "steps", "pedestrian", "track", "bridleway", "corridor")
     val MAJOR = setOf("motorway", "trunk", "primary", "secondary", "motorway_link", "trunk_link", "primary_link")
+    val SHADE = Color.argb(120, 10, 14, 22)
   }
 
   override fun onDraw(c: Canvas) {
@@ -288,91 +306,186 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
     val w = width.toFloat(); val h = height.toFloat()
     if (w <= 0f || h <= 0f) return
     val u = h / 250f                                  // 1 dp at the default 250 dp height (the editor scales the view)
-    val cx = w / 2; val cy = h * 0.82f
+    val cx = w / 2; val cy = h * 0.74f
+    streets.clear()
+    var routePts: FloatArray? = null
     val lat = NavPos.lat(t); val lon = NavPos.lon(t)
     if (lat.isNaN() || lon.isNaN() || (lat == 0.0 && lon == 0.0)) {
-      if (NavOverlay.editing) sample(c, w, h, u)
-      return
-    }
-    val b = Math.toRadians(NavPos.bearing(t).toDouble())
-    val cb = cos(b); val sb = sin(b)
-    // the view shows ~200 m ahead in town, up to ~700 m at highway speed
-    val ahead = (180.0 + t.vEgo * 10.0).coerceIn(180.0, 700.0)
-    val target = ((cy - 8 * u) / ahead).toFloat()
-    scale = if (scale.isNaN()) target else scale + (target - scale) * 0.15f
-    val k = scale
-    fun sx(de: Double, dn: Double) = cx + ((de * cb - dn * sb) * k).toFloat()
-    fun sy(de: Double, dn: Double) = cy - ((de * sb + dn * cb) * k).toFloat()
-    val reach = hypot(w.toDouble(), h.toDouble()) / k
+      if (!NavOverlay.editing) return
+      routePts = sample(w, h, cx, cy)
+    } else {
+      val b = Math.toRadians(NavPos.bearing(t).toDouble())
+      val cb = cos(b); val sb = sin(b)
+      // the view shows ~200 m ahead in town, up to ~700 m at highway speed
+      val ahead = (180.0 + t.vEgo * 10.0).coerceIn(180.0, 700.0)
+      val target = ((cy - 8 * u) / ahead).toFloat()
+      scale = if (scale.isNaN()) target else scale + (target - scale) * 0.15f
+      val k = scale
+      fun sx(de: Double, dn: Double) = cx + ((de * cb - dn * sb) * k).toFloat()
+      fun sy(de: Double, dn: Double) = cy - ((de * sb + dn * cb) * k).toFloat()
+      val reach = hypot(w.toDouble(), h.toDouble()) / k
 
-    // streets
-    val osm = OsmRoads.INSTANCE
-    val local = osm.toLocal(lat, lon)
-    val e0 = local.first; val n0 = local.second
-    labelBoxes.clear()
-    if (!e0.isNaN() && !n0.isNaN()) {
-      val ways = osm.near(e0, n0, reach).filter { it.kind !in SKIP }
-      for (pass in 0..1) {                                       // dark edge first, then the line, so crossings stay clean
-        for (way in ways) {
-          val e = way.e; val n = way.n
-          if (e.size < 2) continue
-          path.rewind()
-          for (i in e.indices) {
-            val px = sx(e[i] - e0, n[i] - n0); val py = sy(e[i] - e0, n[i] - n0)
-            if (i == 0) path.moveTo(px, py) else path.lineTo(px, py)
-          }
-          val major = way.highway || way.kind in MAJOR
-          if (pass == 0) { road.color = Color.argb(95, 0, 0, 0); road.strokeWidth = (if (major) 6f else 4.5f) * u }
-          else { road.color = Color.argb(if (major) 175 else 135, 255, 255, 255); road.strokeWidth = (if (major) 2.6f else 1.6f) * u }
-          c.drawPath(path, road)
+      // streets from the offline map
+      val osm = OsmRoads.INSTANCE
+      val local = osm.toLocal(lat, lon)
+      val e0 = local.first; val n0 = local.second
+      if (!e0.isNaN() && !n0.isNaN()) {
+        for (way in osm.near(e0, n0, reach)) {
+          if (way.kind in SKIP || way.e.size < 2) continue
+          val pts = FloatArray(way.e.size * 2)
+          for (i in way.e.indices) { pts[2 * i] = sx(way.e[i] - e0, way.n[i] - n0); pts[2 * i + 1] = sy(way.e[i] - e0, way.n[i] - n0) }
+          streets.add(Street(pts, way.name, way.highway || way.kind in MAJOR))
         }
       }
-      // names: one per street, near the car but not on it, never overlapping
-      for (way in ways.sortedByDescending { it.highway || it.kind in MAJOR }) {
-        if (labelBoxes.size >= 6 || way.name.isEmpty()) continue
-        var best = -1; var bestD = Double.MAX_VALUE
-        for (i in way.e.indices) {
-          val px = sx(way.e[i] - e0, way.n[i] - n0); val py = sy(way.e[i] - e0, way.n[i] - n0)
-          if (px < 30 * u || px > w - 30 * u || py < 14 * u || py > h - 14 * u) continue
-          val dd = hypot((px - cx).toDouble(), (py - cy).toDouble())
-          if (dd < 40 * u) continue
-          if (dd < bestD) { bestD = dd; best = i }
+
+      // the route still ahead, from the tablet's copy of it
+      val line = if (Nav.INSTANCE.active) Nav.INSTANCE.line else null
+      if (line != null && line.size >= 2) {
+        val m = EARTH * cos(Math.toRadians(lat))
+        val mx0 = Nav.INSTANCE.mercX(lon); val my0 = Nav.INSTANCE.mercY(lat)
+        val along = Nav.INSTANCE.along
+        val i0 = if (along.isNaN() || along.isInfinite()) 0 else line.indexAt(along).coerceIn(0, line.size - 1)
+        val stop = (if (along.isNaN()) 0.0 else along) + reach * 1.5
+        val out = ArrayList<Float>()
+        out.add(cx); out.add(cy)
+        var i = max(i0, 1)
+        while (i < line.size) {
+          val de = (line.mx[i] - mx0) * m; val dn = -(line.my[i] - my0) * m
+          out.add(sx(de, dn)); out.add(sy(de, dn))
+          if (line.cum[i] > stop) break
+          i++
         }
-        if (best < 0) continue
-        val px = sx(way.e[best] - e0, way.n[best] - n0); val py = sy(way.e[best] - e0, way.n[best] - n0)
-        val tw = label.measureText(way.name)
-        val box = RectF(px - tw / 2 - 3 * u, py - 12 * u, px + tw / 2 + 3 * u, py + 3 * u)
-        if (box.left < 0 || box.right > w || labelBoxes.any { RectF.intersects(it, box) }) continue
-        labelBoxes.add(box)
-        label.style = Paint.Style.STROKE; label.strokeWidth = 3 * u; label.color = Color.argb(160, 0, 0, 0)
-        c.drawText(way.name, px - tw / 2, py, label)
-        label.style = Paint.Style.FILL; label.color = Color.argb(215, 255, 255, 255)
-        c.drawText(way.name, px - tw / 2, py, label)
+        routePts = out.toFloatArray()
       }
     }
+    paint(c, w, h, u, cx, cy, routePts)
+  }
 
-    // the route still ahead, from the tablet's copy of it
-    val line = if (Nav.INSTANCE.active) Nav.INSTANCE.line else null
-    if (line != null && line.size >= 2) {
-      val m = EARTH * cos(Math.toRadians(lat))
-      val mx0 = Nav.INSTANCE.mercX(lon); val my0 = Nav.INSTANCE.mercY(lat)
-      val along = Nav.INSTANCE.along
-      val i0 = if (along.isNaN() || along.isInfinite()) 0 else line.indexAt(along).coerceIn(0, line.size - 1)
-      val stop = (if (along.isNaN()) 0.0 else along) + reach * 1.5
-      path.rewind()
-      path.moveTo(cx, cy)
-      var i = max(i0, 1)
-      while (i < line.size) {
-        val de = (line.mx[i] - mx0) * m; val dn = -(line.my[i] - my0) * m
-        path.lineTo(sx(de, dn), sy(de, dn))
-        if (line.cum[i] > stop) break
-        i++
+  private fun pathOf(pts: FloatArray) {
+    path.rewind()
+    path.moveTo(pts[0], pts[1])
+    var i = 2
+    while (i + 1 < pts.size) { path.lineTo(pts[i], pts[i + 1]); i += 2 }
+  }
+
+  private fun paint(c: Canvas, w: Float, h: Float, u: Float, cx: Float, cy: Float, routePts: FloatArray?) {
+    val layer = c.saveLayer(0f, 0f, w, h, null)
+    fill.style = Paint.Style.FILL; fill.color = SHADE
+    c.drawRect(0f, 0f, w, h, fill)
+    for (pass in 0..1) {                                         // dark edge first, then the line, so crossings stay clean
+      for (s in streets) {
+        pathOf(s.pts)
+        if (pass == 0) { road.color = Color.argb(80, 0, 0, 0); road.strokeWidth = (if (s.major) 6f else 4.5f) * u }
+        else { road.color = Color.argb(if (s.major) 185 else 140, 255, 255, 255); road.strokeWidth = (if (s.major) 2.6f else 1.6f) * u }
+        c.drawPath(path, road)
       }
+    }
+    labels(c, w, h, u, cx, cy, routePts)
+    if (routePts != null && routePts.size >= 4) {
+      pathOf(routePts)
       route.color = NavOverlay.ROUTE_CASE; route.strokeWidth = 9 * u; c.drawPath(path, route)
       route.color = NavOverlay.ROUTE; route.strokeWidth = 5 * u; c.drawPath(path, route)
     }
-
     car(c, cx, cy, u)
+    // fade every edge out: the shade, the streets and the names melt into the road view
+    val key = (w.toLong() shl 32) or h.toLong()
+    if (fadeX == null || fadeFor != key) {
+      fadeFor = key
+      val clear = Color.argb(0, 0, 0, 0); val full = Color.argb(255, 0, 0, 0)
+      fadeX = LinearGradient(0f, 0f, w, 0f, intArrayOf(clear, full, full, clear), floatArrayOf(0f, 0.17f, 0.83f, 1f), Shader.TileMode.CLAMP)
+      fadeY = LinearGradient(0f, 0f, 0f, h, intArrayOf(clear, full, full, clear), floatArrayOf(0f, 0.2f, 0.86f, 1f), Shader.TileMode.CLAMP)
+    }
+    fade.shader = fadeX; c.drawRect(0f, 0f, w, h, fade)
+    fade.shader = fadeY; c.drawRect(0f, 0f, w, h, fade)
+    c.restoreToCount(layer)
+  }
+
+  /**
+   * Street names written along their street (kept upright), where the street runs longest inside the clear middle of
+   * the view; one per name, never over another name or the car.
+   */
+  private fun labels(c: Canvas, w: Float, h: Float, u: Float, cx: Float, cy: Float, routePts: FloatArray?) {
+    labelBoxes.clear()
+    val done = HashSet<String>()
+    val l = w * 0.14f; val r = w * 0.86f; val top = h * 0.16f; val bot = h * 0.9f
+    val run = ArrayList<Float>(); val best = ArrayList<Float>()
+    val pos = FloatArray(2)
+    for (s in streets.sortedByDescending { it.major }) {
+      if (labelBoxes.size >= 7 || s.name.isEmpty() || s.name in done) continue
+      // the longest stretch of the street inside the clear middle (each segment clipped to it)
+      run.clear(); best.clear(); var runLen = 0f; var bestLen = 0f
+      val p = s.pts
+      var i = 0
+      while (i + 3 < p.size) {
+        val seg = clip(p[i], p[i + 1], p[i + 2], p[i + 3], l, top, r, bot)
+        if (seg == null) {
+          run.clear(); runLen = 0f
+        } else {
+          val joined = run.size >= 2 && abs(run[run.size - 2] - seg[0]) < 0.5f && abs(run[run.size - 1] - seg[1]) < 0.5f
+          if (!joined) { run.clear(); runLen = 0f; run.add(seg[0]); run.add(seg[1]) }
+          run.add(seg[2]); run.add(seg[3]); runLen += hypot(seg[2] - seg[0], seg[3] - seg[1])
+          if (runLen > bestLen) { bestLen = runLen; best.clear(); best.addAll(run) }
+        }
+        i += 2
+      }
+      val tw = label.measureText(s.name)
+      if (best.size < 4 || bestLen < tw + 14 * u) continue
+      path.rewind()
+      val forward = best[best.size - 2] >= best[0]                // write left to right so the text is upright
+      if (forward) { path.moveTo(best[0], best[1]); var j = 2; while (j + 1 < best.size) { path.lineTo(best[j], best[j + 1]); j += 2 } }
+      else { path.moveTo(best[best.size - 2], best[best.size - 1]); var j = best.size - 4; while (j >= 0) { path.lineTo(best[j], best[j + 1]); j -= 2 } }
+      measure.setPath(path, false)
+      val len = measure.length
+      // the middle of the stretch first, then toward either end: the first spot that is clear
+      var off = -1f; var box: RectF? = null
+      for (f in floatArrayOf(0.5f, 0.3f, 0.7f, 0.15f, 0.85f)) {
+        val o = (len * f - tw / 2).coerceIn(0f, len - tw)
+        var x0 = Float.MAX_VALUE; var y0 = Float.MAX_VALUE; var x1 = -Float.MAX_VALUE; var y1 = -Float.MAX_VALUE
+        for (q in 0..4) {
+          measure.getPosTan(o + tw * q / 4f, pos, null)
+          x0 = min(x0, pos[0]); y0 = min(y0, pos[1]); x1 = max(x1, pos[0]); y1 = max(y1, pos[1])
+        }
+        val b = RectF(x0 - 9 * u, y0 - 9 * u, x1 + 9 * u, y1 + 9 * u)
+        if (labelBoxes.any { RectF.intersects(it, b) }) continue
+        if (b.contains(cx, cy) || hypot(b.centerX() - cx, b.centerY() - cy) < 30 * u) continue
+        if (routePts != null && crosses(routePts, b)) continue      // never over the route
+        off = o; box = b; break
+      }
+      if (box == null) continue
+      labelBoxes.add(box); done.add(s.name)
+      val v = label.textSize * 0.36f                              // the text's middle on the street
+      label.style = Paint.Style.STROKE; label.strokeWidth = 3.2f * u; label.color = Color.argb(175, 8, 10, 16)
+      c.drawTextOnPath(s.name, path, off, v, label)
+      label.style = Paint.Style.FILL; label.color = Color.argb(235, 255, 255, 255)
+      c.drawTextOnPath(s.name, path, off, v, label)
+    }
+  }
+
+  /** Whether the polyline passes through the box. */
+  private fun crosses(pts: FloatArray, box: RectF): Boolean {
+    var i = 0
+    while (i + 3 < pts.size) {
+      if (clip(pts[i], pts[i + 1], pts[i + 2], pts[i + 3], box.left, box.top, box.right, box.bottom) != null) return true
+      i += 2
+    }
+    return false
+  }
+
+  /** The part of the segment inside the rectangle (Liang-Barsky), or null. */
+  private fun clip(x0: Float, y0: Float, x1: Float, y1: Float, l: Float, t: Float, r: Float, b: Float): FloatArray? {
+    var t0 = 0f; var t1 = 1f
+    val dx = x1 - x0; val dy = y1 - y0
+    val ps = floatArrayOf(-dx, dx, -dy, dy); val qs = floatArrayOf(x0 - l, r - x0, y0 - t, b - y0)
+    for (k in 0..3) {
+      val pk = ps[k]; val qk = qs[k]
+      if (pk == 0f) { if (qk < 0f) return null }
+      else {
+        val tt = qk / pk
+        if (pk < 0f) { if (tt > t1) return null; if (tt > t0) t0 = tt } else { if (tt < t0) return null; if (tt < t1) t1 = tt }
+      }
+    }
+    if (t1 - t0 < 1e-4f) return null
+    return floatArrayOf(x0 + t0 * dx, y0 + t0 * dy, x0 + t1 * dx, y0 + t1 * dy)
   }
 
   private fun car(c: Canvas, cx: Float, cy: Float, u: Float) {
@@ -386,22 +499,17 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
     c.drawPath(path, fill)
   }
 
-  /** What the widget looks like, for the screen editor when there is no position yet. */
-  private fun sample(c: Canvas, w: Float, h: Float, u: Float) {
-    val cx = w / 2; val cy = h * 0.82f
-    for (pass in 0..1) {
-      road.color = if (pass == 0) Color.argb(95, 0, 0, 0) else Color.argb(150, 255, 255, 255)
-      road.strokeWidth = (if (pass == 0) 4.5f else 1.8f) * u
-      c.drawLine(cx, 0f, cx, h, road)
-      c.drawLine(w * 0.04f, h * 0.26f, w * 0.96f, h * 0.26f, road)
-      c.drawLine(w * 0.08f, h * 0.62f, w * 0.92f, h * 0.62f, road)
-      c.drawLine(w * 0.25f, h * 0.05f, w * 0.25f, h * 0.95f, road)
-      c.drawLine(w * 0.77f, 0f, w * 0.77f, h * 0.9f, road)
-    }
-    path.rewind()
-    path.moveTo(cx, cy); path.lineTo(cx, h * 0.26f + 14 * u); path.quadTo(cx, h * 0.26f, cx + 14 * u, h * 0.26f); path.lineTo(w, h * 0.26f)
-    route.color = NavOverlay.ROUTE_CASE; route.strokeWidth = 9 * u; c.drawPath(path, route)
-    route.color = NavOverlay.ROUTE; route.strokeWidth = 5 * u; c.drawPath(path, route)
-    car(c, cx, cy, u)
+  /** What the widget looks like, for the screen editor when there is no position yet: a few named streets and a route. */
+  private fun sample(w: Float, h: Float, cx: Float, cy: Float): FloatArray {
+    fun st(name: String, major: Boolean, vararg xy: Float) { val a = FloatArray(xy.size); for (i in xy.indices) a[i] = if (i % 2 == 0) xy[i] * w else xy[i] * h; streets.add(Street(a, name, major)) }
+    st("Ocean Parkway", true, 0.5f, 1.1f, 0.5f, -0.1f)
+    st("Avenue R", false, -0.1f, 0.38f, 1.1f, 0.42f)
+    st("Avenue S", false, -0.1f, 0.6f, 1.1f, 0.64f)
+    st("Avenue P", false, -0.1f, 0.12f, 1.1f, 0.15f)
+    st("East 5th Street", false, 0.22f, 1.1f, 0.3f, -0.1f)
+    st("East 7th Street", false, 0.76f, 1.1f, 0.7f, -0.1f)
+    st("", false, 0.05f, 0.86f, 0.36f, 0.88f)
+    val ty = 0.4f * h
+    return floatArrayOf(cx, cy, cx, ty + 10 * (h / 250f), cx + 10 * (h / 250f), ty + 0.33f * (h / 250f), w * 1.05f, 0.42f * h + 0.5f)
   }
 }
