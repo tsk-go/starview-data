@@ -160,7 +160,7 @@ public final class MainActivity extends AppCompatActivity {
     private HudLayout hud;
     HudEditor hudEditor;
     private Boolean hudGrey;
-    private final Map<String, String> hudSettingKeys;
+    private Map<String, String> hudSettingKeys;
     private TextView ideasChip;
     private ImageView ideasDay;
     private long ideasLabelMs;
@@ -443,12 +443,13 @@ public final class MainActivity extends AppCompatActivity {
         this.lastNavDest = "";
         this.lastHomeKey = "";
         this.uiTick = new MainActivity$uiTick$1(this);
-        this.hudSettingKeys = MapsKt.mapOf(TuplesKt.to("speedBox", "show_speed"), TuplesKt.to("maxCard", "show_max"), TuplesKt.to("slc", "speed_limit"), TuplesKt.to("wheel", "wheel_button"), TuplesKt.to("egpu", "egpu_status"), TuplesKt.to("personality", "personality_button"), TuplesKt.to("dm", "dm_icon"), TuplesKt.to("roadName", "road_name"), TuplesKt.to("gauge", "aether_gauge"), TuplesKt.to("navCard", "nav_card"), TuplesKt.to("navMap", "nav_map"), TuplesKt.to("slowCard", "slow_card"), TuplesKt.to("laneCard", "lane_card"), TuplesKt.to("blinkCard", "blink_card"), TuplesKt.to("gpsCard", "gps_card"), TuplesKt.to("nudgeHint", "nudge_hint"), TuplesKt.to("weather", "weather"), TuplesKt.to("compass", "compass"), TuplesKt.to("devMetrics", "dev_metrics"), TuplesKt.to("clock", "clock"), TuplesKt.to("modeText", "mode_text"), TuplesKt.to("devSidebar", "dev_sidebar"), TuplesKt.to("pipLeft", "side_views"), TuplesKt.to("pipRight", "side_views"));
+        this.hudSettingKeys = MapsKt.mapOf(TuplesKt.to("speedBox", "show_speed"), TuplesKt.to("maxCard", "show_max"), TuplesKt.to("slc", "speed_limit"), TuplesKt.to("wheel", "wheel_button"), TuplesKt.to("egpu", "egpu_status"), TuplesKt.to("personality", "personality_button"), TuplesKt.to("dm", "dm_icon"), TuplesKt.to("roadName", "road_name"), TuplesKt.to("gauge", "aether_gauge"), TuplesKt.to("navCard", "nav_card"), TuplesKt.to("slowCard", "slow_card"), TuplesKt.to("laneCard", "lane_card"), TuplesKt.to("blinkCard", "blink_card"), TuplesKt.to("gpsCard", "gps_card"), TuplesKt.to("nudgeHint", "nudge_hint"), TuplesKt.to("weather", "weather"), TuplesKt.to("compass", "compass"), TuplesKt.to("devMetrics", "dev_metrics"), TuplesKt.to("clock", "clock"), TuplesKt.to("modeText", "mode_text"), TuplesKt.to("devSidebar", "dev_sidebar"), TuplesKt.to("pipLeft", "side_views"), TuplesKt.to("pipRight", "side_views"));
         Paint $this$greyPaint_u24lambda_u24228 = new Paint();
         ColorMatrix $this$greyPaint_u24lambda_u24228_u24lambda_u24227 = new ColorMatrix();
         $this$greyPaint_u24lambda_u24228_u24lambda_u24227.setSaturation(0.0f);
         $this$greyPaint_u24lambda_u24228.setColorFilter(new ColorMatrixColorFilter($this$greyPaint_u24lambda_u24228_u24lambda_u24227));
         this.greyPaint = $this$greyPaint_u24lambda_u24228;
+        hybInit();
     }
 
     private final Detector getDetector() {
@@ -605,9 +606,7 @@ public final class MainActivity extends AppCompatActivity {
         Intrinsics.checkNotNullParameter(intent, "intent");
         super.onNewIntent(intent);
         setIntent(intent);
-        if (intent.getBooleanExtra(Relaunch.EXTRA_BACK, false)) {
-            intent.removeExtra(Relaunch.EXTRA_BACK);
-            moveTaskToBack(true);
+        if (hybNewIntent(intent)) {
             return;
         }
         if (intent.getBooleanExtra("open_nav", false)) {
@@ -883,12 +882,7 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         SurfaceView surfaceView;
         super.onCreate(savedInstanceState);
-        // 2.85.12: reopened after an update while another app was in front: start, but stay behind that app
-        if (getIntent() != null && getIntent().getBooleanExtra(Relaunch.EXTRA_BACK, false)) {
-            getIntent().removeExtra(Relaunch.EXTRA_BACK);
-            moveTaskToBack(true);
-            overridePendingTransition(0, 0);
-        }
+        hybCreateEarly();
         boolean freshInstall = savedInstanceState == null && SettingsBackup.INSTANCE.looksFresh(this);
         this.backupArmed = !freshInstall;
         ModelDownload.INSTANCE.detector(this);
@@ -957,10 +951,6 @@ public final class MainActivity extends AppCompatActivity {
         }, new IntentFilter("com.starpilot.starview.TEST_SPEAK"), 2);
         Speech.init$default(Speech.INSTANCE, this, null, 2, null);
         OsmRoads.INSTANCE.init(this);
-        AnrWatch.INSTANCE.start(this);
-        // 2.85.8: StarView is open again after an update it installed itself (cancels the reopen alarms); automatic updates
-        Relaunch.INSTANCE.cancel(this);
-        AppUpdate.INSTANCE.startAuto(this);
         BlinkLog.INSTANCE.init(this);
         MapdMaps.INSTANCE.init(this);
         installCrashLog();
@@ -1074,7 +1064,6 @@ public final class MainActivity extends AppCompatActivity {
         this.hostEdit = (EditText) findViewById(R.id.hostEdit);
         this.gauge = (AetherGaugeView) findViewById(R.id.gauge);
         this.navCard = (NavCardView) findViewById(R.id.navCard);
-        this.navMap = (NavMapView) findViewById(R.id.navMap);
         this.slowCard = (SlowReasonView) findViewById(R.id.slowCard);
         this.laneCard = (LaneCardView) findViewById(R.id.laneCard);
         this.blinkCard = (BlinkerCardView) findViewById(R.id.blinkCard);
@@ -1236,13 +1225,6 @@ public final class MainActivity extends AppCompatActivity {
             navCardView = null;
         }
         navCardView.setT(this.telemetry);
-        this.navMap.setT(this.telemetry);
-        this.navMap.setOnClickListener(new View.OnClickListener() {
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                MainActivity.this.openMap();
-            }
-        });
         SlowReasonView slowReasonView = this.slowCard;
         if (slowReasonView == null) {
             Intrinsics.throwUninitializedPropertyAccessException("slowCard");
@@ -2035,19 +2017,6 @@ public final class MainActivity extends AppCompatActivity {
         $this$onCreate_u24lambda_u24119.topMargin = dp(70);
         Unit unit28 = Unit.INSTANCE;
         frameLayout21.addView(textView11, $this$onCreate_u24lambda_u24119);
-        // 2.85.3: the bottom buttons, the saver pill, the favorites bar and the "why" chip are screen-editor widgets
-        HudLayout hudLate = this.hud;
-        if (hudLate != null) {
-            hudLate.adoptLate(this.sceneBtn, R.id.hudScene);
-            hudLate.adoptLate(this.whereBtn, R.id.hudWhere);
-            hudLate.adoptLate(this.mapBtn, R.id.hudMap);
-            hudLate.adoptLate(this.bookmarkBtn, R.id.hudBookmark);
-            hudLate.adoptLate(this.micBtn, R.id.hudMic);
-            hudLate.adoptLate(this.quickBtn, R.id.hudQuick);
-            hudLate.adoptLate(this.saverPill, R.id.hudSaver);
-            hudLate.adoptLate(this.favBar, R.id.hudFavBar);
-            hudLate.adoptLate(this.ideasChip, R.id.hudIdeas);
-        }
         LinearLayout $this$onCreate_u24lambda_u24127 = new LinearLayout(this);
         int i2 = 0;
         $this$onCreate_u24lambda_u24127.setOrientation(1);
@@ -2155,6 +2124,7 @@ public final class MainActivity extends AppCompatActivity {
         updateTheme();
         this.ui.post(this.uiTick);
         discover();
+        hybCreateLate();
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -6664,6 +6634,7 @@ public final class MainActivity extends AppCompatActivity {
 
     /* VF: from Vineflower (jadx: Type inference failed) */
     private final void setupMapFrame() {
+        hybMapFrame();
         ViewGroup var5 = this.findViewById(16908290);
         FrameLayout var2 = this.root;
         Object var3 = null;
@@ -7055,11 +7026,7 @@ public final class MainActivity extends AppCompatActivity {
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     public final void navTick(long var1) {
         String var19 = null; // declarations Vineflower left out
-        // 2.85.0: the full-screen map would cover the road view's alerts: an orange / red alert closes it
-        Telemetry alertT = this.telemetry;
-        if (this.mapPane != null && getMapOpen() && alertT.getStarted() && !Intrinsics.areEqual(alertT.getAlertSize(), "none") && !Intrinsics.areEqual(alertT.getAlertStatus(), "normal")) {
-            closeMap();
-        }
+        hybNavAlert();
         MapPane var9 = this.mapPane;
         UiSettings var10 = null;
         if (var9 != null && this.getMapOpen()) {
@@ -7073,10 +7040,7 @@ public final class MainActivity extends AppCompatActivity {
             }
 
             Nav.poll$default(var11, var15, false, var1, false, 8, null);
-            if (Nav.INSTANCE.getActive() && this.settings != null) {
-                Telemetry tt = this.telemetry;
-                Nav.INSTANCE.track(NavPos.INSTANCE.lat(tt), NavPos.INSTANCE.lon(tt), tt.getVEgo(), tt.isMetric(), tt.getStarted(), Nav.INSTANCE.voiceMode(this.settings));
-            }
+            hybNavTrack();
         }
 
         MapboxRelay var12 = MapboxRelay.INSTANCE;
@@ -7540,6 +7504,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private final void startHudEdit() {
+        hybEditStart();
         FrameLayout frameLayout;
         HudLayout hudLayout;
         if (this.hudEditor != null) {
@@ -7552,7 +7517,6 @@ public final class MainActivity extends AppCompatActivity {
             linearLayout = null;
         }
         linearLayout.setVisibility(8);
-        NavOverlay.editing = true;
         MainActivity mainActivity = this;
         FrameLayout frameLayout3 = this.root;
         if (frameLayout3 == null) {
@@ -7606,7 +7570,126 @@ public final class MainActivity extends AppCompatActivity {
         return Unit.INSTANCE;
     }
 
+    // ---- Hybrid build (app/hybrid): StarView ships 2.84.1's own compiled code for the methods that call these, with a
+    // few smali lines added to call them (app/hybrid/patches.py). Our source calls them at the same places, so both
+    // builds do the same. Keep them small and self-contained: they are the only code of ours in those methods. ----
+
+    /** End of the constructor: the see-through map is a screen-editor widget with its own setting. */
+    final void hybInit() {
+        this.hudSettingKeys = MapsKt.plus(this.hudSettingKeys, TuplesKt.to("navMap", "nav_map"));
+    }
+
+    /** Right after super.onCreate. 2.85.12: reopened after an update while another app was in front: start, but
+     *  stay behind that app. */
+    final void hybCreateEarly() {
+        Intent in = getIntent();
+        if (in != null && in.getBooleanExtra(Relaunch.EXTRA_BACK, false)) {
+            in.removeExtra(Relaunch.EXTRA_BACK);
+            moveTaskToBack(true);
+            overridePendingTransition(0, 0);
+        }
+    }
+
+    /** End of onCreate (every view exists; the first screen tick runs after this). */
+    final void hybCreateLate() {
+        // 2.85.4: freeze recorder; 2.85.8: StarView is open again after an update it installed itself (cancels the
+        // reopen alarms), automatic updates
+        AnrWatch.INSTANCE.start(this);
+        Relaunch.INSTANCE.cancel(this);
+        AppUpdate.INSTANCE.startAuto(this);
+        // 2.85.0: the see-through map under the turn card; a tap opens the full navigation screen
+        this.navMap = (NavMapView) findViewById(R.id.navMap);
+        if (this.navMap != null) {
+            this.navMap.setT(this.telemetry);
+            this.navMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MainActivity.this.openMap();
+                }
+            });
+        }
+        // 2.85.3: the bottom buttons, the saver pill, the favorites bar and the "why" chip are screen-editor widgets
+        HudLayout hudLate = this.hud;
+        if (hudLate != null) {
+            hudLate.adoptLate(this.sceneBtn, R.id.hudScene);
+            hudLate.adoptLate(this.whereBtn, R.id.hudWhere);
+            hudLate.adoptLate(this.mapBtn, R.id.hudMap);
+            hudLate.adoptLate(this.bookmarkBtn, R.id.hudBookmark);
+            hudLate.adoptLate(this.micBtn, R.id.hudMic);
+            hudLate.adoptLate(this.quickBtn, R.id.hudQuick);
+            hudLate.adoptLate(this.saverPill, R.id.hudSaver);
+            hudLate.adoptLate(this.favBar, R.id.hudFavBar);
+            hudLate.adoptLate(this.ideasChip, R.id.hudIdeas);
+        }
+    }
+
+    /** onNewIntent, after setIntent; true = done (2.85.12: reopened behind another app after an update). */
+    final boolean hybNewIntent(Intent intent) {
+        if (intent.getBooleanExtra(Relaunch.EXTRA_BACK, false)) {
+            intent.removeExtra(Relaunch.EXTRA_BACK);
+            moveTaskToBack(true);
+            return true;
+        }
+        return false;
+    }
+
+    /** Start of navTick. 2.85.0: the full-screen map would cover the road view's alerts: an orange / red alert
+     *  closes it. */
+    final void hybNavAlert() {
+        Telemetry t = this.telemetry;
+        if (this.mapPane != null && getMapOpen() && t.getStarted() && !Intrinsics.areEqual(t.getAlertSize(), "none") && !Intrinsics.areEqual(t.getAlertStatus(), "normal")) {
+            closeMap();
+        }
+    }
+
+    /** navTick, after Nav.poll while the full-screen map is closed: the route's progress follows the car for the
+     *  turn card and the see-through map (2.84.1 only did that inside the open map). */
+    final void hybNavTrack() {
+        if (Nav.INSTANCE.getActive() && this.settings != null) {
+            Telemetry t = this.telemetry;
+            Nav.INSTANCE.track(NavPos.INSTANCE.lat(t), NavPos.INSTANCE.lon(t), t.getVEgo(), t.isMetric(), t.getStarted(), Nav.INSTANCE.voiceMode(this.settings));
+        }
+    }
+
+    /** Start of setupMapFrame. 2.85.3: the full-screen map is never put back at start (it was the split-screen
+     *  pane's remembered state). */
+    final void hybMapFrame() {
+        if (this.settings != null && this.settings.get("map_open")) {
+            this.settings.set("map_open", false);
+        }
+    }
+
+    /** Start of startHudEdit: the see-through map and the turn card show while the screen editor is open. */
+    final void hybEditStart() {
+        NavOverlay.editing = true;
+    }
+
+    /** Start of stopHudEdit. 2.85.9: redraw the see-through map now with its new size / zoom (and restart its
+     *  5x-a-second redraw). */
+    final void hybEditStop() {
+        NavOverlay.editing = false;
+        if (this.navMap != null) {
+            this.navMap.invalidate();
+        }
+    }
+
+    /** Screen tick (MainActivity$uiTick$1), right after the turn card. 2.85.3: the see-through map shows whenever
+     *  the car is on (streets; the route too while one is set); 2.85.7: a lighter shade over the Scene view. */
+    final void hybNavMapTick() {
+        NavMapView m = this.navMap;
+        if (m == null) {
+            return;
+        }
+        Telemetry t = this.telemetry;
+        int vis = ((t.getStarted() && t.s("nav_map") && !getMapOpen()) || NavOverlay.editing) ? 0 : 8;
+        if (m.getVisibility() != vis) {
+            m.setVisibility(vis);
+        }
+        m.light = this.sceneOn;
+    }
+
     private final void stopHudEdit() {
+        hybEditStop();
         HudEditor ed = this.hudEditor;
         if (ed == null) {
             return;
@@ -7618,11 +7701,6 @@ public final class MainActivity extends AppCompatActivity {
         }
         frameLayout.removeView(ed);
         this.hudEditor = null;
-        NavOverlay.editing = false;
-        // 2.85.9: redraw the see-through map now with its new size / zoom (and restart its 5x-a-second redraw)
-        if (this.navMap != null) {
-            this.navMap.invalidate();
-        }
         if (this.backupArmed) {
             SettingsBackup.INSTANCE.auto(this);
         }

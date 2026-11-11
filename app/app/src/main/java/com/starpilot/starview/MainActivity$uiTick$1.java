@@ -1138,13 +1138,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
         }
 
         var309.setVisibility(var132);
-        // 2.85.3: the see-through map shows whenever the car is on (streets; the route too while one is set)
-        NavMapView navMapView = this.this$0.navMap;
-        if (navMapView != null) {
-            navMapView.setVisibility(((var58.getStarted() && var58.s("nav_map") && !this.this$0.getMapOpen()) || NavOverlay.editing) ? 0 : 8);
-            // 2.85.7: a lighter shade over the Scene view's light picture
-            navMapView.light = this.this$0.sceneOn;
-        }
+        this.this$0.hybNavMapTick();
         NavCardView var529 = this.this$0.navCard;
         NavCardView var310 = var529;
         if (var529 == null) {
