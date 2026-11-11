@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "17"
+          java-version: "21"      # the same javac as app/hybrid/base.json was made with (guard.py compares builds)
 
       - uses: gradle/actions/setup-gradle@v4
 
@@ -58,14 +58,14 @@ jobs:
           chmod +x gradlew
           ./gradlew --no-daemon :app:assembleDebug :starlock:assembleDebug
 
-      # StarView ships as a hybrid: 2.84.1's own compiled code for every class we didn't change on purpose (the
-      # recovered source has decompiler mistakes that only show when that code runs), our build for the rest.
-      # app/hybrid/merge.py lists the classes that come from the build; check.py must find every call between the
-      # two halves; guard.py stops a change to a class that would ship as 2.84.1's code. The 2.84.1 APK is on this
-      # repo's branch "hybrid-base"; apktool (with smali / baksmali) comes from its own GitHub release.
+      # StarView ships as a hybrid: 2.84.1's own compiled code for every class and method we didn't change on purpose
+      # (the recovered source has decompiler mistakes that only show when that code runs), our build for the rest.
+      # app/hybrid/build.sh: guard.py stops a change that wouldn't ship, merge.py / methodmerge.py put the two
+      # together (decisions.py, patches.py), check.py must find every call between them and verify.py checks the
+      # registers of every changed method like Android will. The 2.84.1 APK is on this repo's branch "hybrid-base";
+      # apktool (with smali / baksmali) comes from its own GitHub release.
       - name: Hybrid StarView
         run: |
-          python3 app/hybrid/guard.py
           mkdir -p "$RUNNER_TEMP/base"
           git fetch -q --depth 1 origin hybrid-base
           git show FETCH_HEAD:StarView-2.84.1-base.apk > "$RUNNER_TEMP/base/StarView-2.84.1-base.apk"
