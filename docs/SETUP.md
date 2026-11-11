@@ -20,12 +20,16 @@ screens) runs on the tablet; the comma only shares its data.
 | --- | --- |
 | comma four | runs StarPilot, from [tsk-go/openpilot](https://github.com/tsk-go/openpilot) branch `Dom` |
 | Chestnut eGPU | external AMD GPU over USB that runs StarPilot's big driving model |
-| USB hub: RSHTECH RSH-H7C | 7 USB-C ports, 10 Gbps, its own 12 V / 3 A supply; everything below plugs into it |
+| [RSHTECH 7-port powered USB-C 3.2 hub (RSH-H7C)](https://www.amazon.com/dp/B0GTYVWT4R) | 7 USB-C ports, 10 Gbps; everything below plugs into it |
+| [Czepa 12 V car DC power cord](https://www.amazon.com/dp/B091PM893V) | powers the hub from one of the car's 12 V outlets (only live while the car is on) |
 | Tablet: Lenovo Idea Tab Pro (Android 16) | the main screen, running StarView (this repo) |
 | USB stick, SanDisk ~460 GB | archive of finished drives |
-| SparkFun GPS-RTK Dead Reckoning Kit (u-blox ZED-F9R) + multi-band magnetic antenna | centimetre GPS with RTK corrections |
-| Raspberry Pi Pico + 4-channel 5 V relay module | presses the turn-signal switch and the door key switch for the comma |
-| Nooelec NESDR (RTL-SDR, RTL2838) | hears the key fob while the car is running |
+| [SparkFun GPS-RTK Dead Reckoning Kit (SMA), u-blox ZED-F9R](https://www.amazon.com/dp/B0CQ745H6Z) | centimetre GPS with RTK corrections (comes with a multi-band magnetic antenna and a USB cable) |
+| [Waveshare Raspberry Pi Pico W, pre-soldered](https://www.amazon.com/dp/B0BN14J26Q) | the relay box's brain (MicroPython; Wi-Fi not used) |
+| [Hosyond 4-channel 5 V relay module with optocoupler](https://www.amazon.com/dp/B0C2Z8JF5R) | presses the turn-signal switch and the door key switch for the comma |
+| [Cable Matters USB-C to Micro-USB cable, 6.6 ft](https://www.amazon.com/dp/B00UUBRYS0) | Pico to the hub |
+| [Nooelec RTL-SDR v5 bundle (NESDR Smart, RTL2832U / R820T2)](https://www.amazon.com/dp/B01GDN1T4S) | hears the key fob while the car is running |
+| [RED WOLF fabric wiring-harness tape](https://www.amazon.com/dp/B0BBV3NNTM) | wrapping the new wires so they're neat, protected and don't rattle |
 | Android phone | internet (hotspot) and the StarLock app (lock / unlock) |
 
 ## The software
@@ -40,8 +44,8 @@ screens) runs on the tablet; the comma only shares its data.
 
 ## 1. USB hub and power
 
-The comma's USB-C port goes to the hub, and every device below plugs into the hub. The hub has its own power supply,
-which only gets power while the car is on.
+The comma's USB-C port goes to the hub, and every device below plugs into the hub. The hub has its own power: a 12 V
+car cord (Czepa) in one of the car's 12 V outlets, which are only live while the car is on.
 
 **Car off.** With its own supply dead, the hub was fed 5 V back through the comma's cable: tablet charging, the GPS,
 the radio and the Pico all ran off the car battery until the comma's low-voltage cutoff, and the comma kept
@@ -145,7 +149,7 @@ got "503 Service Temporarily Unavailable" without ever reaching the caster. Star
 
 ## 5. Pico relay box: turn signals and window close
 
-A Raspberry Pi Pico (MicroPython) drives a 4-channel 5 V relay module. The comma sends it one character over USB
+A Raspberry Pi Pico W (MicroPython; its Wi-Fi isn't used) drives a 4-channel 5 V relay module. The comma sends it one character over USB
 serial; if it hears nothing valid for 1 second, every relay opens. Only one relay can be on at a time.
 
 Wiring (low-level-trigger module, JD-VCC jumper removed):
