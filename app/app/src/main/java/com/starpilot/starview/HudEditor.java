@@ -83,9 +83,9 @@ public final class HudEditor extends FrameLayout {
         this.setTranslationZ(this.dpf(120.0F));
         LinearLayout var7 = new LinearLayout(var1);
         var7.setOrientation(0);
-        // 2.85.4: a bigger preview of the driving screen, a narrower panel beside it
-        var7.addView(this.preview, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -1, 0.72F)));
-        var7.addView(this.panel(var1), (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -1, 0.28F)));
+        // 2.85.7: an even bigger preview (80%), the panel beside it narrower (its text wraps instead of shrinking)
+        var7.addView(this.preview, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -1, 0.8F)));
+        var7.addView(this.panel(var1), (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -1, 0.2F)));
         this.addView((View)var7, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
         this.refresh();
     }

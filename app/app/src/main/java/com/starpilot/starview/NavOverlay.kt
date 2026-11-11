@@ -290,6 +290,8 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
   private var fadeX: LinearGradient? = null
   private var fadeY: LinearGradient? = null
   private var fadeFor = 0L
+  /** On the Scene view (a light picture): a lighter shade so the map blends in. The camera view keeps the darker one. */
+  @JvmField var light = false
 
   /** A street on screen: x0, y0, x1, y1, ... */
   private class Street(val pts: FloatArray, val name: String, val major: Boolean)
@@ -300,6 +302,7 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
     val SKIP = setOf("sidewalk", "footway", "cycleway", "path", "steps", "pedestrian", "track", "bridleway", "corridor")
     val MAJOR = setOf("motorway", "trunk", "primary", "secondary", "motorway_link", "trunk_link", "primary_link")
     val SHADE = Color.argb(120, 10, 14, 22)
+    val SHADE_LIGHT = Color.argb(60, 10, 14, 22)
   }
 
   override fun onDraw(c: Canvas) {
@@ -309,20 +312,20 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
     if (visibility == VISIBLE && !NavOverlay.editing) postDelayed(redraw, 200)
     val w = width.toFloat(); val h = height.toFloat()
     if (w <= 0f || h <= 0f) return
-    val u = h / 250f                                  // 1 dp at the default 250 dp height (the editor scales the view)
+    val u = min(w, h) / 250f                          // 1 dp at the default 250 dp width (the editor scales the view)
     val cx = w / 2; val cy = h * 0.74f
     streets.clear()
     var routePts: FloatArray? = null
     val lat = NavPos.lat(t); val lon = NavPos.lon(t)
     if (lat.isNaN() || lon.isNaN() || (lat == 0.0 && lon == 0.0)) {
       if (!NavOverlay.editing) return
-      routePts = sample(w, h, cx, cy)
+      routePts = sample(w, h, cx, cy, u)
     } else {
       val b = Math.toRadians(NavPos.bearing(t).toDouble())
       val cb = cos(b); val sb = sin(b)
       // the view shows ~200 m ahead in town, up to ~700 m at highway speed
       val ahead = (180.0 + t.vEgo * 10.0).coerceIn(180.0, 700.0)
-      val target = ((cy - 8 * u) / ahead).toFloat()
+      val target = ((min(w, h) * 0.74f - 8 * u) / ahead).toFloat()   // same zoom as the old wide map: a tall one shows more ahead
       scale = if (scale.isNaN()) target else scale + (target - scale) * 0.15f
       val k = scale
       fun sx(de: Double, dn: Double) = cx + ((de * cb - dn * sb) * k).toFloat()
@@ -374,7 +377,7 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
 
   private fun paint(c: Canvas, w: Float, h: Float, u: Float, cx: Float, cy: Float, routePts: FloatArray?) {
     val layer = c.saveLayer(0f, 0f, w, h, null)
-    fill.style = Paint.Style.FILL; fill.color = SHADE
+    fill.style = Paint.Style.FILL; fill.color = if (light) SHADE_LIGHT else SHADE
     c.drawRect(0f, 0f, w, h, fill)
     for (pass in 0..1) {                                         // dark edge first, then the line, so crossings stay clean
       for (s in streets) {
@@ -504,7 +507,7 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
   }
 
   /** What the widget looks like, for the screen editor when there is no position yet: a few named streets and a route. */
-  private fun sample(w: Float, h: Float, cx: Float, cy: Float): FloatArray {
+  private fun sample(w: Float, h: Float, cx: Float, cy: Float, u: Float): FloatArray {
     fun st(name: String, major: Boolean, vararg xy: Float) { val a = FloatArray(xy.size); for (i in xy.indices) a[i] = if (i % 2 == 0) xy[i] * w else xy[i] * h; streets.add(Street(a, name, major)) }
     st("Ocean Parkway", true, 0.5f, 1.1f, 0.5f, -0.1f)
     st("Avenue R", false, -0.1f, 0.38f, 1.1f, 0.42f)
@@ -514,6 +517,6 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
     st("East 7th Street", false, 0.76f, 1.1f, 0.7f, -0.1f)
     st("", false, 0.05f, 0.86f, 0.36f, 0.88f)
     val ty = 0.4f * h
-    return floatArrayOf(cx, cy, cx, ty + 10 * (h / 250f), cx + 10 * (h / 250f), ty + 0.33f * (h / 250f), w * 1.05f, 0.42f * h + 0.5f)
+    return floatArrayOf(cx, cy, cx, ty + 10 * u, cx + 10 * u, ty + 0.33f * u, w * 1.05f, 0.42f * h + 0.5f)
   }
 }
