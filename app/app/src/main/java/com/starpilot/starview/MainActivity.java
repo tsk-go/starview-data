@@ -605,6 +605,11 @@ public final class MainActivity extends AppCompatActivity {
         Intrinsics.checkNotNullParameter(intent, "intent");
         super.onNewIntent(intent);
         setIntent(intent);
+        if (intent.getBooleanExtra(Relaunch.EXTRA_BACK, false)) {
+            intent.removeExtra(Relaunch.EXTRA_BACK);
+            moveTaskToBack(true);
+            return;
+        }
         if (intent.getBooleanExtra("open_nav", false)) {
             intent.removeExtra("open_nav");
             getWindow().getDecorView().postDelayed(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda103
@@ -878,6 +883,12 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         SurfaceView surfaceView;
         super.onCreate(savedInstanceState);
+        // 2.85.12: reopened after an update while another app was in front: start, but stay behind that app
+        if (getIntent() != null && getIntent().getBooleanExtra(Relaunch.EXTRA_BACK, false)) {
+            getIntent().removeExtra(Relaunch.EXTRA_BACK);
+            moveTaskToBack(true);
+            overridePendingTransition(0, 0);
+        }
         boolean freshInstall = savedInstanceState == null && SettingsBackup.INSTANCE.looksFresh(this);
         this.backupArmed = !freshInstall;
         ModelDownload.INSTANCE.detector(this);
