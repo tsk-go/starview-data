@@ -106,11 +106,12 @@ public final class WheelButton extends View {
         }
         int col = wheelTint.update(aEgo, z, System.nanoTime());
         this.p.setColorFilter(col != -1 ? new PorterDuffColorFilter(col, PorterDuff.Mode.MULTIPLY) : null);
-        Bitmap icon = getT().getExperimentalMode() ? this.exp : this.wheel;
+        // 2.85.7: always the stock steering wheel (the experimental icon is gone: the circle's color shows the mode)
+        Bitmap icon = this.wheel;
         float iconS = 0.75f * s;
         this.p.setAlpha((getT().getEngageable() || getT().getEnabled()) ? 255 : 120);
         c.save();
-        if (!getT().getExperimentalMode() && getT().s("rotating_wheel")) {
+        if (getT().s("rotating_wheel")) {
             c.rotate(-getT().getSteeringAngleDeg(), cx, cy);
         }
         c.drawBitmap(icon, (Rect) null, new RectF(cx - (iconS / f), cy - (iconS / f), (iconS / f) + cx, (iconS / f) + cy), this.p);
