@@ -1252,8 +1252,6 @@ public final class LaneAhead {
                             return new Triple<>(valueOf, valueOf2, valueOf3);
                         }
                     }
-                } else {
-                    continue;
                 }
                 k++;
             }
