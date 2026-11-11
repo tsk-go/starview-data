@@ -83,8 +83,9 @@ public final class HudEditor extends FrameLayout {
         this.setTranslationZ(this.dpf(120.0F));
         LinearLayout var7 = new LinearLayout(var1);
         var7.setOrientation(0);
-        var7.addView(this.preview, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -1, 0.58F)));
-        var7.addView(this.panel(var1), (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -1, 0.42F)));
+        // 2.85.4: a bigger preview of the driving screen, a narrower panel beside it
+        var7.addView(this.preview, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -1, 0.72F)));
+        var7.addView(this.panel(var1), (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -1, 0.28F)));
         this.addView((View)var7, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
         this.refresh();
     }
@@ -273,6 +274,36 @@ public final class HudEditor extends FrameLayout {
                 return panel$lambda$19;
             }
         }));
+        // 2.85.4: the narrower panel has the four buttons in two rows of two (Undo Reset / Presets Done)
+        java.util.ArrayList<TextView> btns = new java.util.ArrayList<>();
+        for (int bi = 0; bi < actions.getChildCount(); bi++) {
+            View child = actions.getChildAt(bi);
+            if (child instanceof TextView) {
+                btns.add((TextView) child);
+            }
+        }
+        actions.removeAllViews();
+        actions.setOrientation(1);
+        for (int r = 0; r * 2 < btns.size(); r++) {
+            LinearLayout row = new LinearLayout(ctx);
+            row.setOrientation(0);
+            for (int ci = 0; ci < 2 && r * 2 + ci < btns.size(); ci++) {
+                TextView b = btns.get(r * 2 + ci);
+                b.setMinWidth(0);
+                b.setMinimumWidth(0);
+                b.setPadding(this.ui.dp(10), this.ui.dp(10), this.ui.dp(10), this.ui.dp(10));
+                LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(0, -2, 1.0f);
+                if (ci == 0) {
+                    blp.setMarginEnd(this.ui.dp(8));
+                }
+                row.addView(b, blp);
+            }
+            LinearLayout.LayoutParams rlp = new LinearLayout.LayoutParams(-1, -2);
+            if (r > 0) {
+                rlp.topMargin = this.ui.dp(8);
+            }
+            actions.addView(row, rlp);
+        }
         p.addView(actions);
         LinearLayout tabs = new LinearLayout(ctx);
         tabs.setOrientation(0);

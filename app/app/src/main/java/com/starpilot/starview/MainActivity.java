@@ -946,6 +946,7 @@ public final class MainActivity extends AppCompatActivity {
         }, new IntentFilter("com.starpilot.starview.TEST_SPEAK"), 2);
         Speech.init$default(Speech.INSTANCE, this, null, 2, null);
         OsmRoads.INSTANCE.init(this);
+        AnrWatch.INSTANCE.start(this);
         BlinkLog.INSTANCE.init(this);
         MapdMaps.INSTANCE.init(this);
         installCrashLog();
