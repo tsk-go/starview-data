@@ -12,8 +12,10 @@ or new code.
 - **Releases:** `.github/workflows/starview-app.yml` builds every push to `main` that touches `app/`. When `versionName`
   in `app/app/build.gradle.kts` is new, it publishes release `v<versionName>` with `StarView-<versionName>.apk`.
   Bump `versionName` and `versionCode` together for each release.
-- **Updating the tablet:** StarView Settings › Tablet › About › Check for updates (from 2.84.2). It reads this repo's
-  releases, downloads the APK and hands it to Android's installer, which asks to confirm.
+- **Updating the tablet:** from 2.85.8 StarView installs a new release by itself within about a minute, also while
+  driving (Settings › Tablet › About › "Install updates automatically" turns that off; "Check for updates" still works).
+  So a push to `main` with a new `versionName` reaches the tablet at once: drafts go on side branches. See
+  `docs/STARVIEW-APP.md`.
 - **Signing key:** every build is signed with the StarView key so it installs over the app already on the tablet. The key
   is not in this public repo: the workflow takes it from the repository secret `STARVIEW_KEYSTORE_B64` (base64 of
   `starview.jks`), and a local build reads `app/keystore/starview.jks` (git-ignored). Losing the key means the next
@@ -24,6 +26,15 @@ or new code.
   From 2.19.1 it updates itself the same way: Updates › Check for updates.
 - **Local build:** `cd app && ./gradlew :app:assembleDebug :starlock:assembleDebug` (needs the Android SDK in
   `local.properties` or `ANDROID_HOME`).
+
+## Docs (`docs/`)
+
+- `docs/STARVIEW-APP.md`: the running record of the app - how releases and automatic updates work, the owner's
+  direction for the driving screen, how to find crashes and freezes on the tablet, and every version with what changed
+  and why. Kept the same as `claude/starview-app-source.md` in the StarView project on claude.ai.
+- `docs/tools/`: the tools that compared the recovered source with the original APK, the source scanners, and the
+  off-device rendering test.
+- `docs/pending/`: work written but not yet landed (a patch for tsk-go/openpilot waiting for a signed commit).
 
 ## HPMS lane counts (release `hpms-2024`)
 
