@@ -144,11 +144,11 @@ public final class HudPresets {
         }
         Iterator<String> keys = o.keys();
         Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
-        Sequence $this$associateWith$iv = SequencesKt.asSequence(keys);
+        // 2.85.6: the keys are a one-time sequence, not a list (the cast to Iterable crashed Presets)
         LinkedHashMap result$iv = new LinkedHashMap();
-        for (Object element$iv$iv : (Iterable) $this$associateWith$iv) {
-            String it = (String) element$iv$iv;
-            result$iv.put(element$iv$iv, o.getString(it));
+        while (keys.hasNext()) {
+            String it = keys.next();
+            result$iv.put(it, o.getString(it));
         }
         return result$iv;
     }
