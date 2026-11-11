@@ -947,6 +947,9 @@ public final class MainActivity extends AppCompatActivity {
         Speech.init$default(Speech.INSTANCE, this, null, 2, null);
         OsmRoads.INSTANCE.init(this);
         AnrWatch.INSTANCE.start(this);
+        // 2.85.8: StarView is open again after an update it installed itself (cancels the reopen alarms); automatic updates
+        Relaunch.INSTANCE.cancel(this);
+        AppUpdate.INSTANCE.startAuto(this);
         BlinkLog.INSTANCE.init(this);
         MapdMaps.INSTANCE.init(this);
         installCrashLog();

@@ -20,6 +20,8 @@
   <uses-permission android:name="android.permission.READ_PHONE_STATE" />
   <!-- Settings > About > Check for updates: installs the newer StarView from GitHub (the system asks to confirm) -->
   <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+  <uses-permission android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION" />
+  <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
   <application
     android:label="StarView"
@@ -78,5 +80,8 @@
     <activity android:name=".DestinationActivity" android:exported="false" android:screenOrientation="fullUser" android:windowSoftInputMode="adjustResize|stateVisible" android:theme="@style/Theme.StarView" />
     <activity android:name=".SettingsActivity" android:exported="false" android:screenOrientation="fullUser" android:windowSoftInputMode="adjustResize" android:theme="@style/Theme.StarView" />
     <receiver android:name=".AppUpdateReceiver" android:exported="false" />
+    <receiver android:name=".AppReplacedReceiver" android:exported="false">
+      <intent-filter><action android:name="android.intent.action.MY_PACKAGE_REPLACED" /></intent-filter>
+    </receiver>
   </application>
 </manifest>
