@@ -292,6 +292,8 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
   private var fadeFor = 0L
   /** On the Scene view (a light picture): a lighter shade so the map blends in. The camera view keeps the darker one. */
   @JvmField var light = false
+  /** 2.85.8: the owner's zoom from the screen editor (1 = ~180 m ahead in town); set by HudLayout.apply. */
+  @JvmField var zoom = 1f
 
   /** A street on screen: x0, y0, x1, y1, ... */
   private class Street(val pts: FloatArray, val name: String, val major: Boolean)
@@ -312,20 +314,21 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
     if (visibility == VISIBLE && !NavOverlay.editing) postDelayed(redraw, 200)
     val w = width.toFloat(); val h = height.toFloat()
     if (w <= 0f || h <= 0f) return
-    val u = min(w, h) / 250f                          // 1 dp at the default 250 dp width (the editor scales the view)
+    // 2.85.8: the map's scale no longer follows the box: width and height are set on their own and only show more or less
+    val u = d
     val cx = w / 2; val cy = h * 0.74f
     streets.clear()
     var routePts: FloatArray? = null
     val lat = NavPos.lat(t); val lon = NavPos.lon(t)
     if (lat.isNaN() || lon.isNaN() || (lat == 0.0 && lon == 0.0)) {
       if (!NavOverlay.editing) return
-      routePts = sample(w, h, cx, cy, u)
+      routePts = sample(cx, cy, 177f * u * zoom / 180f)
     } else {
       val b = Math.toRadians(NavPos.bearing(t).toDouble())
       val cb = cos(b); val sb = sin(b)
       // the view shows ~200 m ahead in town, up to ~700 m at highway speed
       val ahead = (180.0 + t.vEgo * 10.0).coerceIn(180.0, 700.0)
-      val target = ((min(w, h) * 0.74f - 8 * u) / ahead).toFloat()   // same zoom as the old wide map: a tall one shows more ahead
+      val target = (177f * u * zoom / ahead).toFloat()   // px per metre: 1 dp per metre in town at zoom 1, the owner's zoom on top
       scale = if (scale.isNaN()) target else scale + (target - scale) * 0.15f
       val k = scale
       fun sx(de: Double, dn: Double) = cx + ((de * cb - dn * sb) * k).toFloat()
@@ -506,17 +509,20 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
     c.drawPath(path, fill)
   }
 
-  /** What the widget looks like, for the screen editor when there is no position yet: a few named streets and a route. */
-  private fun sample(w: Float, h: Float, cx: Float, cy: Float, u: Float): FloatArray {
-    fun st(name: String, major: Boolean, vararg xy: Float) { val a = FloatArray(xy.size); for (i in xy.indices) a[i] = if (i % 2 == 0) xy[i] * w else xy[i] * h; streets.add(Street(a, name, major)) }
-    st("Ocean Parkway", true, 0.5f, 1.1f, 0.5f, -0.1f)
-    st("Avenue R", false, -0.1f, 0.38f, 1.1f, 0.42f)
-    st("Avenue S", false, -0.1f, 0.6f, 1.1f, 0.64f)
-    st("Avenue P", false, -0.1f, 0.12f, 1.1f, 0.15f)
-    st("East 5th Street", false, 0.22f, 1.1f, 0.3f, -0.1f)
-    st("East 7th Street", false, 0.76f, 1.1f, 0.7f, -0.1f)
-    st("", false, 0.05f, 0.86f, 0.36f, 0.88f)
-    val ty = 0.4f * h
-    return floatArrayOf(cx, cy, cx, ty + 10 * u, cx + 10 * u, ty + 0.33f * u, w * 1.05f, 0.42f * h + 0.5f)
+  /** What the widget looks like, for the screen editor when there is no position yet: a few named streets and a route,
+   *  laid out in metres around the car so the editor shows the zoom and the box size as they will be. */
+  private fun sample(cx: Float, cy: Float, k: Float): FloatArray {
+    fun st(name: String, major: Boolean, vararg en: Float) {
+      val a = FloatArray(en.size); for (i in en.indices) a[i] = if (i % 2 == 0) cx + en[i] * k else cy - en[i] * k
+      streets.add(Street(a, name, major))
+    }
+    st("Ocean Parkway", true, 0f, -900f, 0f, 1400f)
+    for ((x, n) in listOf(-260f to "East 3rd Street", -170f to "East 5th Street", -85f to "", 85f to "East 7th Street", 170f to "", 260f to "East 9th Street"))
+      st(n, false, x, -900f, x + 25f, 1400f)
+    for ((y, n) in listOf(-200f to "Avenue T", -60f to "Avenue S", 90f to "Avenue R", 240f to "Avenue Q", 390f to "Avenue P", 690f to "Avenue N"))
+      st(n, false, -900f, y, 900f, y + 6f)
+    st("Kings Highway", true, -900f, 520f, 900f, 560f)
+    // the route: up Ocean Parkway, right onto Avenue R
+    return floatArrayOf(cx, cy, cx, cy - 84f * k, cx + 6f * k, cy - 90f * k, cx + 900f * k, cy - 96f * k)
   }
 }
