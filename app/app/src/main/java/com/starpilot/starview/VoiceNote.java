@@ -4,19 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioRecord;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.List;
 import kotlin.Unit;
-import kotlin.collections.CollectionsKt;
 import kotlin.io.CloseableKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
@@ -73,65 +70,10 @@ public final class VoiceNote {
                     if (sr != null) {
                         ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
                         this.pipeOut = new ParcelFileDescriptor.AutoCloseOutputStream(pipe[1]);
-                        sr.setRecognitionListener(new RecognitionListener() { // from class: com.starpilot.starview.VoiceNote$start$1
-                            @Override // android.speech.RecognitionListener
-                            public void onResults(Bundle b) {
-                                String t;
-                                ArrayList<String> stringArrayList;
-                                if (b == null || (stringArrayList = b.getStringArrayList("results_recognition")) == null || (t = (String) CollectionsKt.firstOrNull((List) stringArrayList)) == null) {
-                                    t = VoiceNote.this.partial;
-                                }
-                                VoiceNote.this.deliver(t);
-                            }
-
-                            @Override // android.speech.RecognitionListener
-                            public void onPartialResults(Bundle b) {
-                                ArrayList<String> stringArrayList;
-                                String it;
-                                if (b == null || (stringArrayList = b.getStringArrayList("results_recognition")) == null || (it = (String) CollectionsKt.firstOrNull((List) stringArrayList)) == null) {
-                                    return;
-                                }
-                                VoiceNote voiceNote = VoiceNote.this;
-                                if (StringsKt.isBlank(it)) {
-                                    return;
-                                }
-                                voiceNote.partial = it;
-                            }
-
-                            @Override // android.speech.RecognitionListener
-                            public void onError(int error) {
-                                String str;
-                                VoiceNote voiceNote = VoiceNote.this;
-                                str = VoiceNote.this.partial;
-                                voiceNote.deliver(str);
-                            }
-
-                            @Override // android.speech.RecognitionListener
-                            public void onReadyForSpeech(Bundle p) {
-                            }
-
-                            @Override // android.speech.RecognitionListener
-                            public void onBeginningOfSpeech() {
-                            }
-
-                            @Override // android.speech.RecognitionListener
-                            public void onRmsChanged(float v) {
-                            }
-
-                            @Override // android.speech.RecognitionListener
-                            public void onBufferReceived(byte[] b) {
-                            }
-
-                            @Override // android.speech.RecognitionListener
-                            public void onEndOfSpeech() {
-                            }
-
-                            @Override // android.speech.RecognitionListener
-                            public void onEvent(int t, Bundle p) {
-                            }
-                        });
+                        sr.setRecognitionListener(hybListener());
                         Intent i = new Intent("android.speech.action.RECOGNIZE_SPEECH").putExtra("android.speech.extra.LANGUAGE_MODEL", "free_form").putExtra("android.speech.extra.PARTIAL_RESULTS", true).putExtra("android.speech.extra.AUDIO_SOURCE", pipe[0]).putExtra("android.speech.extra.AUDIO_SOURCE_CHANNEL_COUNT", 1).putExtra("android.speech.extra.AUDIO_SOURCE_ENCODING", 2).putExtra("android.speech.extra.AUDIO_SOURCE_SAMPLING_RATE", 16000).putExtra("android.speech.extras.SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS", 60000L).putExtra("android.speech.extras.SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS", 60000L);
                         Intrinsics.checkNotNullExpressionValue(i, "putExtra(...)");
+                        hybIntent(i);
                         sr.startListening(i);
                         this.recognizer = sr;
                     }
@@ -243,6 +185,25 @@ public final class VoiceNote {
     /* JADX INFO: Access modifiers changed from: private */
     public static final void start$lambda$2$lambda$1$lambda$0(VoiceNote this$0) {
         this$0.deliver(this$0.partial);
+    }
+
+    /** 2.86.6: the recognizer's listener: VoiceListen keeps every stretch of the note, not only the last one. */
+    public final RecognitionListener hybListener() {
+        return new VoiceListen(this);
+    }
+
+    /** 2.86.6: a segmented session (Android 13+): the recognizer hands back each stretch until the microphone stops. */
+    public final void hybIntent(Intent i) {
+        i.putExtra(RecognizerIntent.EXTRA_SEGMENTED_SESSION, RecognizerIntent.EXTRA_AUDIO_SOURCE);
+    }
+
+    /** 2.86.6: the whole note so far - what the end of a note delivers however it ends (results, error, the 6 s wait). */
+    public final void hybText(String t) {
+        this.partial = t;
+    }
+
+    public final void hybDeliver(String t) {
+        deliver(t);
     }
 
     public final void stop() {

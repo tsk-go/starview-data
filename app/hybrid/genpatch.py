@@ -264,6 +264,27 @@ old = "".join(m.lines[a:b])
 m.edits.append((old, old + f"    invoke-virtual {{v0, v1, v10, v3, v11}}, {PV}->hybFreeResize(Lcom/starpilot/starview/HudLayout$Item;{ST}FF)Z\n"
                 "    move-result v5\n    if-nez v5, :goto_0\n"))
 
+# ---------------------------------------------------------------- LaneSuggest
+# 2.86.6: the route's exit signals by itself only with exactly one lane to its side (was: unless 2 or more)
+m = M("LaneSuggest", "exitDue(Lcom/starpilot/starview/LaneSuggest$In;J)Z")
+i = m.find("invoke-virtual/range {p1 .. p1}, Lcom/starpilot/starview/LaneSuggest$In;->getExitSideLanes()I")
+k = [x for x in instr_idx(m.lines) if x > i][:3]
+assert [m.lines[x].strip() for x in k] == ["move-result v1", "const/4 v4, 0x2", "if-lt v1, v4, :cond_4"], k
+m.replace_line("const/4 v4, 0x2", ["const/4 v4, 0x1"])
+m.replace_line("if-lt v1, v4, :cond_4", ["if-eq v1, v4, :cond_4"])
+
+# ---------------------------------------------------------------- VoiceNote
+# 2.86.6: our listener (VoiceListen keeps every stretch of the note) and a segmented session
+VN = "Lcom/starpilot/starview/VoiceNote;"
+m = M("VoiceNote", "start(Ljava/io/File;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;")
+i = m.find("new-instance v9, Lcom/starpilot/starview/VoiceNote$start$1;")
+j = m.find("invoke-direct {v9, p0}, Lcom/starpilot/starview/VoiceNote$start$1;-><init>(Lcom/starpilot/starview/VoiceNote;)V")
+assert [x for x in instr_idx(m.lines) if x > i][0] == j
+m.add(i, j + 1, [f"    invoke-virtual {{p0}}, {VN}->hybListener()Landroid/speech/RecognitionListener;\n", "\n",
+                 "    move-result-object v9\n"])
+m.insert_before("invoke-virtual {v4, v7}, Landroid/speech/SpeechRecognizer;->startListening(Landroid/content/Intent;)V",
+                [f"invoke-virtual {{p0, v7}}, {VN}->hybIntent(Landroid/content/Intent;)V"])
+
 # ---------------------------------------------------------------- checks + output
 for m in METHODS:
   for old, new in m.edits:

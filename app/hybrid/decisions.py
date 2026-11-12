@@ -11,7 +11,8 @@ The digest is changes.py's for our source of that method when the decision was m
 guard.py stops the build until the decision (and the patch) are looked at again.
 """
 
-METHOD_LEVEL = {"MainActivity", "SettingsActivity", "MapPane", "HudEditor", "WheelButton", "UiSettings"}
+METHOD_LEVEL = {"MainActivity", "SettingsActivity", "MapPane", "HudEditor", "WheelButton", "UiSettings", "LaneSuggest",
+                "VoiceNote"}
 
 DECISIONS = {
   "MainActivity": {
@@ -69,5 +70,12 @@ DECISIONS = {
   },
   "UiSettings": {
     "<clinit>()V": "build",
+  },
+  "LaneSuggest": {
+    "exitDue(Lcom/starpilot/starview/LaneSuggest$In;J)Z": ("patch", "e115f51b7f09"),
+  },
+  "VoiceNote": {
+    "start(Ljava/io/File;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": ("patch", "68e8f99ee3f0"),
+    "wavHeader(Ljava/io/File;JI)V": ("orig", "1157c101540a"),
   },
 }

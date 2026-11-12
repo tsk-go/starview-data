@@ -123,4 +123,16 @@ PATCHES = {
     ('    move-object v7, v10\n',
      '    move-object v7, v10\n    invoke-virtual {v0, v1, v10, v3, v11}, Lcom/starpilot/starview/HudEditor$Preview;->hybFreeResize(Lcom/starpilot/starview/HudLayout$Item;Lcom/starpilot/starview/HudLayout$State;FF)Z\n    move-result v5\n    if-nez v5, :goto_0\n'),
   ],
+  ('LaneSuggest', 'exitDue(Lcom/starpilot/starview/LaneSuggest$In;J)Z'): [
+    ('    const/4 v4, 0x2\n',
+     '    const/4 v4, 0x1\n'),
+    ('    if-lt v1, v4, :cond_4\n',
+     '    if-eq v1, v4, :cond_4\n'),
+  ],
+  ('VoiceNote', 'start(Ljava/io/File;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;'): [
+    ('    new-instance v9, Lcom/starpilot/starview/VoiceNote$start$1;\n\n    invoke-direct {v9, p0}, Lcom/starpilot/starview/VoiceNote$start$1;-><init>(Lcom/starpilot/starview/VoiceNote;)V\n',
+     '    invoke-virtual {p0}, Lcom/starpilot/starview/VoiceNote;->hybListener()Landroid/speech/RecognitionListener;\n\n    move-result-object v9\n'),
+    ('    invoke-virtual {v4, v7}, Landroid/speech/SpeechRecognizer;->startListening(Landroid/content/Intent;)V\n',
+     '    invoke-virtual {p0, v7}, Lcom/starpilot/starview/VoiceNote;->hybIntent(Landroid/content/Intent;)V\n    invoke-virtual {v4, v7}, Landroid/speech/SpeechRecognizer;->startListening(Landroid/content/Intent;)V\n'),
+  ],
 }
