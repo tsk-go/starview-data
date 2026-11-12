@@ -37,28 +37,43 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
     // only a "valid" reading, so the sign came for a moment and went again. Forgotten when the car turns off.
     @Volatile private var lastMps = Float.NaN
 
-    /** The posted limit in m/s (NaN when unknown): the speed-limit card's own number, before any offset. */
+    /** 2.86.5: with no combined reading, a source's own (the ones the speed limit controller uses first) */
+    private val ORDER = listOf("dashboard", "map", "mapbox", "navigation", "vision")
+    private fun ok(v: Float) = v.isFinite() && v > 0f
+
+    /** The posted limit in m/s (NaN when unknown): the speed limit controller's reading (also in display-only mode),
+     *  else any source's own valid reading (2.86.5: like Waze, the sign shows a limit whenever one is known, even
+     *  from a source the controller doesn't use), else the last one this drive, else the accepted one. */
     fun postedMps(t: Telemetry): Float {
       if (!t.started) {
         lastMps = Float.NaN
         return Float.NaN
       }
       val live = t.slcLive(System.nanoTime())
-      val v = when {
-        live != null && live.kind == "valid" && live.speedMps.isFinite() && live.speedMps > 0f -> live.speedMps
-        lastMps.isFinite() -> lastMps
-        live != null && live.hasAccepted -> live.acceptedMps
-        live == null -> t.slcSpeedLimit
-        else -> Float.NaN
+      var fresh = Float.NaN
+      if (live != null) {
+        if (live.kind == "valid" && ok(live.speedMps)) {
+          fresh = live.speedMps
+        } else {
+          val rs = live.readings.filter { it.kind == "valid" && ok(it.speedMps) }
+          val r = rs.firstOrNull { it.enabled } ?: rs.minByOrNull { ORDER.indexOf(it.source).let { i -> if (i < 0) 99 else i } }
+          if (r != null) fresh = r.speedMps
+        }
+      } else {
+        for (v in floatArrayOf(t.slcSpeedLimit, t.slcMapSpeedLimit, t.slcMapbox)) if (ok(v)) { fresh = v; break }
       }
-      if (!(v.isFinite() && v > 0f)) return Float.NaN
-      if (live != null && live.kind == "valid") lastMps = v
-      return v
+      if (ok(fresh)) {
+        lastMps = fresh
+        return fresh
+      }
+      if (ok(lastMps)) return lastMps
+      if (live != null && live.hasAccepted && ok(live.acceptedMps)) return live.acceptedMps
+      return Float.NaN
     }
 
-    /** The speed the big number shows (the car's dash speed unless "use wheel speed" is on), m/s. */
+    /** The speed the big number shows, m/s (2.86.5: SpeedShown, the true speed learned from GPS). */
     fun speedMps(t: Telemetry): Float =
-      if (!t.tBool("use_wheel_speed", false) && t.vEgoCluster > 0f) t.vEgoCluster else t.vEgo
+      SpeedShown.mps(t, if (!t.tBool("use_wheel_speed", false) && t.vEgoCluster > 0f) t.vEgoCluster else t.vEgo)
   }
 
   /** (number shown, flashing now) - null while there is nothing to show */

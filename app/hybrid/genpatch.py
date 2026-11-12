@@ -180,6 +180,15 @@ a, b = m.context(i, j + 1)
 old = "".join(m.lines[a:b])
 new = "".join(m.lines[a:first]) + "    # 2.85.3: the map button is a screen-editor widget now (HudLayout places it)\n" + "".join(m.lines[j:b])
 m.edits.append((old, new))
+# 2.86.5: the big speed number from SpeedShown (true speed learned from GPS); v2 = Telemetry, v0 = the speed (m/s)
+i = m.find(":goto_14")
+k = min(x for x in instr_idx(m.lines) if x > i)
+assert m.lines[k].strip() == "move/from16 v31, v0", m.lines[k]
+assert "getVEgo()F" in "".join(m.lines[i - 6:i]) and "use_wheel_speed" in "".join(m.lines[i - 60:i])
+a, b = m.context(k, k + 1, before=False)
+old = "".join(m.lines[a:b])
+m.edits.append((old, "".join(m.lines[a:k]) + "    invoke-static {v2, v0}, Lcom/starpilot/starview/SpeedShown;->mps(Lcom/starpilot/starview/Telemetry;F)F\n"
+                "    move-result v0\n" + "".join(m.lines[k:b])))
 # ---------------------------------------------------------------- MapPane
 MP = "Lcom/starpilot/starview/MapPane;"
 m = M("MapPane", "<init>(Landroid/content/Context;Lcom/starpilot/starview/MapPane$Host;)V")

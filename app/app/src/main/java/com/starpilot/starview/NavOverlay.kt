@@ -200,6 +200,7 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
   private val rect = RectF()
   private var totalKey = ""
   private var total = 0.0
+  private fun trips() = context.applicationContext.getSharedPreferences("starview_navtrip", 0)
   private val timeFormat by lazy { android.text.format.DateFormat.getTimeFormat(context) }
   // 2.86.1: the last instruction stays while the comma's navigation has no position (elevated tracks, tunnels, the
   // first seconds after a start): its distances count down by the car's own motion (Odometry: wheels, gyro), until
@@ -316,10 +317,23 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
         c.drawText(trip, right - tp.measureText(trip), header + 20 * u, tp)
       }
     }
-    // progress: how much of the drive is done (the most left seen for this destination is the whole)
+    // progress: how much of the drive is done (the most left seen for this destination is the whole). 2.86.5: kept
+    // across StarView restarts (an update mid-drive restarted it and the whole became what was left then: after 1 h 20
+    // the bar was half full with 9 min to go); a trip to the same place more than 12 h later starts over.
     val key = nav.optString("destination")
-    if (key != totalKey) { totalKey = key; total = 0.0 }
-    if (!remaining.isNaN()) total = max(total, remaining)
+    if (key != totalKey) {
+      totalKey = key; total = 0.0
+      val sp = trips()
+      if (sp.getString("dest", null) == key && System.currentTimeMillis() - sp.getLong("at", 0L) < 12 * 3_600_000L) {
+        total = sp.getFloat("total", 0f).toDouble()
+      }
+    }
+    if (!remaining.isNaN() && remaining > total) {
+      total = remaining
+      if (key.isNotEmpty()) {
+        trips().edit().putString("dest", key).putFloat("total", total.toFloat()).putLong("at", System.currentTimeMillis()).apply()
+      }
+    }
     if (total > 0 && barRight > pad + 20 * u) {
       val thick = 6 * u
       rect.set(pad, barCenter - thick / 2, barRight, barCenter + thick / 2)
