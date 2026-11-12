@@ -69,9 +69,14 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     private const val PERIOD = 12.2
     private const val EGO_BACK = 0.29         // the van's middle, behind the comma camera (m)
     private val GENERIC = arrayOf("car_sedan", "car_suv", "car_hatch", "car_coupe")
+    /** Traffic's id for radarState's leadOne, the car openpilot follows (its LEAD_ID_BASE) */
+    private const val FOLLOWED_ID = -100L
   }
 
-  class Thing(val id: Long, val model: String, var r: Double, var f: Double, var psi: Double, val lead: Boolean, val remembered: Boolean)
+  class Thing(val id: Long, val model: String, var r: Double, var f: Double, var psi: Double, val lead: Boolean, val remembered: Boolean) {
+    /** a place and a direction that can be drawn (no NaN, no infinity) */
+    fun ok() = r.isFinite() && f.isFinite() && psi.isFinite()
+  }
 
   /** Everything one drawing needs (the live one is made from the telemetry; tests make their own). */
   class Frame(val model: ModelSnapshot?, val fit: LaneFit.Fit?, val pose: LaneFit.Pose?, val travelled: Double,
@@ -209,7 +214,8 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       if (!showTraffic && !v.lead) continue
       val name = GENERIC[v.kind and 3]
       val L = SceneSprites.models[name]?.L ?: 4.6f
-      things.add(Thing(v.id, name, v.y, v.x + L / 2, roadHeading(m, v.x), v.lead, false))
+      // 2.87.1: only the car openpilot follows (radarState's leadOne) is blue, not the second lead or the cars beside us
+      things.add(Thing(v.id, name, v.y, v.x + L / 2, roadHeading(m, v.x), v.id == FOLLOWED_ID, false))
     }
     if (showTraffic) {
       val det = detector
@@ -221,8 +227,13 @@ class LaneSceneView(ctx: Context) : View(ctx) {
           } ?: continue
           val vehicle = o.cls == 2 || o.cls == 3 || o.cls == 5 || o.cls == 7
           val cx = o.cx.toDouble(); val cy = o.cy.toDouble()
+          // 2.87.1: the detector says NaN when it doesn't know how far a car is (left out) or which way it faces (then
+          // it goes the road's way, like the radar's cars). A NaN reaching the drawing turned every frame grey.
+          if (!cx.isFinite() || !cy.isFinite()) continue
           if (vehicle && things.any { abs(it.f - cx) < cx * 0.2 + 4 && abs(it.r - cy) < cx * 0.06 + 2.2 }) continue
-          things.add(Thing(-o.id - 5_000_000L, name, cy, cx, if (vehicle) o.heading.toDouble() else 0.0, false, false))
+          val hd = o.heading.toDouble()
+          val psi = if (!vehicle) 0.0 else if (hd.isFinite()) hd else roadHeading(m, cx)
+          things.add(Thing(-o.id - 5_000_000L, name, cy, cx, psi, false, false))
         }
       }
       if (t.s("car_memory")) carMemory?.ghosts?.forEach { g ->
@@ -231,13 +242,14 @@ class LaneSceneView(ctx: Context) : View(ctx) {
         things.add(Thing(-1_000_000L - g.id, name, g.y, g.x + L / 2, roadHeading(m, g.x), false, true))
       }
     }
+    things.removeAll { !it.ok() }
     // ease every road user toward where it was seen (radar and camera jump a little from frame to frame)
     val dt = if (lastNs == 0L) 0.0 else (nowNs - lastNs) / 1e9
     lastNs = nowNs
     val k = 1 - exp(-dt / 0.12)
     for (th in things) {
       val s = seen[th.id]
-      if (s == null || abs(s[1] - th.f) > 8 || abs(s[0] - th.r) > 3) { seen[th.id] = doubleArrayOf(th.r, th.f, th.psi, nowNs.toDouble()); continue }
+      if (s == null || abs(s[1] - th.f) > 8 || abs(s[0] - th.r) > 3 || !(s[0] + s[1] + s[2]).isFinite()) { seen[th.id] = doubleArrayOf(th.r, th.f, th.psi, nowNs.toDouble()); continue }
       s[0] += (th.r - s[0]) * k; s[1] += (th.f - s[1]) * k; s[2] += (th.psi - s[2]) * k; s[3] = nowNs.toDouble()
       th.r = s[0]; th.f = s[1]; th.psi = s[2]
     }
@@ -605,8 +617,9 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       val col = (color and 0x00FFFFFF) or (0x48 shl 24)
       grad(c, yAt(to * 0.5), yAt(to), col, col and 0x00FFFFFF)
     }
+    // Telemetry's laneChangeDir: -1 left, 1 right (2.87.1: 2.87.0 took 1 for left and 2 for right)
     if (m.laneChanging && t?.s("lane_change_lane") != false) {
-      if (m.laneChangeDir == 1) lane(0, 1, 60.0, pal.change) else if (m.laneChangeDir == 2) lane(2, 3, 60.0, pal.change)
+      if (m.laneChangeDir < 0) lane(0, 1, 60.0, pal.change) else if (m.laneChangeDir > 0) lane(2, 3, 60.0, pal.change)
     }
     if (fr.blindL) lane(0, 1, 18.0, pal.blind)
     if (fr.blindR) lane(2, 3, 18.0, pal.blind)
@@ -633,11 +646,24 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   private fun drawThings(c: Canvas, fr: Frame, pal: Pal) {
     class D(val z: Double, val th: Thing?)
     val list = ArrayList<D>()
-    for (th in fr.things) { if (th.f < FMIN || th.f > 200 || abs(th.r) > 40) continue; if (proj(th.r, th.f)) list.add(D(pz, th)) }
+    for (th in fr.things) { if (!th.ok() || th.f < FMIN || th.f > 200 || abs(th.r) > 40) continue; if (proj(th.r, th.f)) list.add(D(pz, th)) }
     if (proj(0.0, -EGO_BACK)) list.add(D(pz, null))
     list.sortByDescending { it.z }
-    for (d in list) if (d.th == null) drawEgo(c, pal) else drawThing(c, d.th, pal)
+    for (d in list) {
+      if (d.th == null) { drawEgo(c, pal); continue }
+      // 2.87.1: a road user that can't be drawn is left out; the rest of the picture stays
+      val n = c.saveCount
+      try {
+        drawThing(c, d.th, pal)
+      } catch (e: Exception) {
+        c.restoreToCount(n)
+        pFill.shader = null
+        val now = System.currentTimeMillis()
+        if (now - thingFailAt > 10_000) { thingFailAt = now; android.util.Log.w("StarView/Scene2", "thing ${d.th.model}", e) }
+      }
+    }
   }
+  private var thingFailAt = 0L
 
   /** a soft dark oval on the road under a car (its footprint, blurred at the edges) */
   private fun shadow(c: Canvas, r: Double, f: Double, psi: Double, L: Double, Wd: Double, pal: Pal, alpha: Int) {
@@ -649,6 +675,8 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     }
     val cx = (x0 + x1) / 2; val cy = (y0 + y1) / 2
     val rx = max(1f, (x1 - x0) / 2); val ry = max(1f, (y1 - y0) / 2)
+    // Android refuses a gradient of NaN or infinite size (IllegalArgumentException): no shadow then
+    if (!(cx.isFinite() && cy.isFinite() && rx.isFinite() && ry.isFinite())) return
     val col = pal.shadow and 0x00FFFFFF
     pFill.color = -0x1000000
     pFill.shader = android.graphics.RadialGradient(cx, cy, rx, intArrayOf(col or (alpha shl 24), col or ((alpha * 0.7f).toInt() shl 24), col),
@@ -686,10 +714,13 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     val p = when { th.lead -> pLead; th.remembered -> pGhost; else -> pBmp }
     val a0 = p.alpha
     p.alpha = (a0 * fade).toInt()
-    if (mirror) { c.save(); c.scale(-1f, 1f, ax, ay) }
-    c.drawBitmap(bmp, src, dst, p)
-    if (mirror) c.restore()
-    p.alpha = a0
+    try {
+      if (mirror) { c.save(); c.scale(-1f, 1f, ax, ay) }
+      c.drawBitmap(bmp, src, dst, p)
+      if (mirror) c.restore()
+    } finally {
+      p.alpha = a0
+    }
   }
 
   private fun drawEgo(c: Canvas, pal: Pal) {

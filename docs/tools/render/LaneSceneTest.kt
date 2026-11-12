@@ -25,7 +25,8 @@ import kotlin.math.hypot
  * The new Scene view on a recorded drive, off the tablet: the drive's model lines and GPS (laneData/drive_*.json),
  * OpenStreetMap ways (laneData/osm_all.json), LaneMap + LaneFit replayed over the 90 s before each moment, then
  * LaneSceneView drawn at the tablet's size. Moments in laneData/picks.txt: "window,YYYY-MM-DD HH:MM:SS (Eastern),name
- * [,day][,cars][,top][,zoom=D][,tilt=E]". Writes picOut/<name>.png (+ _top.png: bird's-eye check) and log.txt.
+ * [,day][,cars][,nan][,lcL|lcR][,top][,zoom=D][,tilt=E]" (nan: two cars with the detector's NaN; lcL / lcR: a lane
+ * change to that side). Writes picOut/<name>.png (+ _top.png: bird's-eye check) and log.txt.
  * Drive data never goes in git.
  */
 @RunWith(RobolectricTestRunner::class)
@@ -38,7 +39,7 @@ class LaneSceneTest {
 
   private fun fa(a: JSONArray) = FloatArray(a.length()) { a.getDouble(it).toFloat() }
 
-  private fun snapshot(f: JSONObject): ModelSnapshot {
+  private fun snapshot(f: JSONObject, lcDir: Int = 0): ModelSnapshot {
     val x = fa(f.getJSONArray("lx"))
     val n = x.size
     val lanes = f.getJSONArray("lanes")
@@ -47,7 +48,7 @@ class LaneSceneTest {
     return ModelSnapshot(0L, fa(f.getJSONArray("px")), fa(f.getJSONArray("py")), z, z,
       Array(4) { x }, Array(4) { fa(lanes.getJSONArray(it)) }, Array(4) { z }, fa(f.getJSONArray("lp")),
       Array(2) { x }, Array(2) { fa(edges.getJSONArray(it)) }, Array(2) { z }, fa(f.getJSONArray("estd")),
-      fa(f.getJSONArray("lstd")), z, false, 0f, false, 0, false, FloatArray(8), 0f)
+      fa(f.getJSONArray("lstd")), z, false, 0f, lcDir != 0, lcDir, false, FloatArray(8), 0f)
   }
 
   /** bird's-eye check around the fitted car (1 px = 12.5 cm, the car at the bottom middle, ahead = up): roads it
@@ -163,11 +164,16 @@ class LaneSceneTest {
         things.add(LaneSceneView.Thing(3, "truck", 3.7, 26.0, 0.0, false, false))
         things.add(LaneSceneView.Thing(4, "car_hatch", 3.6, -4.0, 0.0, false, true))
       }
+      if ("nan" in p) {      // what the camera's car detector hands over when it doesn't know (2.87.1)
+        things.add(LaneSceneView.Thing(5, "car_suv", 3.6, 16.0, Double.NaN, false, false))
+        things.add(LaneSceneView.Thing(6, "car_coupe", Double.NaN, Double.NaN, 0.0, false, false))
+      }
+      val lcDir = if ("lcR" in p) 1 else if ("lcL" in p) -1 else 0
       val v = LaneSceneView(ctx)
       v.night = "day" !in p
       p.firstOrNull { it.startsWith("zoom=") }?.let { v.dist = it.substring(5).toFloat() }
       p.firstOrNull { it.startsWith("tilt=") }?.let { v.elev = it.substring(5).toFloat() }
-      v.frame = LaneSceneView.Frame(snapshot(f), fitN, if (fitN.hidden) null else fitN.pose, travelled, things, true,
+      v.frame = LaneSceneView.Frame(snapshot(f, lcDir), fitN, if (fitN.hidden) null else fitN.pose, travelled, things, true,
         false, false, null)
       val w = 2944
       val h = 1840
