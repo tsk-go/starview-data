@@ -50,3 +50,21 @@ com.starpilot.starview.PicTest`. The tablet is 1472 x 920 dp at density 2.0 (qua
 
 `PYTHONPATH=<openpilot>:<openpilot>/opendbc_repo python3 run_stubbed.py -q <test file>` stubs the compiled modules a PC
 lacks (msgq, params) so starviewd's tests import.
+
+## `render/LaneSceneTest.kt`: the new Scene view on a recorded drive
+
+The 2.87.0 Scene view (LaneSceneView, with LaneMap and LaneFit) run off the tablet on a real drive, to show the owner
+before a release. Data (never in git - it holds where the car drove): `render/lane_conv.py OSM_DIR EXPORT.json.gz DIR`
+makes `DIR/osm_all.json` from OpenStreetMap extracts (`api.openstreetmap.org/api/0.6/map?bbox=...`) and
+`DIR/drive_<window>.json` from the comma's lane export (modelV2 lines, GPS, radar per segment). `DIR/picks.txt` lists the
+moments: `window,YYYY-MM-DD HH:MM:SS (Eastern),name[,day][,cars][,top][,zoom=D][,tilt=E]` (`top` adds a bird's-eye check
+of the fit, `cars` three hand-placed cars). Set up like PicTest, plus `it.systemProperty("laneData", DIR)`, and run with
+`--rerun` (Gradle doesn't see picks.txt change). Each moment replays LaneMap + LaneFit over the 90 s before it.
+
+## `scene2/`: the road users' pictures in assets/scene2
+
+LaneSceneView draws cars, people, signs and the van from pictures of the old Scene's own 3D models (assets/models):
+`sprites.html` (three.js 0.169.0 in `node_modules`, `models` -> assets/models, served on 127.0.0.1:8765) renders each
+model from 3 heights and 21 turns, the van from the chase camera at 12-48 deg; `gen.sh` runs it through Playwright
+(`run.js`), `pack.py OUT` packs WebP sheets and `sprites.json`; `sheet.py` makes a contact sheet to look at. truck.glb and
+bus.glb face backwards in their files (`flip=1`).
