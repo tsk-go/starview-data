@@ -32,15 +32,28 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
     val RED = Color.rgb(214, 18, 32)
     const val SAMPLE = 25                 // what the screen editor shows
 
+    // 2.86.4: the last limit read stays while the reading goes stale / unknown / absent (the comma's own screen does
+    // the same: unified_speed_presentation.displayed_limit_mps keeps last_received_speed_limit_mps). 2.86.3 showed
+    // only a "valid" reading, so the sign came for a moment and went again. Forgotten when the car turns off.
+    @Volatile private var lastMps = Float.NaN
+
     /** The posted limit in m/s (NaN when unknown): the speed-limit card's own number, before any offset. */
     fun postedMps(t: Telemetry): Float {
-      val live = t.slcLive(System.nanoTime())
-      if (live != null) {
-        val v = if (live.kind == "valid") live.speedMps else if (live.hasAccepted) live.acceptedMps else Float.NaN
-        return if (v.isFinite() && v > 0f) v else Float.NaN
+      if (!t.started) {
+        lastMps = Float.NaN
+        return Float.NaN
       }
-      val v = t.slcSpeedLimit
-      return if (v.isFinite() && v > 0f) v else Float.NaN
+      val live = t.slcLive(System.nanoTime())
+      val v = when {
+        live != null && live.kind == "valid" && live.speedMps.isFinite() && live.speedMps > 0f -> live.speedMps
+        lastMps.isFinite() -> lastMps
+        live != null && live.hasAccepted -> live.acceptedMps
+        live == null -> t.slcSpeedLimit
+        else -> Float.NaN
+      }
+      if (!(v.isFinite() && v > 0f)) return Float.NaN
+      if (live != null && live.kind == "valid") lastMps = v
+      return v
     }
 
     /** The speed the big number shows (the car's dash speed unless "use wheel speed" is on), m/s. */

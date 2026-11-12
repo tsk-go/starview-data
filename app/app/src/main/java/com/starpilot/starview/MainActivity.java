@@ -7714,8 +7714,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     /** 2.86.3: the speed limit road sign shows while the car is on and the limit is known; redrawn when its number or
-     *  flash changes. The first time it shows it goes right of the speed number, wherever that is (then the screen
-     *  editor keeps where the owner puts it). */
+     *  flash changes. Where it sits is the screen editor's (default: bottom left, right of the default speed). */
     private void hybSignTick() {
         SpeedSignView sign = this.speedSign;
         if (sign == null) {
@@ -7728,33 +7727,7 @@ public final class MainActivity extends AppCompatActivity {
         }
         if (vis == 0) {
             sign.tick();
-            hybPlaceSign(sign);
         }
-    }
-
-    private void hybPlaceSign(SpeedSignView sign) {
-        HudLayout h = this.hud;
-        View sb = findViewById(R.id.speedBox);
-        if (h == null || sb == null || sb.getWidth() <= 0 || sign.getHeight() <= 0 || !(sb.getParent() instanceof View)) {
-            return;
-        }
-        HudLayout.State st = h.state("speedSign");
-        if (!Float.isNaN(st.getX())) {
-            return;
-        }
-        View root = (View) sb.getParent();
-        if (root.getWidth() <= 0 || root.getHeight() <= 0) {
-            return;
-        }
-        float d = getResources().getDisplayMetrics().density;
-        float left = sb.getLeft() + sb.getWidth() * sb.getScaleX() + 14 * d;
-        float top = sb.getTop() + Math.max(0f, (sb.getHeight() * sb.getScaleY() - sign.getHeight() * sign.getScaleY()) / 2f);
-        if (left + sign.getWidth() > root.getWidth()) {
-            return;
-        }
-        h.place(st, left, top, root.getWidth(), root.getHeight());
-        h.save();
-        applyHud();
     }
 
     private final void stopHudEdit() {
