@@ -25,8 +25,8 @@ import kotlin.math.hypot
  * The new Scene view on a recorded drive, off the tablet: the drive's model lines and GPS (laneData/drive_*.json),
  * OpenStreetMap ways (laneData/osm_all.json), LaneMap + LaneFit replayed over the 90 s before each moment, then
  * LaneSceneView drawn at the tablet's size. Moments in laneData/picks.txt: "window,YYYY-MM-DD HH:MM:SS (Eastern),name
- * [,day][,cars][,nan][,lcL|lcR][,top][,zoom=D][,tilt=E]" (nan: two cars with the detector's NaN; lcL / lcR: a lane
- * change to that side). Writes picOut/<name>.png (+ _top.png: bird's-eye check) and log.txt.
+ * [,day][,cars][,nan][,lcL|lcR][,lanes=L:R[:E]][,nomap][,top][,zoom=D][,tilt=E]" (nan: two cars with the detector's
+ * NaN; lcL / lcR: a lane change to that side; lanes: the lane card's count; nomap: camera only). Writes picOut/<name>.png (+ _top.png: bird's-eye check) and log.txt.
  * Drive data never goes in git.
  */
 @RunWith(RobolectricTestRunner::class)
@@ -173,8 +173,13 @@ class LaneSceneTest {
       v.night = "day" !in p
       p.firstOrNull { it.startsWith("zoom=") }?.let { v.dist = it.substring(5).toFloat() }
       p.firstOrNull { it.startsWith("tilt=") }?.let { v.elev = it.substring(5).toFloat() }
-      v.frame = LaneSceneView.Frame(snapshot(f, lcDir), fitN, if (fitN.hidden) null else fitN.pose, travelled, things, true,
-        false, false, null)
+      // lanes=L:R[:E]: the lane card's count (lanes our way left / right of us, E = the left edge's LaneMap style, default
+      // solid yellow); nomap: draw as if the map hadn't lined up (camera only)
+      val lanes = p.firstOrNull { it.startsWith("lanes=") }?.substring(6)?.split(':')?.let {
+        LaneSceneView.Lanes(it[0].toInt(), it[1].toInt(), it.getOrNull(2)?.toInt() ?: LaneMap.EDGE_YELLOW)
+      }
+      val pose = if (fitN.hidden || "nomap" in p) null else fitN.pose
+      v.frame = LaneSceneView.Frame(snapshot(f, lcDir), fitN, pose, travelled, things, true, false, false, null, lanes)
       val w = 2944
       val h = 1840
       v.measure(View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.EXACTLY))

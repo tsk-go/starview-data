@@ -56,11 +56,13 @@ lacks (msgq, params) so starviewd's tests import.
 The 2.87.0 Scene view (LaneSceneView, with LaneMap and LaneFit) run off the tablet on a real drive, to show the owner
 before a release. Data (never in git - it holds where the car drove): `render/lane_conv.py OSM_DIR EXPORT.json.gz DIR`
 makes `DIR/osm_all.json` from OpenStreetMap extracts (`api.openstreetmap.org/api/0.6/map?bbox=...`) and
-`DIR/drive_<window>.json` from the comma's lane export (modelV2 lines, GPS, radar per segment). `DIR/picks.txt` lists the
-moments: `window,YYYY-MM-DD HH:MM:SS (Eastern),name[,day][,cars][,nan][,lcL|lcR][,top][,zoom=D][,tilt=E]` (`top` adds a
-bird's-eye check of the fit, `cars` three hand-placed cars, `nan` two cars with the detector's NaN distance / heading,
-`lcL` / `lcR` a lane change to that side). Set up like PicTest, plus `it.systemProperty("laneData", DIR)`, and run with
-`--rerun` (Gradle doesn't see picks.txt change). Each moment replays LaneMap + LaneFit over the 90 s before it.
+`DIR/drive_<window>.json` from the comma's lane export (modelV2 lines, GPS, radar per segment). `DIR/picks.txt` lists
+the moments, one per line:
+`window,YYYY-MM-DD HH:MM:SS (Eastern),name[,day][,cars][,nan][,lcL|lcR][,lanes=L:R[:E]][,nomap][,top][,zoom=D][,tilt=E]`
+(`top` adds a bird's-eye check of the fit, `cars` three hand-placed cars, `nan` two cars with the detector's NaN
+distance / heading, `lcL` / `lcR` a lane change to that side, `lanes=L:R[:E]` the lane card's count, `nomap` camera
+only). Set up like PicTest, plus `it.systemProperty("laneData", DIR)`, and run with `--rerun` (Gradle doesn't see
+picks.txt change). Each moment replays LaneMap + LaneFit over the 90 s before it.
 
 ## `scene2/`: the road users' pictures in assets/scene2
 

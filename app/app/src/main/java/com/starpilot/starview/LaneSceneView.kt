@@ -81,7 +81,50 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   /** Everything one drawing needs (the live one is made from the telemetry; tests make their own). */
   class Frame(val model: ModelSnapshot?, val fit: LaneFit.Fit?, val pose: LaneFit.Pose?, val travelled: Double,
               val things: List<Thing>, val latActive: Boolean, val blindL: Boolean, val blindR: Boolean,
-              val marks: Array<LaneMarks.Mark>?)
+              val marks: Array<LaneMarks.Mark>?, val lanes: Lanes? = null)
+
+  /**
+   * 2.87.1: the lane card's count (LaneBrain), when it's sure (70 %, each side on its own): lanes our way left / right
+   * of us (-1 = not sure) and how the left edge of our side is painted (LaneMap.EDGE_YELLOW on a one-way or divided road,
+   * DOUBLE_YELLOW for the centre line of a bigger two-way road, -1 = only what the camera's line reader sees: a small
+   * street often has none). It tells which of the camera's four lines is a road edge (solid), a line between lanes, or
+   * past the edge (not drawn).
+   */
+  class Lanes(val left: Int, val right: Int, val leftEdge: Int) {
+    /** camera line [i] (0 = two over on the left .. 3 = two over on the right): one of the ROLE_ values */
+    fun role(i: Int): Int {
+      val n = if (i < 2) left else right
+      if (n < 0) return ROLE_UNKNOWN
+      val near = i == 1 || i == 2                 // the lines of our own lane
+      return when {
+        near && n == 0 -> if (i == 1) ROLE_LEFT_EDGE else ROLE_RIGHT_EDGE
+        near -> ROLE_INNER
+        n == 0 -> ROLE_BEYOND
+        n == 1 -> if (i == 0) ROLE_LEFT_EDGE else ROLE_RIGHT_EDGE
+        else -> ROLE_INNER
+      }
+    }
+    companion object {
+      const val ROLE_UNKNOWN = 0; const val ROLE_INNER = 1; const val ROLE_LEFT_EDGE = 2; const val ROLE_RIGHT_EDGE = 3
+      const val ROLE_BEYOND = 4
+      private val MINOR = setOf("residential", "service", "living_street", "unclassified", "road", "track")
+
+      /** from the live lane tracker; null when it isn't running */
+      fun live(): Lanes? {
+        val b = LaneBrain.Live.INSTANCE.brain ?: return null
+        val (l, pl) = b.side(-1)
+        val (r, pr) = b.side(1)
+        val road = b.road
+        val leftEdge = when {
+          road == null -> -1
+          road.oneway || road.highway -> LaneMap.EDGE_YELLOW
+          road.kind in MINOR -> -1
+          else -> LaneMap.DOUBLE_YELLOW
+        }
+        return Lanes(if (pl >= 0.7) l else -1, if (pr >= 0.7) r else -1, leftEdge)
+      }
+    }
+  }
 
   // ------------------------------------------------------------------------------------------- colours
   private class Pal(val top: Int, val hor: Int, val road: Int, val white: Int, val yellow: Int, val curb: Int,
@@ -254,7 +297,8 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       th.r = s[0]; th.f = s[1]; th.psi = s[2]
     }
     seen.values.removeAll { nowNs - it[3] > 2e9 }
-    return Frame(m, fit, pose, odo[3], things, t.latActive, t.leftBlindspot, t.rightBlindspot, detector?.laneMarks?.marks)
+    val lanes = try { Lanes.live() } catch (e: Exception) { null }
+    return Frame(m, fit, pose, odo[3], things, t.latActive, t.leftBlindspot, t.rightBlindspot, detector?.laneMarks?.marks, lanes)
   }
 
   /** the road's direction at [x] m ahead, from openpilot's path (radians, right = positive) */
@@ -532,23 +576,34 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     for (i in 0 until 4) {
       val p = m.laneProb[i]
       if (p < 0.35f) continue
+      // 2.87.1: past the road's edge (the lane card is sure there's no lane our way there): the camera's line there is a
+      // shoulder or a barrier, not a lane line - drawing it made a 3-lane road look like 4 or 5
+      val role = fr.lanes?.role(i) ?: Lanes.ROLE_UNKNOWN
+      if (role == Lanes.ROLE_BEYOND) continue
       val reach = if (mapOn) min(42.0, lineReach(m, i)) else lineReach(m, i)
       val xs = m.laneX[i]; val ys = m.laneY[i]
-      // how it's painted: the camera's line reader, else the map line it lies on, else a dashed white line
-      var style = LaneMap.DASH_WHITE
-      val mk = fr.marks?.getOrNull(i)
+      // how it's painted: the map line it lies on, the camera's line reader, and (2.87.1) which line of the road it is
       val r20 = LaneFit.interp(xs, ys, min(20.0, reach * 0.5))
       val near = styleAt.minByOrNull { abs(it[0] - r20) }
-      if (near != null && abs(near[0] - r20) < 0.9) style = near[1].toInt()
-      if (style == LaneMap.CURB || style == LaneMap.EDGE_WHITE) style = LaneMap.SOLID_WHITE
-      if (mk != null && mk.kind >= LaneMarks.DASHED) {
-        style = when {
-          mk.yellow && mk.double -> LaneMap.DOUBLE_YELLOW
-          mk.yellow -> LaneMap.EDGE_YELLOW
-          mk.kind == LaneMarks.SOLID -> LaneMap.SOLID_WHITE
-          else -> LaneMap.DASH_WHITE
-        }
+      var mapStyle = if (near != null && abs(near[0] - r20) < 0.9) near[1].toInt() else -1
+      if (mapStyle == LaneMap.CURB || mapStyle == LaneMap.EDGE_WHITE) mapStyle = LaneMap.SOLID_WHITE
+      val mk = fr.marks?.getOrNull(i)
+      val rd = if (mk == null || mk.kind < LaneMarks.DASHED) -1 else when {
+        mk.yellow && mk.double -> LaneMap.DOUBLE_YELLOW
+        mk.yellow -> LaneMap.EDGE_YELLOW
+        mk.kind == LaneMarks.SOLID -> LaneMap.SOLID_WHITE
+        else -> LaneMap.DASH_WHITE
       }
+      val style = when (role) {
+        // the edges are solid: yellow on the left (double for a two-way road's centre line), white on the right
+        Lanes.ROLE_LEFT_EDGE -> if (mapStyle == LaneMap.EDGE_YELLOW || mapStyle == LaneMap.DOUBLE_YELLOW) mapStyle
+          else if (fr.lanes!!.leftEdge >= 0) fr.lanes.leftEdge else rd
+        Lanes.ROLE_RIGHT_EDGE -> LaneMap.SOLID_WHITE
+        // between two lanes our way: white, solid only where the reader (or, without a reading, the map) says so
+        Lanes.ROLE_INNER -> if (rd == LaneMap.SOLID_WHITE || (rd < 0 && mapStyle == LaneMap.SOLID_WHITE)) LaneMap.SOLID_WHITE else LaneMap.DASH_WHITE
+        else -> if (rd >= 0) rd else if (mapStyle >= 0) mapStyle else LaneMap.DASH_WHITE
+      }
+      if (style < 0) continue                       // a small two-way street's middle with no paint seen
       val color = if (style == LaneMap.EDGE_YELLOW || style == LaneMap.DOUBLE_YELLOW) pal.yellow else pal.white
       path.rewind()
       val n = (((reach - FMIN) / 3.0).toInt() + 1).coerceAtMost(120)
