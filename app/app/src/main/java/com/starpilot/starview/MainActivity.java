@@ -187,6 +187,7 @@ public final class MainActivity extends AppCompatActivity {
     private ImageView micBtn;
     TextView modeText;
     NavCardView navCard;
+    SpeedSignView speedSign;
     NavMapView navMap;
     boolean night;
     NudgeHintView nudgeHint;
@@ -7574,9 +7575,10 @@ public final class MainActivity extends AppCompatActivity {
     // few smali lines added to call them (app/hybrid/patches.py). Our source calls them at the same places, so both
     // builds do the same. Keep them small and self-contained: they are the only code of ours in those methods. ----
 
-    /** End of the constructor: the see-through map is a screen-editor widget with its own setting. */
+    /** End of the constructor: the see-through map and the speed limit road sign are screen-editor widgets with their
+     *  own settings. */
     final void hybInit() {
-        this.hudSettingKeys = MapsKt.plus(this.hudSettingKeys, TuplesKt.to("navMap", "nav_map"));
+        this.hudSettingKeys = MapsKt.plus(MapsKt.plus(this.hudSettingKeys, TuplesKt.to("navMap", "nav_map")), TuplesKt.to("speedSign", "speed_sign"));
     }
 
     /** Right after super.onCreate. 2.85.12: reopened after an update while another app was in front: start, but
@@ -7607,6 +7609,11 @@ public final class MainActivity extends AppCompatActivity {
                     MainActivity.this.openMap();
                 }
             });
+        }
+        // 2.86.3: the speed limit as a US road sign (SpeedSign.kt)
+        this.speedSign = (SpeedSignView) findViewById(R.id.speedSign);
+        if (this.speedSign != null) {
+            this.speedSign.t = this.telemetry;
         }
         // 2.85.3: the bottom buttons, the saver pill, the favorites bar and the "why" chip are screen-editor widgets
         HudLayout hudLate = this.hud;
@@ -7685,9 +7692,15 @@ public final class MainActivity extends AppCompatActivity {
         return c != null && t.getStarted() && t.s("nav_card") && !getMapOpen() && c.current(System.currentTimeMillis()) != null;
     }
 
-    /** Screen tick (MainActivity$uiTick$1), right after the turn card. 2.85.3: the see-through map shows whenever
-     *  the car is on (streets; the route too while one is set); 2.85.7: a lighter shade over the Scene view. */
+    /** Screen tick (MainActivity$uiTick$1), right after the turn card: the see-through map and the speed limit sign. */
     final void hybNavMapTick() {
+        hybMapTick();
+        hybSignTick();
+    }
+
+    /** 2.85.3: the see-through map shows whenever the car is on (streets; the route too while one is set); 2.85.7: a
+     *  lighter shade over the Scene view. */
+    private void hybMapTick() {
         NavMapView m = this.navMap;
         if (m == null) {
             return;
@@ -7698,6 +7711,50 @@ public final class MainActivity extends AppCompatActivity {
             m.setVisibility(vis);
         }
         m.light = this.sceneOn;
+    }
+
+    /** 2.86.3: the speed limit road sign shows while the car is on and the limit is known; redrawn when its number or
+     *  flash changes. The first time it shows it goes right of the speed number, wherever that is (then the screen
+     *  editor keeps where the owner puts it). */
+    private void hybSignTick() {
+        SpeedSignView sign = this.speedSign;
+        if (sign == null) {
+            return;
+        }
+        Telemetry t = this.telemetry;
+        int vis = ((t.getStarted() && t.s("speed_sign") && sign.hasLimit()) || NavOverlay.editing) ? 0 : 8;
+        if (sign.getVisibility() != vis) {
+            sign.setVisibility(vis);
+        }
+        if (vis == 0) {
+            sign.tick();
+            hybPlaceSign(sign);
+        }
+    }
+
+    private void hybPlaceSign(SpeedSignView sign) {
+        HudLayout h = this.hud;
+        View sb = findViewById(R.id.speedBox);
+        if (h == null || sb == null || sb.getWidth() <= 0 || sign.getHeight() <= 0 || !(sb.getParent() instanceof View)) {
+            return;
+        }
+        HudLayout.State st = h.state("speedSign");
+        if (!Float.isNaN(st.getX())) {
+            return;
+        }
+        View root = (View) sb.getParent();
+        if (root.getWidth() <= 0 || root.getHeight() <= 0) {
+            return;
+        }
+        float d = getResources().getDisplayMetrics().density;
+        float left = sb.getLeft() + sb.getWidth() * sb.getScaleX() + 14 * d;
+        float top = sb.getTop() + Math.max(0f, (sb.getHeight() * sb.getScaleY() - sign.getHeight() * sign.getScaleY()) / 2f);
+        if (left + sign.getWidth() > root.getWidth()) {
+            return;
+        }
+        h.place(st, left, top, root.getWidth(), root.getHeight());
+        h.save();
+        applyHud();
     }
 
     private final void stopHudEdit() {
