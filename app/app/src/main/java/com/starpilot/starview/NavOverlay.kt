@@ -88,28 +88,103 @@ object NavOverlay {
 }
 
 /** Where the car is and which way it points, from the same sources the map uses (RTK, the comma's GPS, the phone). */
+/**
+ * Where the car is, for the turn card's route progress and the see-through map. In order: the RTK receiver; the comma's
+ * GPS through GpsBridge (2.84.1's, which also carries on by the car's own motion for up to a minute after a fix); then,
+ * with no fix at all (under elevated tracks, in a tunnel or garage, the first seconds after the car starts), our own
+ * estimate: the last position moved along by the car's wheels and gyro / steering (Odometry), for as long as it takes.
+ * The last real position is kept across restarts, so the map shows at once when the car starts where it was parked.
+ */
 object NavPos {
-  fun lat(t: Telemetry): Double {
-    RtkPosition.INSTANCE.now(System.currentTimeMillis(), t.vEgo.toDouble())?.let { return it[0] }
-    val g = GpsBridge.INSTANCE
-    if (!g.outLat.isNaN() && System.currentTimeMillis() - g.lastLiveMs < 30000) return g.outLat
-    return t.gpsLat
-  }
+  private const val PREFS = "starview_navpos"
+  private var prefs: android.content.SharedPreferences? = null
+  // the last position from a real source, with the car's motion (Odometry) at that moment
+  private var aLat = Double.NaN; private var aLon = Double.NaN; private var aBearing = Double.NaN
+  private var aX = 0.0; private var aY = 0.0; private var aYaw = 0.0; private var aSet = false
+  private var savedMs = 0L
+  private var cacheMs = 0L
+  private val cache = doubleArrayOf(Double.NaN, Double.NaN, Double.NaN, 0.0)
+  /** true while the position is our own estimate (no RTK / GPS fix) */
+  @Volatile var estimated = false; private set
 
-  fun lon(t: Telemetry): Double {
-    RtkPosition.INSTANCE.now(System.currentTimeMillis(), t.vEgo.toDouble())?.let { return it[1] }
-    val g = GpsBridge.INSTANCE
-    if (!g.outLon.isNaN() && System.currentTimeMillis() - g.lastLiveMs < 30000) return g.outLon
-    return t.gpsLon
-  }
-
-  fun bearing(t: Telemetry): Float {
-    if (RtkPosition.INSTANCE.now(System.currentTimeMillis(), t.vEgo.toDouble()) != null) {
-      val hd = RtkPosition.INSTANCE.heading
-      if (!hd.isNaN() && !hd.isInfinite()) return hd.toFloat()
+  fun init(ctx: Context) {
+    if (prefs != null) return
+    val p = ctx.applicationContext.getSharedPreferences(PREFS, 0)
+    prefs = p
+    if (aLat.isNaN()) {
+      val la = p.getString("lat", null)?.toDoubleOrNull(); val lo = p.getString("lon", null)?.toDoubleOrNull()
+      if (la != null && lo != null) {
+        aLat = la; aLon = lo; aBearing = p.getString("bearing", null)?.toDoubleOrNull() ?: Double.NaN
+      }
     }
+  }
+
+  fun lat(t: Telemetry): Double = pos(t)[0]
+  fun lon(t: Telemetry): Double = pos(t)[1]
+  fun bearing(t: Telemetry): Float = pos(t)[2].toFloat()
+
+  /** (lat, lon, bearing, 1 = estimated); worked out at most every 50 ms */
+  @Synchronized fun pos(t: Telemetry): DoubleArray {
+    val nowMs = System.currentTimeMillis()
+    if (nowMs - cacheMs >= 50) {
+      cacheMs = nowMs
+      work(t, nowMs)
+    }
+    return cache.copyOf()
+  }
+
+  private fun work(t: Telemetry, nowMs: Long) {
+    val odo = Odometry.at(System.nanoTime())
+    var lat = Double.NaN; var lon = Double.NaN; var b = Double.NaN
+    RtkPosition.INSTANCE.now(nowMs, t.vEgo.toDouble())?.let {
+      lat = it[0]; lon = it[1]
+      val hd = RtkPosition.INSTANCE.heading
+      if (hd.isFinite()) b = hd
+    }
+    // GpsBridge only while the comma's GPS has a fix (its own carrying-on after that stops after a minute and then
+    // stands still; ours goes on)
     val g = GpsBridge.INSTANCE
-    return if (!g.outBearing.isNaN() && System.currentTimeMillis() - g.lastLiveMs < 30000) g.outBearing else t.bearingDeg
+    val gpsLive = g.lastLiveMs > 0 && nowMs - g.lastLiveMs < 2000
+    if (lat.isNaN() && gpsLive && !g.outLat.isNaN() && !g.outLon.isNaN()) {
+      lat = g.outLat; lon = g.outLon
+    }
+    if (b.isNaN() && gpsLive && !g.outBearing.isNaN()) b = g.outBearing.toDouble()
+    if (b.isNaN() && t.bearingDeg.isFinite() && !lat.isNaN()) b = t.bearingDeg.toDouble()
+    if (!lat.isNaN() && !(lat == 0.0 && lon == 0.0)) {
+      // a real position (or GpsBridge's own minute of carrying on): the new starting point for our estimate
+      aLat = lat; aLon = lon
+      if (!b.isNaN()) aBearing = b
+      aX = odo[0]; aY = odo[1]; aYaw = odo[2]; aSet = true
+      estimated = false
+      if (nowMs - savedMs > 5000) {
+        savedMs = nowMs
+        prefs?.edit()?.putString("lat", lat.toString())?.putString("lon", lon.toString())
+          ?.putString("bearing", aBearing.toString())?.apply()
+      }
+      cache[0] = lat; cache[1] = lon; cache[2] = if (aBearing.isNaN()) 0.0 else aBearing; cache[3] = 0.0
+      return
+    }
+    if (aLat.isNaN()) {                                   // never had a position, not even a saved one
+      cache[0] = Double.NaN; cache[1] = Double.NaN; cache[2] = 0.0; cache[3] = 1.0
+      estimated = true
+      return
+    }
+    if (!aSet) {                                          // the saved spot: the car starts from there
+      aX = odo[0]; aY = odo[1]; aYaw = odo[2]; aSet = true
+    }
+    // our estimate: the car's motion since the last real position, turned into north / east by that position's heading
+    val b0 = if (aBearing.isNaN()) 0.0 else aBearing
+    val dx = odo[0] - aX; val dy = odo[1] - aY
+    val fwd = dx * cos(aYaw) + dy * sin(aYaw)
+    val left = -dx * sin(aYaw) + dy * cos(aYaw)
+    val br = Math.toRadians(b0)
+    val dE = fwd * sin(br) - left * cos(br)
+    val dN = fwd * cos(br) + left * sin(br)
+    cache[0] = aLat + dN / 111320.0
+    cache[1] = aLon + dE / (111320.0 * cos(Math.toRadians(aLat)))
+    cache[2] = ((b0 - Math.toDegrees(odo[2] - aYaw)) % 360.0 + 360.0) % 360.0
+    cache[3] = 1.0
+    estimated = true
   }
 }
 
@@ -126,13 +201,50 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
   private var totalKey = ""
   private var total = 0.0
   private val timeFormat by lazy { android.text.format.DateFormat.getTimeFormat(context) }
+  // 2.86.1: the last instruction stays while the comma's navigation has no position (elevated tracks, tunnels, the
+  // first seconds after a start): its distances count down by the car's own motion (Odometry: wheels, gyro), until
+  // the turn is 150 ft behind, the destination is cleared or 15 minutes passed. Telemetry only holds it 30 s.
+  private var held: JSONObject? = null
+  private var shown: JSONObject? = null
+  private var heldOdo = 0.0
+  private var heldMs = 0L
+
+  /** The instruction to show now: the comma's, else the held one counted down; null = no card. */
+  fun current(nowMs: Long): JSONObject? {
+    if (!::t.isInitialized) return null
+    val live = t.navCard(nowMs)
+    if (live != null && !live.second) {
+      if (held !== live.first) {
+        held = live.first; shown = null
+      }
+      heldOdo = Odometry.at(System.nanoTime())[3]; heldMs = nowMs
+      return live.first
+    }
+    val h = held ?: return live?.first
+    val dest = t.pStr("NavDestination", "").trim()
+    if (dest.isEmpty() || dest == "{}" || dest == "null" || nowMs - heldMs > 15 * 60_000L) {
+      held = null; shown = null
+      return live?.first
+    }
+    val gone = Odometry.at(System.nanoTime())[3] - heldOdo
+    val man = h.optDouble("maneuverDistance", 0.0) - gone
+    if (man < -45.0) {
+      held = null; shown = null
+      return null
+    }
+    val c = shown ?: JSONObject(h.toString()).also { shown = it }
+    c.put("maneuverDistance", max(0.0, man))
+    val rem = h.optDouble("distanceRemaining", Double.NaN)
+    if (!rem.isNaN()) c.put("distanceRemaining", max(0.0, rem - gone))
+    return c
+  }
 
   private fun icon(type: String, modifier: String) = NavIcons.INSTANCE.icon(context, type, modifier)
 
   override fun onDraw(c: Canvas) {
     if (!::t.isInitialized) return
     val nowMs = System.currentTimeMillis()
-    val nav = t.navCard(nowMs)?.first ?: if (NavOverlay.editing) NavOverlay.SAMPLE else return
+    val nav = current(nowMs) ?: if (NavOverlay.editing) NavOverlay.SAMPLE else return
     val metric = t.isMetric
     val w = width.toFloat(); val h = height.toFloat()
     if (w <= 0f || h <= 0f) return
@@ -276,6 +388,7 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
  */
 class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
   lateinit var t: Telemetry
+  init { NavPos.init(ctx) }
   private val d = resources.displayMetrics.density
   private val road = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND }
   private val route = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND }

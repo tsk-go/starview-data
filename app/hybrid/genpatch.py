@@ -158,7 +158,9 @@ for sig, cond in [("navigateTo$lambda$177$lambda$176(Lcom/starpilot/starview/Mai
 # ---------------------------------------------------------------- the screen tick
 UT = "Lcom/starpilot/starview/MainActivity$uiTick$1;"
 m = M("MainActivity$uiTick$1", "run()V")
-m.insert_after(":cond_9c", ["sget-boolean v3, Lcom/starpilot/starview/NavOverlay;->editing:Z", "if-nez v3, :hyb_navcard_on"])
+# the turn card also shows when hybCardForced says so (the screen editor; 2.86.1: a held instruction without GPS)
+m.insert_after(":cond_9c", [f"iget-object v3, v1, {UT}->this$0:{MA}", f"invoke-virtual {{v3}}, {MA}->hybCardForced()Z",
+                            "move-result v3", "if-nez v3, :hyb_navcard_on"])
 i = m.find("goto :goto_3f")
 k = max(x for x in instr_idx(m.lines) if x < i)
 assert m.lines[k].strip() == "const/4 v3, 0x0", m.lines[k]

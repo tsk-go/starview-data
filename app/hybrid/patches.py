@@ -51,7 +51,7 @@ PATCHES = {
   ],
   ('MainActivity$uiTick$1', 'run()V'): [
     ('    :cond_9c\n',
-     '    :cond_9c\n    sget-boolean v3, Lcom/starpilot/starview/NavOverlay;->editing:Z\n    if-nez v3, :hyb_navcard_on\n'),
+     '    :cond_9c\n    iget-object v3, v1, Lcom/starpilot/starview/MainActivity$uiTick$1;->this$0:Lcom/starpilot/starview/MainActivity;\n    invoke-virtual {v3}, Lcom/starpilot/starview/MainActivity;->hybCardForced()Z\n    move-result v3\n    if-nez v3, :hyb_navcard_on\n'),
     ('    if-nez v3, :cond_9d\n\n',
      '    if-nez v3, :cond_9d\n\n:hyb_navcard_on\n'),
     ('    invoke-virtual {v0, v3}, Lcom/starpilot/starview/NavCardView;->setVisibility(I)V\n',

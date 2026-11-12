@@ -7673,6 +7673,18 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** Screen tick (MainActivity$uiTick$1), deciding whether the turn card shows: true = show it even though the
+     *  comma has no instruction now. The screen editor shows it; 2.86.1: so does a held instruction while the comma's
+     *  navigation has no position (NavCardView.current). */
+    final boolean hybCardForced() {
+        if (NavOverlay.editing) {
+            return true;
+        }
+        NavCardView c = this.navCard;
+        Telemetry t = this.telemetry;
+        return c != null && t.getStarted() && t.s("nav_card") && !getMapOpen() && c.current(System.currentTimeMillis()) != null;
+    }
+
     /** Screen tick (MainActivity$uiTick$1), right after the turn card. 2.85.3: the see-through map shows whenever
      *  the car is on (streets; the route too while one is set); 2.85.7: a lighter shade over the Scene view. */
     final void hybNavMapTick() {
