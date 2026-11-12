@@ -36,7 +36,7 @@ or new code.
   and why. Kept the same as `claude/starview-app-source.md` in the StarView project on claude.ai.
 - `docs/tools/`: the tools that compared the recovered source with the original APK, the source scanners, and the
   off-device rendering test.
-- `docs/pending/`: work written but not yet landed (a patch for tsk-go/openpilot waiting for a signed commit).
+- `docs/pending/`: work written but not yet landed, only while there is some (e.g. a patch for tsk-go/openpilot waiting for a signed commit).
 
 ## HPMS lane counts (release `hpms-2024`)
 
