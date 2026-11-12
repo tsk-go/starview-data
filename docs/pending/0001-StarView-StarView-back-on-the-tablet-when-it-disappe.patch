@@ -1,8 +1,21 @@
+From 759ea49b61b655eddf81f3176dd86199c20c18a4 Mon Sep 17 00:00:00 2001
+From: tsk-go <cmc686@gmail.com>
+Date: Thu, 12 Nov 2026 08:34:12 -0500
+Subject: [PATCH 1/2] StarView: StarView back on the tablet when it disappears
+ while driving, never over another app
+
+---
+ CLAUDE.md                                     | 10 +++
+ .../starpilot/system/starview/starviewd.py    | 69 ++++++++++++++++
+ .../system/starview/tests/test_reopen.py      | 78 +++++++++++++++++++
+ 3 files changed, 157 insertions(+)
+ create mode 100644 openpilot/starpilot/system/starview/tests/test_reopen.py
+
 diff --git a/CLAUDE.md b/CLAUDE.md
-index d5b1988b..8b18fd2e 100644
+index 29a176f1..c3d29502 100644
 --- a/CLAUDE.md
 +++ b/CLAUDE.md
-@@ -396,6 +396,14 @@ Paths are under `openpilot/` unless noted.
+@@ -405,6 +405,16 @@ Paths are under `openpilot/` unless noted.
      Sound Preview switch (/data/starview/sound_preview_off) is gone. StarView 2.81.3 calls upstream's
      /api/sounds/preview by itself when a volume slider is let go (quiet when onroad - forced offroad with the car on
      works). Ours is in the history (patches 68-70) if onroad previews are ever wanted back.
@@ -12,13 +25,15 @@ index d5b1988b..8b18fd2e 100644
 +    `tablet_flag_tick`, every second): car on (started), tablet mode, a tablet connected within the last 5 min, then
 +    no data client for 8 s -> in a thread, `adb shell pidof com.starpilot.starview`; no process -> `_tablet_wake`
 +    (screen on, StarView started only if it isn't in front). Every 20 s, 5 tries per drop. A running process (the
-+    driver switched to another app - the connection drops then too) is left alone. Also brings StarView back after
-+    a crash. Test: `starview/tests/test_reopen.py`.
++    driver switched to another app - the connection drops then too) is left alone, and it never pops up over another
++    app: only when the tablet shows its home screen, the lock screen or nothing adb can tell (`_may_cover`:
++    `_tablet_front()` against the launcher from `cmd package resolve-activity`); another app in front -> looks again
++    20 s later, within the 5 min. Also brings StarView back after a crash. Test: `starview/tests/test_reopen.py`.
  
  **Fixes to upstream behaviour (drop when upstream fixes them; see the section above)**
  12. Chestnut big model compiles every start (patches 14, 16): `starpilot/models/program_cache.py`, `load_profile.py`,
 diff --git a/openpilot/starpilot/system/starview/starviewd.py b/openpilot/starpilot/system/starview/starviewd.py
-index cc81c3e4..a168f161 100644
+index 6ae9e835..29643b34 100644
 --- a/openpilot/starpilot/system/starview/starviewd.py
 +++ b/openpilot/starpilot/system/starview/starviewd.py
 @@ -1237,6 +1237,7 @@ class Hub:
@@ -29,7 +44,7 @@ index cc81c3e4..a168f161 100644
      # Parked: hold 30 s through app switches / reconnects (every drop used to light the comma screen up again).
      # Driving: no hold, so the comma screen comes back within ~5 s (the UI's staleness limit) if the tablet dies.
      hold_s = 0.0 if (self.started or self._onroad()) else 30.0
-@@ -1253,6 +1254,45 @@ class Hub:
+@@ -1253,6 +1254,51 @@ class Hub:
      except OSError:
        pass
  
@@ -41,7 +56,9 @@ index cc81c3e4..a168f161 100644
 +    """StarView back on the tablet when it disappeared while the car is on: it updated itself (Android closes an app to
 +    replace it and doesn't open it again) or crashed. Only after a tablet was connected in the last 5 min, only while
 +    started and in tablet mode, and only when StarView's process is gone (a driver who switched to another app keeps
-+    it - the connection drops then too). Every 20 s, 5 tries per drop, in a thread (adb can take seconds)."""
++    it - the connection drops then too). Never over another app: only when the tablet shows its home screen, the
++    lock screen or nothing it can tell (else it looks again 20 s later, as long as the 5 min last). Every 20 s, 5 tries
++    per drop, in a thread (adb can take seconds)."""
 +    if connected or not (self.started and self.tablet_mode):
 +      self._reopen_tries = 0
 +      return
@@ -64,6 +81,10 @@ index cc81c3e4..a168f161 100644
 +        if r.stdout.strip():
 +          self._reopen_tries = self.REOPEN_TRIES   # still running (the driver went to another app): leave it
 +          return
++        front = _tablet_front()
++        if not _may_cover(front):
++          self._reopen_tries -= 1                  # another app is in front: never pop up over it; look again later
++          return
 +        awake = _tablet_awake()
 +        cloudlog.warning(f"starview: StarView gone with the car on -> tablet: {_tablet_wake(bool(awake))}")
 +      except Exception as e:
@@ -75,12 +96,42 @@ index cc81c3e4..a168f161 100644
    # ---- drive replay ----
    def _replaying(self) -> bool:
      r = getattr(self, "replay", None)
+@@ -3063,6 +3109,29 @@ def _tablet_front():
+   return None
+ 
+ 
++_HOME_PKG = []
++
++
++def _tablet_home():
++  """The tablet's home screen (launcher) package, asked once."""
++  if not _HOME_PKG:
++    r = _adb("shell", "cmd", "package", "resolve-activity", "--brief", "-a", "android.intent.action.MAIN",
++             "-c", "android.intent.category.HOME")
++    if r is None:
++      return None
++    lines = [ln.strip() for ln in r.stdout.splitlines() if "/" in ln]
++    _HOME_PKG.append(lines[-1].split("/")[0] if lines else "")
++  return _HOME_PKG[0] or None
++
++
++def _may_cover(front) -> bool:
++  """Whether StarView may be put in front of [front] (the package in front on the tablet): nothing told, StarView
++  itself, the home screen, the lock screen / system UI. Never another app the driver is using."""
++  if front is None or front == STARVIEW_PKG or front == "com.android.systemui" or "launcher" in front.lower():
++    return True
++  return front == _tablet_home()
++
++
+ def _tablet_wake(awake: bool) -> str:
+   """Car on: screen on, and StarView in front - but only started when it isn't already in front. Starting its main
+   screen (singleTask) while StarView shows Settings or any other of its screens would close them all and drop the
 diff --git a/openpilot/starpilot/system/starview/tests/test_reopen.py b/openpilot/starpilot/system/starview/tests/test_reopen.py
 new file mode 100644
-index 00000000..85e42ebc
+index 00000000..3ddd388f
 --- /dev/null
 +++ b/openpilot/starpilot/system/starview/tests/test_reopen.py
-@@ -0,0 +1,58 @@
+@@ -0,0 +1,78 @@
 +from types import SimpleNamespace
 +
 +from openpilot.starpilot.system.starview import starviewd
@@ -94,8 +145,10 @@ index 00000000..85e42ebc
 +    self.target()
 +
 +
-+def make(monkeypatch, pid=""):
++def make(monkeypatch, pid="", front=None):
 +  calls = []
++  monkeypatch.setattr(starviewd, "_tablet_front", lambda: front)
++  monkeypatch.setattr(starviewd, "_tablet_home", lambda: "com.android.launcher3")
 +  monkeypatch.setattr(starviewd.threading, "Thread", SyncThread)
 +  monkeypatch.setattr(starviewd.shutil, "which", lambda name: "/usr/bin/adb")
 +  monkeypatch.setattr(starviewd.os.path, "isdir", lambda p: True)
@@ -139,3 +192,24 @@ index 00000000..85e42ebc
 +  hub._reopen_check(109.0, True)                      # connected
 +  hub._reopen_check(500.0, False)                     # gone more than 5 min (tablet off / unplugged)
 +  assert calls == []
++
++
++def test_never_pops_up_over_another_app(monkeypatch):
++  hub, calls = make(monkeypatch, front="com.waze")     # StarView gone, but the driver is in another app
++  hub._reopen_check(109.0, False)
++  assert ("wake", True) not in calls
++  hub._reopen_check(130.0, False)                     # still in front 20 s later: still left alone
++  assert ("wake", True) not in calls
++  monkeypatch.setattr(starviewd, "_tablet_front", lambda: "com.android.launcher3")
++  hub._reopen_check(150.0, False)                     # back on the home screen: StarView comes back
++  assert ("wake", True) in calls
++
++
++def test_may_cover():
++  assert starviewd._may_cover(None)
++  assert starviewd._may_cover(starviewd.STARVIEW_PKG)
++  assert starviewd._may_cover("com.android.systemui")
++  assert starviewd._may_cover("com.google.android.apps.nexuslauncher")
+-- 
+2.43.0
+
