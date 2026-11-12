@@ -26,7 +26,7 @@ patch files and this section.
 
 With Galaxy > Navigation > GPS Source = "Prefer phone GPS" (the RTK receiver reaches the comma through the phone GPS
 handoff, StarView patch 16), mapd matches the road and its limit fine (`mapdOut`: tileLoaded, matchedLimit, e.g. 55 on
-the Palisades Parkway), but the speed-limit side never takes it: map stays `unknown` in `slcState.sourceReadings`.
+a parkway), but the speed-limit side never takes it: map stays `unknown` in `slcState.sourceReadings`.
 mapd (Go) writes `gpsSource = 4` (its own GpsSourcePhone), which the Python schema's `MapdOut.GpsSource` enum doesn't
 have (`str()` raises "Member was null", so `speed_limits/map_source.copy_frame` drops the frame), and
 `map_source.GPS_MAX_AGE_NS` has no 'phone' entry either. Parked, mapd also refuses the phone fix on purpose (no
