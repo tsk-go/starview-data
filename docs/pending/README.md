@@ -16,6 +16,26 @@ Before committing, change one thing the owner was promised: leave StarView alone
 (`_tablet_front()` returns another package that isn't the launcher), so it never pops up over an app he's using. Then
 update the CLAUDE.md entry to say so, run the test, sign, push, and delete this file.
 
+## `openpilot-patch73-logarchive.diff` (Nov 12)
+
+The log archive kept up with nothing: ~36 GB behind, and the Nov 9 evening drive was deleted on the comma before it
+reached the stick. Three causes, all fixed here (fork history item 28, "Patch 73"): starviewd checked every 5 min, so
+after parking the copy often started just as the hub switched off (5 min); it copied at most 20 MB/s; and it copied in
+folder order, full-size videos with the logs. Now: starviewd `ArchiveDue` starts it 15 s after openpilot goes offroad
+(car off or forced offroad), then every 5 min while offroad; no speed cap (offroad only, the eGPU is idle); every
+drive's rlog / qlog / qcamera first, oldest drive first, videos after; and `hub_power` keeps the hub on past its delay
+while a copy runs (at most 20 min more, a low battery still wins). Tests: `test_logarchive.py`, `test_hub_power.py`
+(38 pass here), `test_starviewd_control.py` (`ArchiveDue`; that file needs msgq, so run it on a full checkout).
+
+Not committed: this session had no `GIT_SIGNING_KEY_B64`. To land it, in a session with the key, on `Dom`:
+
+```
+git apply docs/pending/openpilot-patch73-logarchive.diff   # from a checkout of tsk-go/openpilot, path adjusted
+```
+
+Then run the three test files, commit signed as tsk-go, push, and delete this section and the diff. After it's on the
+comma: watch that key fob presses still work while a copy runs (the radio dongle streams ~5 MB/s on the same hub).
+
 ## Map speed limits ignored with GPS source "Prefer phone GPS" (found Nov 11, comma side, not fixed yet)
 
 With Galaxy > Navigation > GPS Source = "Prefer phone GPS" (the RTK receiver reaches the comma through the phone GPS
