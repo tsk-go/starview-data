@@ -80,6 +80,7 @@ class UiSettings(ctx: Context) {
       Item("map_auto_open", "Open the map when a route starts", true, "Internal"),
       Item("map_traffic", "Live traffic on every road", true, "Internal"),
       Item("map_north_up", "North up", false, "Internal"),
+      Item("scene_new", "Scene: new style (the road lane by lane from the map, lined up with the camera; off = the old 3D Scene)", true, "Camera"),
       Item("scene_cars", "Scene: show other cars, people and traffic lights", false, "Camera"),
       Item("map_roads", "Street map from OpenStreetMap under the Scene (test: placed by GPS, orange outlines)", true, "Camera"),
       Item("detector_test", "Object detection in the camera view (cars, people, bikes, lights)", true, "Camera"),

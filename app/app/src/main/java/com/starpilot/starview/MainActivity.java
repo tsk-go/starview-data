@@ -209,6 +209,7 @@ public final class MainActivity extends AppCompatActivity {
     private boolean saverLinked;
     private TextView saverPill;
     SceneView scene;
+    LaneSceneView laneScene;
     private TextView sceneBtn;
     boolean sceneOn;
     private boolean searching;
@@ -3680,7 +3681,8 @@ public final class MainActivity extends AppCompatActivity {
             var5 = false;
         }
 
-        if (var5 && this.scene == null) {
+        // 2.87.0: the old 3D Scene only when "Scene: new style" is off (hybSceneTick shows LaneSceneView otherwise)
+        if (var5 && this.scene == null && this.hybOldScene()) {
             SceneView var12 = new SceneView((Context)this, null, 2, null);
             var12.setT(this.telemetry);
             UiSettings var53 = this.settings;
@@ -3824,7 +3826,8 @@ public final class MainActivity extends AppCompatActivity {
 
         int var15;
         label252: {
-            if (this.sceneOn) {
+            // 2.87.0: the road layout model only feeds the old 3D Scene (hybOldScene)
+            if (this.sceneOn && this.hybOldScene()) {
                 LayoutSeg var63 = this.layoutSeg;
                 LayoutSeg var32 = var63;
                 if (var63 == null) {
@@ -7698,6 +7701,64 @@ public final class MainActivity extends AppCompatActivity {
     final void hybNavMapTick() {
         hybMapTick();
         hybSignTick();
+        hybSceneTick();
+    }
+
+    /** 2.87.0: the new Scene view (LaneSceneView, Settings "Scene: new style", on by default) in place of the old 3D one:
+     *  the old SceneView is then never made (syncScene asks hybOldScene) and dropped if it was. The lane map and its
+     *  fit to the camera's lines (LaneMap, LaneFit) run while the car is on. */
+    private void hybSceneTick() {
+        Telemetry t = this.telemetry;
+        boolean newStyle = t.s("scene_new");
+        if (t.getStarted()) {
+            LaneMap.INSTANCE.init(this);
+            LaneFit.INSTANCE.tick(t);
+        }
+        FrameLayout r = this.root;
+        if (r == null) {
+            return;
+        }
+        if (newStyle && this.scene != null) {
+            r.removeView(this.scene);
+            this.scene = null;
+        }
+        boolean want = this.sceneOn && newStyle;
+        LaneSceneView v = this.laneScene;
+        if (want && v == null) {
+            v = new LaneSceneView(this);
+            v.setT(t);
+            v.setHost(this);
+            v.setDist(this.settings.getFloat("scene2_dist", LaneSceneView.DEF_DIST));
+            v.setElev(this.settings.getFloat("scene2_elev", LaneSceneView.DEF_ELEV));
+            r.addView(v, r.indexOfChild(this.overlay), new FrameLayout.LayoutParams(-1, -1));
+            this.laneScene = v;
+        }
+        if (v != null) {
+            int vis = want ? 0 : 8;
+            if (v.getVisibility() != vis) {
+                v.setVisibility(vis);
+            }
+            v.setNight(this.night);
+            v.setShowTraffic(t.s("scene_cars"));
+            v.setDetector(getDetector());
+            v.setCarMemory(this.carMemory);
+        }
+    }
+
+    /** syncScene: whether the old 3D Scene view is the one to show */
+    final boolean hybOldScene() {
+        return !this.telemetry.s("scene_new");
+    }
+
+    /** LaneSceneView: a hold opens the screen editor (as the old Scene did) */
+    final void hybSceneHold() {
+        startHudEdit();
+    }
+
+    /** LaneSceneView: zoom / tilt kept for next time */
+    final void hybSceneView(float d, float e) {
+        this.settings.setFloat("scene2_dist", d);
+        this.settings.setFloat("scene2_elev", e);
     }
 
     /** 2.85.3: the see-through map shows whenever the car is on (streets; the route too while one is set); 2.85.7: a

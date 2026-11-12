@@ -1,0 +1,80 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+// Sprites for StarView's Scene view (2.87.0): each road user model seen from a few heights and every 15 deg around,
+// orthographic, transparent background, plus the van itself from the chase camera. Output: window.result (JSON).
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+const P = new URLSearchParams(location.search);
+const name = P.get('m');
+const loader = new GLTFLoader();
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = +(P.get('exp') || 1.0);
+renderer.setClearColor(0x000000, 0);
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = +(P.get('env') || 0.6);
+const hemi = new THREE.HemisphereLight(0xffffff, 0x30343c, 1.1); scene.add(hemi);
+const key = new THREE.DirectionalLight(0xffffff, 1.6); scene.add(key); scene.add(key.target);
+const gltf = await new Promise((r, e) => loader.load('models/' + name, r, undefined, e));
+const obj = gltf.scene;
+const box = new THREE.Box3().setFromObject(obj), sz = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+obj.position.set(-c.x, -box.min.y, -c.z);
+const wrap = new THREE.Group(); wrap.add(obj); scene.add(wrap);
+const L = sz.z, W = sz.x, H = sz.y;
+const result = { name, L, W, H, cells: [] };
+function lightFrom(cam) {
+  // key light above, slightly left of the camera; fill from the sky
+  const d = new THREE.Vector3().subVectors(cam.position, new THREE.Vector3(0, 0, 0)).normalize();
+  key.position.set(d.x * 20 - 8, 30, d.z * 20 + 4); key.target.position.set(0, 0, 0);
+}
+if (P.get('ego')) {
+  // the van from the chase camera: D m away at elevation e; vertical fov 42 deg
+  // the camera tilts so the van's centre sits CY of the way down the screen (StarView's LaneSceneView does the same)
+  const D = +P.get('D'), CY = +P.get('cy'), Hpx = +P.get('h'), Wpx = +P.get('w');
+  const alpha = Math.atan((CY - 0.5) * 2 * Math.tan(21 * Math.PI / 180));
+  renderer.setSize(Wpx, Hpx);
+  wrap.rotation.y = Math.PI;      // front (+Z in the model) to -Z: away from the camera
+  for (const e of P.get('elev').split(',').map(Number)) {
+    const cam = new THREE.PerspectiveCamera(42, Wpx / Hpx, 0.5, 500);
+    const r = e * Math.PI / 180;
+    const pitch = r - alpha;
+    cam.position.set(0, D * Math.sin(r), D * Math.cos(r));
+    cam.lookAt(0, cam.position.y - 10 * Math.sin(pitch), cam.position.z - 10 * Math.cos(pitch));
+    lightFrom(cam);
+    renderer.render(scene, cam);
+    const a = new THREE.Vector3(0, 0, 0).project(cam);
+    result.cells.push({ elev: e, ax: (a.x + 1) / 2 * Wpx, ay: (1 - a.y) / 2 * Hpx, url: renderer.domElement.toDataURL('image/png') });
+  }
+} else {
+  const pitches = P.get('pitch').split(',').map(Number), ppm = P.get('ppm').split(',').map(Number);
+  const Dg = Math.hypot(L, W) * 1.04;
+  // finer near straight away from us: most cars are seen from just behind
+  result.yaws = (P.get('yaws') || '0,4,8,12,16,20,25,30,40,50,60,70,80,90,100,110,120,135,150,165,180').split(',').map(Number);
+  result.pitches = pitches; result.ppm = ppm;
+  for (let pi = 0; pi < pitches.length; pi++) {
+    const p = pitches[pi] * Math.PI / 180, k = ppm[pi];
+    const top = H * Math.cos(p) + Dg / 2 * Math.sin(p) + 0.15, bot = Dg / 2 * Math.sin(p) + 0.15, half = Dg / 2 + 0.1;
+    const cw = Math.ceil(half * 2 * k), ch = Math.ceil((top + bot) * k);
+    renderer.setSize(cw, ch);
+    const cam = new THREE.OrthographicCamera(-half, half, top, -bot, 0.1, 400);
+    cam.position.set(0, 100 * Math.sin(p), 100 * Math.cos(p)); cam.lookAt(0, 0, 0);
+    lightFrom(cam);
+    for (const yd of result.yaws) {
+      // yaw 0: driving away from us; yaw > 0: turned to its right (we see its left side)
+      wrap.rotation.y = Math.PI - yd * Math.PI / 180 + (P.get('flip') ? Math.PI : 0);   // flip: a model built facing -Z
+      renderer.render(scene, cam);
+      result.cells.push({ pitch: pitches[pi], yaw: yd, w: cw, h: ch, ax: half * k, ay: top * k, url: renderer.domElement.toDataURL('image/png') });
+    }
+  }
+}
+window.result = result;
+document.title = 'done';
+</script></body></html>

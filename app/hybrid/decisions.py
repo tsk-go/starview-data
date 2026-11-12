@@ -12,7 +12,7 @@ guard.py stops the build until the decision (and the patch) are looked at again.
 """
 
 METHOD_LEVEL = {"MainActivity", "SettingsActivity", "MapPane", "HudEditor", "WheelButton", "UiSettings", "LaneSuggest",
-                "VoiceNote"}
+                "VoiceNote", "LaneBrain"}
 
 DECISIONS = {
   "MainActivity": {
@@ -29,6 +29,7 @@ DECISIONS = {
     "setupMapFrame$lambda$215(": ("orig", "ad0c9e0644a8"),
     "startHudEdit()V": ("patch", "27d3b9e1d510"),
     "stopHudEdit()V": ("patch", "82e40d3c8e1b"),
+    "syncScene(Z)V": ("patch", "84864b415930"),
     "wireControls$lambda$136(": "build",
   },
   "MainActivity$uiTick$1": {
@@ -73,6 +74,9 @@ DECISIONS = {
   },
   "LaneSuggest": {
     "exitDue(Lcom/starpilot/starview/LaneSuggest$In;J)Z": ("patch", "e115f51b7f09"),
+  },
+  "LaneBrain": {
+    "answer()V": ("patch", "48e94868aa19"),
   },
   "VoiceNote": {
     "start(Ljava/io/File;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": ("patch", "68e8f99ee3f0"),

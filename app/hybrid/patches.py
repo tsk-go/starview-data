@@ -33,6 +33,12 @@ PATCHES = {
     ('    const v0, 0x1020002\n',
      '    invoke-virtual {p0}, Lcom/starpilot/starview/MainActivity;->hybMapFrame()V\n    const v0, 0x1020002\n'),
   ],
+  ('MainActivity', 'syncScene(Z)V'): [
+    ('    if-eqz v4, :cond_7\n\n',
+     '    if-eqz v4, :cond_7\n\n    invoke-virtual {p0}, Lcom/starpilot/starview/MainActivity;->hybOldScene()Z\n    move-result v6\n    if-eqz v6, :cond_7\n\n'),
+    ('    const-string v6, "layoutSeg"\n\n    if-eqz v5, :cond_16\n\n',
+     '    const-string v6, "layoutSeg"\n\n    if-eqz v5, :cond_16\n\n    invoke-virtual {p0}, Lcom/starpilot/starview/MainActivity;->hybOldScene()Z\n    move-result v5\n    if-eqz v5, :cond_16\n\n'),
+  ],
   ('MainActivity', 'startHudEdit()V'): [
     ('    iget-object v0, p0, Lcom/starpilot/starview/MainActivity;->hudEditor:Lcom/starpilot/starview/HudEditor;\n',
      '    invoke-virtual {p0}, Lcom/starpilot/starview/MainActivity;->hybEditStart()V\n    iget-object v0, p0, Lcom/starpilot/starview/MainActivity;->hudEditor:Lcom/starpilot/starview/HudEditor;\n'),
@@ -60,6 +66,10 @@ PATCHES = {
      '    :cond_118\n    # 2.85.3: the map button is a screen-editor widget now (HudLayout places it)\n    :cond_11d\n'),
     ('    move/from16 v31, v0\n',
      '    invoke-static {v2, v0}, Lcom/starpilot/starview/SpeedShown;->mps(Lcom/starpilot/starview/Telemetry;F)F\n    move-result v0\n    move/from16 v31, v0\n'),
+  ],
+  ('LaneBrain', 'answer()V'): [
+    ('    return-void\n',
+     '    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybAnswer()V\n    return-void\n'),
   ],
   ('MapPane', '<init>(Landroid/content/Context;Lcom/starpilot/starview/MapPane$Host;)V'): [
     ('    return-void\n',

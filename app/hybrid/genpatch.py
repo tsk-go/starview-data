@@ -145,6 +145,17 @@ m.insert_after("invoke-static/range {v5 .. v12}, Lcom/starpilot/starview/Nav;->p
 m.replace_line(f"invoke-virtual {{p0}}, {MA}->openMap()V", [])
 m = M("MainActivity", "setupMapFrame()V")
 m.insert_at_start([f"invoke-virtual {{p0}}, {MA}->hybMapFrame()V"])
+# 2.87.0: the old 3D Scene is only made when "Scene: new style" is off (v6 free: set right after)
+m = M("MainActivity", "syncScene(Z)V")
+i = m.find("iget-object v6, p0, Lcom/starpilot/starview/MainActivity;->scene:Lcom/starpilot/starview/SceneView;", nth=0)
+k = max(x for x in instr_idx(m.lines) if x < i)
+assert m.lines[k].strip() == "if-eqz v4, :cond_7", m.lines[k]
+m.add(i, i, [f"    invoke-virtual {{p0}}, {MA}->hybOldScene()Z\n", "    move-result v6\n", "    if-eqz v6, :cond_7\n\n"])
+# ... and the road layout model (it only feeds the old Scene) runs only for it
+i = m.find("iget-object v5, p0, Lcom/starpilot/starview/MainActivity;->layoutSeg:Lcom/starpilot/starview/LayoutSeg;", nth=0)
+k = max(x for x in instr_idx(m.lines) if x < i)
+assert m.lines[k].strip() == "if-eqz v5, :cond_16", m.lines[k]
+m.add(i, i, [f"    invoke-virtual {{p0}}, {MA}->hybOldScene()Z\n", "    move-result v5\n", "    if-eqz v5, :cond_16\n\n"])
 m = M("MainActivity", "startHudEdit()V")
 m.insert_at_start([f"invoke-virtual {{p0}}, {MA}->hybEditStart()V"])
 m = M("MainActivity", "stopHudEdit()V")
@@ -189,6 +200,10 @@ a, b = m.context(k, k + 1, before=False)
 old = "".join(m.lines[a:b])
 m.edits.append((old, "".join(m.lines[a:k]) + "    invoke-static {v2, v0}, Lcom/starpilot/starview/SpeedShown;->mps(Lcom/starpilot/starview/Telemetry;F)F\n"
                 "    move-result v0\n" + "".join(m.lines[k:b])))
+# ---------------------------------------------------------------- LaneBrain
+# 2.87.0: the lane from the map lined up with the camera weighs in after the road model (hybAnswer)
+m = M("LaneBrain", "answer()V")
+m.insert_before("return-void", ["invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybAnswer()V"])
 # ---------------------------------------------------------------- MapPane
 MP = "Lcom/starpilot/starview/MapPane;"
 m = M("MapPane", "<init>(Landroid/content/Context;Lcom/starpilot/starview/MapPane$Host;)V")
