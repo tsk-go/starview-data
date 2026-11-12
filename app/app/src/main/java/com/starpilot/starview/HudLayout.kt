@@ -35,6 +35,7 @@ class HudLayout(ctx: Context) {
   val items: List<Item> = listOf(
     Item(R.id.maxCard, "maxCard", "MAX set speed", Anchor(Gravity.TOP or Gravity.START, 24, 20)),
     Item(R.id.slc, "slc", "Speed limit", Anchor(Gravity.TOP or Gravity.START, 126, 20)),
+    Item(R.id.speedSign, "speedSign", "Speed limit - road sign", Anchor(Gravity.BOTTOM or Gravity.START, 250, 20)),
     Item(R.id.slcSources, "slcSources", "Speed limit sources", Anchor(Gravity.TOP or Gravity.START, 228, 20)),
     Item(R.id.gauge, "gauge", "Curve / stop gauge", Anchor(Gravity.TOP or Gravity.START, 24, 134)),
     Item(R.id.compass, "compass", "Compass", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 64)),
