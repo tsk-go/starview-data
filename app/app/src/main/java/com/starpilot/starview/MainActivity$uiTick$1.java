@@ -470,6 +470,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
         } else {
             var10 = var58.getVEgo();
         }
+        var10 = SpeedShown.mps(var58, var10);
 
         TextView var477 = this.this$0.speedTv;
         TextView var263 = var477;

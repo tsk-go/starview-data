@@ -7610,6 +7610,8 @@ public final class MainActivity extends AppCompatActivity {
                 }
             });
         }
+        // 2.86.5: the big speed number learns the true speed from GPS (Speed.kt)
+        SpeedShown.INSTANCE.init(this);
         // 2.86.3: the speed limit as a US road sign (SpeedSign.kt)
         this.speedSign = (SpeedSignView) findViewById(R.id.speedSign);
         if (this.speedSign != null) {
