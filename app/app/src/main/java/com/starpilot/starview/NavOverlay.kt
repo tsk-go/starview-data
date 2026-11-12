@@ -203,7 +203,7 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
   private val timeFormat by lazy { android.text.format.DateFormat.getTimeFormat(context) }
   // 2.86.1: the last instruction stays while the comma's navigation has no position (elevated tracks, tunnels, the
   // first seconds after a start): its distances count down by the car's own motion (Odometry: wheels, gyro), until
-  // the turn is 150 ft behind, the destination is cleared or 15 minutes passed. Telemetry only holds it 30 s.
+  // the turn is 150 ft behind, the route is cancelled or 15 minutes passed (2.86.2: "route set" from Nav).
   private var held: JSONObject? = null
   private var shown: JSONObject? = null
   private var heldOdo = 0.0
@@ -221,8 +221,11 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
       return live.first
     }
     val h = held ?: return live?.first
+    // the route is still set: the tablet's copy of the comma's navigation state (StarPilot 7's navigation doesn't fill
+    // NavDestination, so Telemetry's own 30 s hold never held anything - the card went the moment GPS dropped)
     val dest = t.pStr("NavDestination", "").trim()
-    if (dest.isEmpty() || dest == "{}" || dest == "null" || nowMs - heldMs > 15 * 60_000L) {
+    val routeOn = Nav.INSTANCE.active || (dest.isNotEmpty() && dest != "{}" && dest != "null")
+    if (!routeOn || nowMs - heldMs > 15 * 60_000L) {
       held = null; shown = null
       return live?.first
     }
