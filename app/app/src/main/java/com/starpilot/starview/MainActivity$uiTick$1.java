@@ -1131,7 +1131,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
             var309 = null;
         }
 
-        if ((var58.getStarted() && var58.s("nav_card") && var645 != null && !this.this$0.getMapOpen()) || NavOverlay.editing) {
+        if ((var58.getStarted() && var58.s("nav_card") && var645 != null && !this.this$0.getMapOpen()) || this.this$0.hybCardForced()) {
             var132 = 0;
         } else {
             var132 = 8;
