@@ -55,7 +55,7 @@ class UiSettings(ctx: Context) {
       Item("slow_card", "Why it's slowing (shows what openpilot brakes for; tap it for the history)", true, "Widgets"),
       Item("lane_suggest", "Change lanes? - asks when the model or the route wants a lane change; Change = signal it (sound alert)", true, "Widgets"),
       Item("lane_nudge_confirm", "Change lanes? - a light steering nudge toward that side also confirms", true, "Blinker"),
-      Item("exit_signals", "Automatic exit signals: takes the route's exits and forks by itself (signals ~8 s before; Cancel on the card)", true, "Blinker"),
+      Item("exit_signals", "Automatic exit signals: takes the route's exits and forks by itself when it's sure you're one lane away (signals ~8 s before; Cancel on the card)", true, "Blinker"),
       Item("lane_pass", "Change lanes? - pass a slower car: asks to move left when the car ahead holds you 5+ mph under your set speed (above 30 mph; always waits for your nudge)", true, "Blinker"),
       Item("lane_return", "Change lanes? - move back right after passing: asks once the passed car is behind you and the right lane ahead is clear (always waits for your nudge)", true, "Blinker"),
       Item("lane_ends_ask", "Change lanes? - lane ends ahead: asks to merge away from a lane that ends (the road data's lane count drops ahead; always waits for your nudge)", false, "Blinker"),

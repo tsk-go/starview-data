@@ -1185,10 +1185,14 @@ public final class LaneSuggest {
         return far || keepsUp;
     }
 
+    /* 2.86.6: the route's exit signals by itself only when the lane tracker is sure there is exactly one lane between us
+       and the exit's side (getExitSideLanes() == 1). It used to go ahead unless it counted 2 or more, so "not sure" (-1)
+       and "no lane on that side" (0) signalled too: Nov 11, already in the left lane before a left exit, the left
+       blinker came on and openpilot started moving left. Unsure or already there: the driver decides. */
     private final boolean exitDue(In i, long now) {
         if (i.getExitOn() && i.getExitDir() != 0 && i.getCommaConfirms()) {
             if (!(i.getExitKey().length() == 0) && !Intrinsics.areEqual(i.getExitKey(), this.exitDoneKey)) {
-                if ((Intrinsics.areEqual(i.getExitKey(), this.exitKey) && (this.exitTries >= 5 || (this.exitRetryAt != 0 && now < this.exitRetryAt))) || i.getExitSideLanes() >= 2 || i.getExitInLane()) {
+                if ((Intrinsics.areEqual(i.getExitKey(), this.exitKey) && (this.exitTries >= 5 || (this.exitRetryAt != 0 && now < this.exitRetryAt))) || i.getExitSideLanes() != 1 || i.getExitInLane()) {
                     return false;
                 }
                 double d = i.getExitDist();
