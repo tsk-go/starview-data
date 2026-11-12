@@ -66,6 +66,8 @@ PATCHES = {
      '    :cond_118\n    # 2.85.3: the map button is a screen-editor widget now (HudLayout places it)\n    :cond_11d\n'),
     ('    move/from16 v31, v0\n',
      '    invoke-static {v2, v0}, Lcom/starpilot/starview/SpeedShown;->mps(Lcom/starpilot/starview/Telemetry;F)F\n    move-result v0\n    move/from16 v31, v0\n'),
+    ('    :goto_6e\n',
+     '    :goto_6e\n    move/from16 v4, v43\n    move/from16 v15, v99\n    invoke-static {v4, v15}, Lcom/starpilot/starview/ExitGuard;->side(II)I\n    move-result v4\n    move/from16 v99, v4\n'),
   ],
   ('LaneBrain', 'answer()V'): [
     ('    return-void\n',

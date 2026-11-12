@@ -200,6 +200,16 @@ a, b = m.context(k, k + 1, before=False)
 old = "".join(m.lines[a:b])
 m.edits.append((old, "".join(m.lines[a:k]) + "    invoke-static {v2, v0}, Lcom/starpilot/starview/SpeedShown;->mps(Lcom/starpilot/starview/Telemetry;F)F\n"
                 "    move-result v0\n" + "".join(m.lines[k:b])))
+# 2.87.1: the lanes between us and the exit's side (v99, In's exitSideLanes) go through ExitGuard: a lane that "appears"
+# there right before the exit (the road widening) doesn't make the route signal. v43 = the exit's side (0 = none);
+# v4 / v15 are written again before they're read on both ways on from :goto_6e
+m.insert_after(":goto_6e", ["move/from16 v4, v43", "move/from16 v15, v99",
+                            "invoke-static {v4, v15}, Lcom/starpilot/starview/ExitGuard;->side(II)I", "move-result v4",
+                            "move/from16 v99, v4"])
+i = m.find(":goto_6e")
+k = max(x for x in instr_idx(m.lines) if x < i)
+assert m.lines[k].strip() == "const/16 v99, -0x1", m.lines[k]
+assert "sideLanes(I)Lkotlin/Pair;" in "".join(m.lines[i - 60:i]) and "move/from16 v99, v46" in "".join(m.lines[i - 12:i])
 # ---------------------------------------------------------------- LaneBrain
 # 2.87.0: the lane from the map lined up with the camera weighs in after the road model (hybAnswer)
 m = M("LaneBrain", "answer()V")

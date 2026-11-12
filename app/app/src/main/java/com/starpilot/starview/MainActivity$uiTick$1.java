@@ -1680,6 +1680,8 @@ public final class MainActivity$uiTick$1 implements Runnable {
                         if (var202 < 0 || !(var80 >= 0.5)) {
                             var202 = -1;
                         }
+                        // 2.87.1: a lane that "appears" on the exit's side right before it doesn't signal (ExitGuard)
+                        var202 = ExitGuard.side(var22, var202);
 
                         boolean var33;
                         label1849: {

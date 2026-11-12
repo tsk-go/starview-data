@@ -64,6 +64,13 @@ distance / heading, `lcL` / `lcR` a lane change to that side, `lanes=L:R[:E]` th
 only). Set up like PicTest, plus `it.systemProperty("laneData", DIR)`, and run with `--rerun` (Gradle doesn't see
 picks.txt change). Each moment replays LaneMap + LaneFit over the 90 s before it.
 
+## `unit/`: plain JVM tests of single pieces
+
+`ExitGuardTest.kt` (2.87.1): when the route's exit may signal by itself, on a made-up lane tracker (the Nov 12 left
+fork: sure of no lane on the left, then "maybe one" right before the fork). Copy into
+`app/app/src/test/java/com/starpilot/starview/`, add Robolectric as for PicTest (LaneBrain is plain Java but needs the
+Android stubs) and run `./gradlew :app:testDebugUnitTest --offline --tests com.starpilot.starview.ExitGuardTest`.
+
 ## `scene2/`: the road users' pictures in assets/scene2
 
 LaneSceneView draws cars, people, signs and the van from pictures of the old Scene's own 3D models (assets/models):

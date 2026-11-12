@@ -33,7 +33,7 @@ DECISIONS = {
     "wireControls$lambda$136(": "build",
   },
   "MainActivity$uiTick$1": {
-    "run()V": ("patch", "1375d76895ad"),
+    "run()V": ("patch", "ffb58518d5f8"),
   },
   "MapPane": {
     "<init>(Landroid/content/Context;Lcom/starpilot/starview/MapPane$Host;)V": ("patch", "048b5f0d357e"),
