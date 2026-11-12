@@ -7711,8 +7711,12 @@ public final class MainActivity extends AppCompatActivity {
         Telemetry t = this.telemetry;
         boolean newStyle = t.s("scene_new");
         if (t.getStarted()) {
-            LaneMap.INSTANCE.init(this);
-            LaneFit.INSTANCE.tick(t);
+            try {
+                LaneMap.INSTANCE.init(this);
+                LaneFit.INSTANCE.tick(t);
+            } catch (Throwable e) {
+                Log.w("StarView/Lanes", "tick", e);
+            }
         }
         FrameLayout r = this.root;
         if (r == null) {
