@@ -1,21 +1,21 @@
-From 1d8f7a6901cbf91e71fd897ae283ff732a36a3d4 Mon Sep 17 00:00:00 2001
+From 617cc5f94b1571184b0c3bd0871f6e3d2d49c96f Mon Sep 17 00:00:00 2001
 From: tsk-go <cmc686@gmail.com>
 Date: Thu, 12 Nov 2026 08:34:12 -0500
 Subject: [PATCH 2/2] Map speed limits with the phone GPS handoff:
  MapdOut.GpsSource phone, its age limit in map_source
 
 ---
- CLAUDE.md                                       | 11 +++++++++++
+ CLAUDE.md                                       | 13 +++++++++++++
  openpilot/cereal/custom.capnp                   |  1 +
  openpilot/starpilot/speed_limits/map_source.py  |  4 +++-
  .../speed_limits/tests/test_map_source.py       | 17 +++++++++++++++++
- 4 files changed, 32 insertions(+), 1 deletion(-)
+ 4 files changed, 34 insertions(+), 1 deletion(-)
 
 diff --git a/CLAUDE.md b/CLAUDE.md
-index c3d29502..56ccd1ca 100644
+index c3d29502..a8d3933c 100644
 --- a/CLAUDE.md
 +++ b/CLAUDE.md
-@@ -120,6 +120,15 @@ normal commit (no revert of history, no force-push) and tell the owner which one
+@@ -120,6 +120,17 @@ normal commit (no revert of history, no force-push) and tell the owner which one
     ever settles and every step rescans every drive folder (~960 routes, `owns_recording` per file): 63 % of a core over
     a 15-min drive (Nov 3). Upstream fixed = the uploader stops rescanning settled-but-failing routes, or has its own
     "uploads off" switch we can set from offline mode.
@@ -27,11 +27,13 @@ index c3d29502..56ccd1ca 100644
 +   comma's own fix); the Python schema had no 4, so `str(road.gpsSource)` raised and `copy_frame` dropped every frame -
 +   mapd matched the road and its limit, the speed-limit side stayed `unknown` (Nov 11). Upstream fixed = upstream's
 +   schema has the phone source and map_source accepts it. (mapd_repo's own schema copy is left as it is: Go writes the
-+   number either way.)
++   number either way.) Check at every sync: if upstream's `MapdOut.GpsSource` has its own entry for 4 and its
++   `GPS_MAX_AGE_NS` its own 'phone' entry, remove ours (keep upstream's lines, drop our test if upstream tests it),
++   move fork history 43 to "No longer carried" and tell the owner patch 74 was dropped.
  
  # Fork history
  
-@@ -424,6 +433,8 @@ Paths are under `openpilot/` unless noted.
+@@ -424,6 +435,8 @@ Paths are under `openpilot/` unless noted.
  18. A full update shows "failed" after its own reboot (patch 29): `system/updated/updated.py` `recover_fast_state`.
  31. The comma four restarts all night after a parked shutdown (patch 50): a marker in /data/starview from the parked
      shutdown makes a CAN wake with no drive since shut down again after 2 minutes instead of an hour; a drive clears it.
