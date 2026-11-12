@@ -1024,31 +1024,35 @@ public final class LaneBrain {
      *  sensor - only while that fit is fresh and shown (the map lines up with the camera's lines), the car isn't
      *  between lanes, and the road has 1 to 6 lanes our way. How hard it pulls goes with how well the map lines up. */
     final void hybAnswer() {
-        LaneFit.Fit f = LaneFit.INSTANCE.getFit();
-        if (f == null || f.getHidden() || System.currentTimeMillis() - f.getAtMs() > 1500L) {
-            return;
-        }
-        LaneFit.Match m = f.getMatch();
-        if (m == null || m.getOf() < 1 || m.getOf() > 6 || m.getOffM() > 1.3d) {
-            return;
-        }
-        int wantL = m.getLane() - 1;
-        int wantR = m.getOf() - m.getLane();
-        double k = f.getCost() < 0.5d ? 1.6d : (f.getCost() < 0.8d ? 1.0d : 0.5d);
-        double s = 0.0d;
-        for (int l = 0; l < 6; l++) {
-            for (int r = 0; r < 6; r++) {
-                double v = this.q[l][r] * (Math.exp(-k * (Math.abs(l - wantL) + Math.abs(r - wantR))) + 0.02d);
-                this.q[l][r] = v;
-                s += v;
+        try {
+            LaneFit.Fit f = LaneFit.INSTANCE.getFit();
+            if (f == null || f.getHidden() || System.currentTimeMillis() - f.getAtMs() > 1500L) {
+                return;
             }
-        }
-        if (s > 0.0d) {
-            for (double[] a : this.q) {
-                for (int j = 0; j < a.length; j++) {
-                    a[j] = a[j] / s;
+            LaneFit.Match m = f.getMatch();
+            if (m == null || m.getOf() < 1 || m.getOf() > 6 || m.getOffM() > 1.3d) {
+                return;
+            }
+            int wantL = m.getLane() - 1;
+            int wantR = m.getOf() - m.getLane();
+            double k = f.getCost() < 0.5d ? 1.6d : (f.getCost() < 0.8d ? 1.0d : 0.5d);
+            double s = 0.0d;
+            for (int l = 0; l < 6; l++) {
+                for (int r = 0; r < 6; r++) {
+                    double v = this.q[l][r] * (Math.exp(-k * (Math.abs(l - wantL) + Math.abs(r - wantR))) + 0.02d);
+                    this.q[l][r] = v;
+                    s += v;
                 }
             }
+            if (s > 0.0d) {
+                for (double[] a : this.q) {
+                    for (int j = 0; j < a.length; j++) {
+                        a[j] = a[j] / s;
+                    }
+                }
+            }
+        } catch (Throwable e) {
+            // the lane tracker goes on without the map
         }
     }
 

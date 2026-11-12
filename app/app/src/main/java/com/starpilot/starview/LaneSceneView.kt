@@ -255,7 +255,19 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   }
 
   // ------------------------------------------------------------------------------------------- drawing
+  private var failAt = 0L
+  /** never let a drawing problem take StarView down mid-drive: the frame is skipped and logged (once in 10 s) */
   override fun onDraw(c: Canvas) {
+    try {
+      drawAll(c)
+    } catch (e: Throwable) {
+      c.drawColor(if (night) NIGHT.hor else DAY.hor)
+      val now = System.currentTimeMillis()
+      if (now - failAt > 10_000) { failAt = now; android.util.Log.w("StarView/Scene2", "draw", e) }
+    }
+  }
+
+  private fun drawAll(c: Canvas) {
     if (width < 2 || height < 2) return
     val fr = frame ?: t?.let { liveFrame(it) } ?: Frame(null, null, null, 0.0, emptyList(), false, false, false, null)
     val pal = if (night) NIGHT else DAY
