@@ -106,8 +106,8 @@ object SpeedAlertPage {
     val ui = CarUi(ctx, false)
     if (header) col.addView(ui.header("Speed limit warning"))
     col.addView(ui.note("Past the amount for the posted limit, the speed sign flashes red and the sound plays once. A limit " +
-      "between two rows uses the next higher row (35 uses the 40 row). It plays again after 10 seconds back under, or when " +
-      "the limit drops."))
+      "between two rows uses the next higher row (35 uses the 40 row), a limit above every row the last row. It plays again " +
+      "after 10 seconds back under, or when the limit drops."))
     val box = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
     col.addView(box, LinearLayout.LayoutParams(-1, -2))
     fill(ctx, ui, box)
@@ -118,9 +118,8 @@ object SpeedAlertPage {
     val metric = SpeedAlert.metric(ctx)
     val unit = if (metric) "km/h" else "mph"
     val c = SpeedAlert.conf(ctx, metric)
-    fun save(rows: List<SpeedAlert.Row> = c.rows, higher: Int = c.higher, sound: Int = c.sound, times: Int = c.times,
-             fallback: Int = c.fallback) {
-      SpeedAlert.save(ctx, metric, SpeedAlert.Conf(rows, higher, sound, times, fallback))
+    fun save(rows: List<SpeedAlert.Row> = c.rows, sound: Int = c.sound, times: Int = c.times, fallback: Int = c.fallback) {
+      SpeedAlert.save(ctx, metric, SpeedAlert.Conf(rows, sound, times, fallback))
       box.post { fill(ctx, ui, box) }
     }
 
@@ -130,7 +129,8 @@ object SpeedAlertPage {
       val lo = if (i == 0) MIN_LIMIT else rows[i - 1].limit + LIMIT_STEP
       val hi = if (i == rows.size - 1) MAX_LIMIT else rows[i + 1].limit - LIMIT_STEP
       fun with(limit: Int = r.limit, over: Int = r.over) = rows.mapIndexed { k, x -> if (k == i) SpeedAlert.Row(limit, over) else x }
-      val row = ui.row("Limit ${r.limit} $unit or less", "Warns at ${r.limit + r.over + 1} $unit and up", 0, null, null).first
+      val above = if (i == rows.size - 1) " (higher limits: the limit +${r.over + 1})" else ""
+      val row = ui.row("Limit ${r.limit} $unit or less", "Warns at ${r.limit + r.over + 1} $unit and up$above", 0, null, null).first
       stepper(ctx, ui, row, "${r.limit}", { if (r.limit - LIMIT_STEP >= lo) save(with(limit = r.limit - LIMIT_STEP)) },
         { if (r.limit + LIMIT_STEP <= hi) save(with(limit = r.limit + LIMIT_STEP)) })
       gap(ctx, ui, row, 18)
@@ -141,11 +141,7 @@ object SpeedAlertPage {
       box.addView(row, ui.lp(0, ui.gap))
     }
     val top = rows.lastOrNull()?.limit
-    val hrow = ui.row(if (top == null) "Any limit" else "Higher limits",
-      (if (top == null) "" else "Above $top $unit: ") + "warns at the limit +${c.higher + 1} $unit and up", 0, null, null).first
-    stepper(ctx, ui, hrow, "+${c.higher}", { if (c.higher > 0) save(higher = c.higher - 1) },
-      { if (c.higher < MAX_OVER) save(higher = c.higher + 1) })
-    box.addView(hrow, ui.lp(0, ui.gap))
+    if (rows.isEmpty()) box.addView(ui.note("No limits in the list: no warning. Add one below."))
     // 2.88.2: what the sign shows while no limit is known yet
     val frow = ui.row("No limit known", if (c.fallback > 0) "The sign shows ${c.fallback} $unit (and warns on it) until the car " +
       "or the map knows the limit" else "Off: no sign until a limit is known", 0, null, null).first
@@ -155,7 +151,7 @@ object SpeedAlertPage {
     if ((top ?: 0) + LIMIT_STEP <= MAX_LIMIT) {
       val add = ui.button("+  Add a limit", false) {
         val l = ((top ?: 20) + 10).coerceAtMost(MAX_LIMIT)
-        save(rows + SpeedAlert.Row(l, c.higher))
+        save(rows + SpeedAlert.Row(l, rows.lastOrNull()?.over ?: 5))
       }
       box.addView(add, LinearLayout.LayoutParams(-2, -2).apply { bottomMargin = ui.dp(6); leftMargin = ui.dp(4) })
     }

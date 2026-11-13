@@ -29,11 +29,11 @@ class SpeedAlertTest {
   private val out = System.getProperty("picOut") ?: "/tmp"
 
   @Test fun amounts() {
-    val c = SpeedAlert.Conf(listOf(SpeedAlert.Row(30, 5), SpeedAlert.Row(40, 7), SpeedAlert.Row(55, 8)), 9, 5, 3, 20)
+    val c = SpeedAlert.Conf(listOf(SpeedAlert.Row(30, 5), SpeedAlert.Row(40, 7), SpeedAlert.Row(55, 8)), 5, 3, 20)
     assertEquals(5, c.allowed(25)); assertEquals(5, c.allowed(30))
     assertEquals(7, c.allowed(35)); assertEquals(7, c.allowed(40))
-    assertEquals(8, c.allowed(45)); assertEquals(9, c.allowed(65))
-    assertEquals(9, SpeedAlert.Conf(emptyList(), 9, 5, 3, 20).allowed(30))
+    assertEquals(8, c.allowed(45)); assertEquals(8, c.allowed(65))      // above every row: the last row
+    assertEquals(SpeedAlert.NEVER, SpeedAlert.Conf(emptyList(), 5, 3, 20).allowed(30))
   }
 
   @Test fun onceThenAgain() {
@@ -62,7 +62,7 @@ class SpeedAlertTest {
   @Test fun page() {
     val ctx = RuntimeEnvironment.getApplication()
     val col = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(CarUi.Companion.getBG()) }
-    SpeedAlert.save(ctx, false, SpeedAlert.Conf(listOf(SpeedAlert.Row(30, 5), SpeedAlert.Row(40, 7), SpeedAlert.Row(55, 8)), 9, 5, 3, 20))
+    SpeedAlert.save(ctx, false, SpeedAlert.Conf(listOf(SpeedAlert.Row(30, 5), SpeedAlert.Row(40, 7), SpeedAlert.Row(55, 8)), 5, 3, 20))
     SpeedAlertPage.build(ctx, col)
     val w = 1100 * 2
     col.measure(View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
