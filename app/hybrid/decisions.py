@@ -47,6 +47,8 @@ DECISIONS = {
     "onDraw(Landroid/graphics/Canvas;)V": ("orig", "a21a139b77dc"),
   },
   "SettingsActivity": {
+    "areas()Ljava/util/List;": ("patch", "daa27f5f3019"),
+    "buildPageUnsafe(Ljava/lang/String;)Landroid/view/View;": ("patch", "9d894baf177d"),
     "catalogPage(Ljava/lang/String;Z)Landroid/view/View;": ("orig", "cc736eb6e3f0"),
     "tabletAboutPage()Landroid/view/View;": ("patch", "10cee18e6a78"),
     "tabletBlinkerPage()Landroid/view/View;": ("orig", "2638fbace510"),

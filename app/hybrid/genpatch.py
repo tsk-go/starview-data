@@ -245,6 +245,41 @@ m = M("SettingsActivity", "uiGroupPage(Ljava/lang/String;)Landroid/view/View;")
 assert m.lines[[x for x in instr_idx(m.lines) if x < m.find("return-object v2")][-1]].strip() == "check-cast v2, Landroid/view/View;"
 m.insert_before("return-object v2", ["invoke-static {p0, p1, v0}, Lcom/starpilot/starview/SpeedAlertPage;->addTo("
                                      "Landroid/app/Activity;Ljava/lang/String;Landroid/widget/LinearLayout;)V"])
+# 2.88.1: Tablet > Settings > "Speed limit warning": a Rail after "Voice alerts" (the tablet list's array grows to 20,
+# the rails after it move one place) and its page from SpeedAlertPage.hybPage at the start of buildPageUnsafe
+RAIL = "Lcom/starpilot/starview/SettingsActivity$Rail;"
+m = M("SettingsActivity", "areas()Ljava/util/List;")
+a = m.find('const-string v13, "tablet:connection"')
+size = max(x for x in range(a) if m.lines[x].strip() == "const/16 v11, 0x13")
+assert f"new-array v11, v11, [{RAIL}" in "".join(m.lines[size:a])
+v = m.find('const-string v13, "tablet:voice"')
+vend = next(x for x in range(v, len(m.lines)) if m.lines[x].strip() == "aput-object v0, v11, v7")
+assert m.lines[max(x for x in instr_idx(m.lines) if x < vend)].strip() == "const/16 v7, 0xc"
+ab = m.find('const-string v13, "tablet:about"')
+aend = next(x for x in range(ab, len(m.lines)) if m.lines[x].strip() == "aput-object v0, v11, v7")
+assert m.lines[max(x for x in instr_idx(m.lines) if x < aend)].strip() == "const/16 v7, 0x12"
+out = []
+for k in range(size, aend + 1):
+  l = m.lines[k]
+  if k == size:
+    out.append(l.replace("0x13", "0x14"))
+    continue
+  mm = re.match(r"\s*const/16 v7, (0x[0-9a-f]+)$", l)
+  if k > vend and mm:
+    out.append(l.replace(mm.group(1), hex(int(mm.group(1), 16) + 1)))
+    continue
+  out.append(l)
+  if k == vend:
+    out += ["    nop\n", f"    new-instance v0, {RAIL}\n",
+            "    sget v7, Lcom/starpilot/starview/R$drawable;->ic_limit:I\n",
+            '    const-string v13, "tablet:speedalert"\n', '    const-string v14, "Speed limit warning"\n',
+            f"    invoke-direct {{v0, v14, v7, v13}}, {RAIL}-><init>(Ljava/lang/String;ILjava/lang/String;)V\n",
+            "    const/16 v7, 0xd\n", "    aput-object v0, v11, v7\n"]
+m.add(size, aend + 1, out)
+m = M("SettingsActivity", "buildPageUnsafe(Ljava/lang/String;)Landroid/view/View;")
+m.insert_at_start(["invoke-static/range {p0 .. p1}, Lcom/starpilot/starview/SpeedAlertPage;->hybPage("
+                   "Landroid/app/Activity;Ljava/lang/String;)Landroid/view/View;", "move-result-object v0",
+                   "if-eqz v0, :hyb_speedalert_no", "return-object v0", ":hyb_speedalert_no"])
 # ---------------------------------------------------------------- WheelButton
 WB = "Lcom/starpilot/starview/WheelButton;"
 m = M("WheelButton", "onDraw(Landroid/graphics/Canvas;)V")

@@ -7,12 +7,16 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 
 /**
- * 2.88.0: Settings > Widgets, under the switches: the speed limit warning (SpeedAlert) - the owner's own list of limits
- * and how far over each is fine, the sound (AlertSounds, or none) and how many times in a row it plays. Added by
- * SettingsActivity.uiGroupPage (a patch before its return). Every change is saved at once.
+ * 2.88.0: the speed limit warning's settings (SpeedAlert) - the owner's own list of limits and how far over each is
+ * fine, the sound (AlertSounds, or none) and how many times in a row it plays. Every change is saved at once.
+ * 2.88.1: its own page, Tablet > Settings > "Speed limit warning" (a Rail after "Voice alerts" in SettingsActivity.areas,
+ * opened by hybPage at the start of buildPageUnsafe). 2.88.0 put it only under the Widgets switches, a page the settings
+ * list never shows (Widgets are the screen editor's), so the owner couldn't find it; it stays there too (settings search
+ * of the speed sign opens that page).
  */
 object SpeedAlertPage {
   private const val TAG = "StarView/SpeedAlertPage"
@@ -32,9 +36,28 @@ object SpeedAlertPage {
     }
   }
 
-  fun build(ctx: Context, col: LinearLayout) {
+  const val PAGE = "tablet:speedalert"
+
+  /** SettingsActivity.buildPageUnsafe: our page for [key], or null for every other page */
+  @JvmStatic
+  fun hybPage(a: Activity, key: String?): View? {
+    if (key != PAGE) return null
+    val ui = CarUi(a, false)
+    val col = LinearLayout(a).apply {
+      orientation = LinearLayout.VERTICAL
+      setPadding(ui.dp(10), ui.dp(4), ui.dp(24), ui.dp(60))      // as SettingsActivity.page()
+    }
+    try {
+      build(a, col, header = false)
+    } catch (e: Exception) {
+      Log.w(TAG, "page", e)
+    }
+    return ScrollView(a).apply { addView(col) }
+  }
+
+  fun build(ctx: Context, col: LinearLayout, header: Boolean = true) {
     val ui = CarUi(ctx, false)
-    col.addView(ui.header("Speed limit warning"))
+    if (header) col.addView(ui.header("Speed limit warning"))
     col.addView(ui.note("Past the amount for the posted limit, the speed sign flashes red and the sound plays once. A limit " +
       "between two rows uses the next higher row (35 uses the 40 row). It plays again after 10 seconds back under, or when " +
       "the limit drops."))
