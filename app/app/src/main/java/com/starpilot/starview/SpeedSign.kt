@@ -14,7 +14,7 @@ import kotlin.math.roundToInt
  * The posted speed limit as a US road sign (MUTCD R2-1, the one on New York roads), like Waze's. The whole sign flashes
  * red (white letters) twice a second while the car is past the warning amount for that limit (2.88.0: the owner's own
  * list, SpeedAlert; 9 mph / 15 km/h before). HUD widget "speedSign" (setting
- * "speed_sign"); hidden while the limit is unknown. The limit is the same one the speed-limit card shows (the comma's
+ * "speed_sign"); while the limit is unknown it shows the owner's fallback (2.88.2, default 20 mph; SpeedAlert). The limit is the same one the speed-limit card shows (the comma's
  * speed limit controller: map, navigation, the car's own sign reading), the speed the same as the big speed number.
  */
 class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
@@ -78,6 +78,14 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
       return Float.NaN
     }
 
+    /** 2.88.2: the limit the sign shows, whole mph / km/h: the known one, else [fallback] while the car is on (no
+     *  limit known yet this drive); 0 = nothing to show */
+    fun shownLimit(t: Telemetry, fallback: Int): Int {
+      val lim = postedMps(t)
+      if (!lim.isNaN()) return (lim * (if (t.isMetric) 3.6f else 2.2369363f)).roundToInt()
+      return if (t.started && fallback > 0) fallback else 0
+    }
+
     /** The speed the big number shows, m/s (2.86.5: SpeedShown, the true speed learned from GPS). */
     fun speedMps(t: Telemetry): Float =
       SpeedShown.mps(t, if (!t.tBool("use_wheel_speed", false) && t.vEgoCluster > 0f) t.vEgoCluster else t.vEgo)
@@ -87,10 +95,9 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
   private fun state(): Pair<Int, Boolean>? {
     if (!::t.isInitialized) return null
     if (NavOverlay.editing) return Pair(SAMPLE, false)
-    val lim = postedMps(t)
-    if (lim.isNaN()) return null
+    val shown = shownLimit(t, SpeedAlert.fallback(context, t.isMetric))
+    if (shown <= 0) return null
     val k = if (t.isMetric) 3.6f else 2.2369363f
-    val shown = (lim * k).roundToInt()
     // 2.88.0: the speed as shown, past the owner's amount for this limit (SpeedAlert): 30 + 5 flashes at 36 and up
     val over = (speedMps(t) * k).roundToInt() > shown + SpeedAlert.allowed(shown, t.isMetric)
     return Pair(shown, over)

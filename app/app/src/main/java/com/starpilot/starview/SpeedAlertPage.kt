@@ -118,8 +118,9 @@ object SpeedAlertPage {
     val metric = SpeedAlert.metric(ctx)
     val unit = if (metric) "km/h" else "mph"
     val c = SpeedAlert.conf(ctx, metric)
-    fun save(rows: List<SpeedAlert.Row> = c.rows, higher: Int = c.higher, sound: Int = c.sound, times: Int = c.times) {
-      SpeedAlert.save(ctx, metric, SpeedAlert.Conf(rows, higher, sound, times))
+    fun save(rows: List<SpeedAlert.Row> = c.rows, higher: Int = c.higher, sound: Int = c.sound, times: Int = c.times,
+             fallback: Int = c.fallback) {
+      SpeedAlert.save(ctx, metric, SpeedAlert.Conf(rows, higher, sound, times, fallback))
       box.post { fill(ctx, ui, box) }
     }
 
@@ -145,6 +146,12 @@ object SpeedAlertPage {
     stepper(ctx, ui, hrow, "+${c.higher}", { if (c.higher > 0) save(higher = c.higher - 1) },
       { if (c.higher < MAX_OVER) save(higher = c.higher + 1) })
     box.addView(hrow, ui.lp(0, ui.gap))
+    // 2.88.2: what the sign shows while no limit is known yet
+    val frow = ui.row("No limit known", if (c.fallback > 0) "The sign shows ${c.fallback} $unit (and warns on it) until the car " +
+      "or the map knows the limit" else "Off: no sign until a limit is known", 0, null, null).first
+    stepper(ctx, ui, frow, if (c.fallback > 0) "${c.fallback}" else "Off", { if (c.fallback > 0) save(fallback = c.fallback - LIMIT_STEP) },
+      { if (c.fallback + LIMIT_STEP <= MAX_LIMIT) save(fallback = c.fallback + LIMIT_STEP) })
+    box.addView(frow, ui.lp(0, ui.gap))
     if ((top ?: 0) + LIMIT_STEP <= MAX_LIMIT) {
       val add = ui.button("+  Add a limit", false) {
         val l = ((top ?: 20) + 10).coerceAtMost(MAX_LIMIT)

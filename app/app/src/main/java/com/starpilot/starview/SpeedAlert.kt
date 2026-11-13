@@ -13,6 +13,9 @@ import kotlin.math.roundToInt
  * only after the speed was back under for WAIT_UNDER_MS, or when the limit drops to a lower one. Edited in Settings >
  * Widgets (SpeedAlertPage); kept in SharedPreferences "speed_alert", per unit (mph / km/h).
  * Before 2.88.0 it was a fixed 9 mph (15 km/h) and no sound.
+ * 2.88.2 (owner: "there should always be a sign ... if there is zero from map and vision, a minimum of 20"): while no
+ * limit is known yet (none read this drive) the sign shows Conf.fallback (20 mph / 30 km/h; 0 = no sign) and the
+ * warning uses it too. A limit read once stays for the drive (SpeedSignView.postedMps), so this is the drive's start.
  */
 object SpeedAlert {
   private const val TAG = "StarView/SpeedAlert"
@@ -24,13 +27,14 @@ object SpeedAlert {
   const val MIN_GAP_MS = 5_000L
 
   class Row(val limit: Int, val over: Int)
-  class Conf(val rows: List<Row>, val higher: Int, val sound: Int, val times: Int) {
+  /** [fallback]: 2.88.2, the limit used while none is known (0 = no sign then) */
+  class Conf(val rows: List<Row>, val higher: Int, val sound: Int, val times: Int, val fallback: Int) {
     /** how far over [limit] is fine */
     fun allowed(limit: Int): Int = rows.firstOrNull { limit <= it.limit }?.over ?: higher
   }
 
   fun defaults(metric: Boolean) =
-    if (metric) Conf(listOf(Row(50, 8), Row(70, 10)), 15, 5, 3) else Conf(listOf(Row(30, 5), Row(40, 7)), 9, 5, 3)
+    if (metric) Conf(listOf(Row(50, 8), Row(70, 10)), 15, 5, 3, 30) else Conf(listOf(Row(30, 5), Row(40, 7)), 9, 5, 3, 20)
 
   @Volatile private var conf: Conf? = null
   @Volatile private var confMetric = false
@@ -51,7 +55,8 @@ object SpeedAlert {
     val rows = p.getString("rows_$u", null)?.let { s ->
       s.split(',').mapNotNull { r -> r.split(':').takeIf { it.size == 2 }?.let { Row(it[0].toIntOrNull() ?: return@let null, it[1].toIntOrNull() ?: return@let null) } }
     } ?: d.rows
-    val out = Conf(rows.sortedBy { it.limit }, p.getInt("higher_$u", d.higher), p.getInt("sound", d.sound), p.getInt("times", d.times))
+    val out = Conf(rows.sortedBy { it.limit }, p.getInt("higher_$u", d.higher), p.getInt("sound", d.sound), p.getInt("times", d.times),
+      p.getInt("fallback_$u", d.fallback))
     conf = out; confMetric = metric
     return out
   }
@@ -60,9 +65,12 @@ object SpeedAlert {
     val u = if (metric) "kph" else "mph"
     prefs(ctx).edit()
       .putString("rows_$u", c.rows.sortedBy { it.limit }.joinToString(",") { "${it.limit}:${it.over}" })
-      .putInt("higher_$u", c.higher).putInt("sound", c.sound).putInt("times", c.times).apply()
-    conf = Conf(c.rows.sortedBy { it.limit }, c.higher, c.sound, c.times); confMetric = metric
+      .putInt("higher_$u", c.higher).putInt("sound", c.sound).putInt("times", c.times).putInt("fallback_$u", c.fallback).apply()
+    conf = Conf(c.rows.sortedBy { it.limit }, c.higher, c.sound, c.times, c.fallback); confMetric = metric
   }
+
+  /** the limit shown while none is known, in the shown unit (0 = none: the sign hides) */
+  fun fallback(ctx: Context, metric: Boolean): Int = conf(ctx, metric).fallback
 
   /** how far over the shown limit is fine, in the shown unit (the speed sign's flash; 9 / 15 before any settings) */
   fun allowed(limit: Int, metric: Boolean): Int {
@@ -109,12 +117,11 @@ object SpeedAlert {
       if (!t.started) { alarm.reset(); return }
       val metric = t.isMetric
       if (metric != prefs(ctx).getBoolean("metric", false)) prefs(ctx).edit().putBoolean("metric", metric).apply()
-      val lim = SpeedSignView.postedMps(t)
-      if (lim.isNaN()) return
-      val k = if (metric) 3.6f else 2.2369363f
-      val shown = (lim * k).roundToInt()
-      val speed = (SpeedSignView.speedMps(t) * k).roundToInt()
       val c = conf(ctx, metric)
+      val shown = SpeedSignView.shownLimit(t, c.fallback)
+      if (shown <= 0) return
+      val k = if (metric) 3.6f else 2.2369363f
+      val speed = (SpeedSignView.speedMps(t) * k).roundToInt()
       if (alarm.step(shown, speed, c.allowed(shown), System.currentTimeMillis()) && c.sound >= 0)
         AlertSounds.play(ctx, c.sound, c.times)
     } catch (e: Exception) {
