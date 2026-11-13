@@ -12,7 +12,8 @@ import kotlin.math.roundToInt
 
 /**
  * The posted speed limit as a US road sign (MUTCD R2-1, the one on New York roads), like Waze's. The whole sign flashes
- * red (white letters) twice a second while the car is more than 9 mph over the limit (15 km/h in metric). HUD widget "speedSign" (setting
+ * red (white letters) twice a second while the car is past the warning amount for that limit (2.88.0: the owner's own
+ * list, SpeedAlert; 9 mph / 15 km/h before). HUD widget "speedSign" (setting
  * "speed_sign"); hidden while the limit is unknown. The limit is the same one the speed-limit card shows (the comma's
  * speed limit controller: map, navigation, the car's own sign reading), the speed the same as the big speed number.
  */
@@ -27,8 +28,6 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
   private var drawnKey = ""
 
   companion object {
-    const val OVER_MPH = 9f
-    const val OVER_KPH = 15f
     val RED = Color.rgb(214, 18, 32)
     const val SAMPLE = 25                 // what the screen editor shows
 
@@ -84,7 +83,8 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
     if (lim.isNaN()) return null
     val k = if (t.isMetric) 3.6f else 2.2369363f
     val shown = (lim * k).roundToInt()
-    val over = speedMps(t) * k - shown > (if (t.isMetric) OVER_KPH else OVER_MPH)
+    // 2.88.0: the speed as shown, past the owner's amount for this limit (SpeedAlert): 30 + 5 flashes at 36 and up
+    val over = (speedMps(t) * k).roundToInt() > shown + SpeedAlert.allowed(shown, t.isMetric)
     return Pair(shown, over)
   }
 

@@ -55,7 +55,7 @@ DECISIONS = {
     "tabletNavPage$lambda$255(Lcom/starpilot/starview/UiSettings;Z)Lkotlin/Unit;": ("patch", "96487089a5bf"),
     "tabletVoicePage()Landroid/view/View;": ("orig", "4064ec1fde65"),
     "tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382(": ("orig", "0a3d255484af"),
-    "uiGroupPage(Ljava/lang/String;)Landroid/view/View;": ("orig", "ca77a7ca4027"),
+    "uiGroupPage(Ljava/lang/String;)Landroid/view/View;": ("patch", "dd6eaa5d0550"),
   },
   "HudEditor": {
     "<init>(Landroid/content/Context;Landroid/widget/FrameLayout;Lcom/starpilot/starview/HudLayout;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)V": ("patch", "587342b3ec1d"),

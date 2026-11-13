@@ -4632,6 +4632,8 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 });
             }
         }
+        // 2.88.0: Widgets: the speed limit warning (own limits, sound)
+        SpeedAlertPage.addTo(this, group, col);
         return sv;
     }
 

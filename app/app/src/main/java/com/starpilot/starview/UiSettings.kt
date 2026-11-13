@@ -32,7 +32,7 @@ class UiSettings(ctx: Context) {
       Item("show_speed", "Current speed", true, "Widgets"),
       Item("show_max", "MAX set speed", true, "Widgets"),
       Item("speed_limit", "Speed limit sign", true, "Widgets"),
-      Item("speed_sign", "Speed limit as a US road sign, next to your speed (flashes red more than 9 mph over)", true, "Widgets"),
+      Item("speed_sign", "Speed limit as a US road sign, next to your speed (flashes red past your warning, below)", true, "Widgets"),
       Item("vienna", "EU-style speed limit sign", false, "HUD"),
       Item("wheel_button", "Steering wheel / experimental button", true, "Widgets"),
       Item("egpu_status", "eGPU status icon (gray = loading, green = active)", true, "Widgets"),

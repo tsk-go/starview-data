@@ -71,6 +71,9 @@ fork: sure of no lane on the left, then "maybe one" right before the fork). Copy
 `app/app/src/test/java/com/starpilot/starview/`, add Robolectric as for PicTest (LaneBrain is plain Java but needs the
 Android stubs) and run `./gradlew :app:testDebugUnitTest --offline --tests com.starpilot.starview.ExitGuardTest`.
 
+`SpeedAlertTest.kt` (2.88.0): the speed limit warning's list and when its sound plays, every sound written as a WAV
+file by the app's own code (AlertSounds, once and 3 times) and a picture of its settings section, into `-DpicOut`.
+
 ## `scene2/`: the road users' pictures in assets/scene2
 
 LaneSceneView draws cars, people, signs and the van from pictures of the old Scene's own 3D models (assets/models):

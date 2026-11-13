@@ -14,8 +14,8 @@ android {
     applicationId = "com.starpilot.starview"
     minSdk = 29
     targetSdk = 35
-    versionCode = 315
-    versionName = "2.87.1"
+    versionCode = 316
+    versionName = "2.88.0"
     // English only: the libraries' translations (appcompat, Play services) took ~300 KB of resources.arsc, which must be
     // stored uncompressed - the room 2.25.0 needed to stay under the 30 MiB send limit
     resourceConfigurations += listOf("en")

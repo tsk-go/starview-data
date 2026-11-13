@@ -240,6 +240,11 @@ for sig in ["tabletNavPage$lambda$254(Lcom/starpilot/starview/UiSettings;)Z",
             "tabletNavPage$lambda$255(Lcom/starpilot/starview/UiSettings;Z)Lkotlin/Unit;"]:
   m = M("SettingsActivity", sig)
   m.replace_line('const-string v0, "map_auto_open"', ['const-string v0, "nav_map"'])
+# 2.88.0: Settings > Widgets: the speed limit warning (SpeedAlertPage) under the switches; v0 = col, p1 = group
+m = M("SettingsActivity", "uiGroupPage(Ljava/lang/String;)Landroid/view/View;")
+assert m.lines[[x for x in instr_idx(m.lines) if x < m.find("return-object v2")][-1]].strip() == "check-cast v2, Landroid/view/View;"
+m.insert_before("return-object v2", ["invoke-static {p0, p1, v0}, Lcom/starpilot/starview/SpeedAlertPage;->addTo("
+                                     "Landroid/app/Activity;Ljava/lang/String;Landroid/widget/LinearLayout;)V"])
 # ---------------------------------------------------------------- WheelButton
 WB = "Lcom/starpilot/starview/WheelButton;"
 m = M("WheelButton", "onDraw(Landroid/graphics/Canvas;)V")

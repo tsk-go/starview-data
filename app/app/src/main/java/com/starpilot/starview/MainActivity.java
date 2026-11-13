@@ -7783,6 +7783,8 @@ public final class MainActivity extends AppCompatActivity {
     /** 2.86.3: the speed limit road sign shows while the car is on and the limit is known; redrawn when its number or
      *  flash changes. Where it sits is the screen editor's (default: bottom left, right of the default speed). */
     private void hybSignTick() {
+        // 2.88.0: the speed limit warning's sound, also with the sign hidden (SpeedAlert)
+        SpeedAlert.tick(this, this.telemetry);
         SpeedSignView sign = this.speedSign;
         if (sign == null) {
             return;

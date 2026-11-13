@@ -105,6 +105,10 @@ PATCHES = {
     ('    const-string v0, "map_auto_open"\n',
      '    const-string v0, "nav_map"\n'),
   ],
+  ('SettingsActivity', 'uiGroupPage(Ljava/lang/String;)Landroid/view/View;'): [
+    ('    return-object v2\n',
+     '    invoke-static {p0, p1, v0}, Lcom/starpilot/starview/SpeedAlertPage;->addTo(Landroid/app/Activity;Ljava/lang/String;Landroid/widget/LinearLayout;)V\n    return-object v2\n'),
+  ],
   ('WheelButton', 'onDraw(Landroid/graphics/Canvas;)V'): [
     ('    iget-object v6, p0, Lcom/starpilot/starview/WheelButton;->exp:Landroid/graphics/Bitmap;\n',
      '    iget-object v6, p0, Lcom/starpilot/starview/WheelButton;->wheel:Landroid/graphics/Bitmap;\n'),
