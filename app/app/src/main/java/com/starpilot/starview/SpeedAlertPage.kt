@@ -1,11 +1,14 @@
 package com.starpilot.starview
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Typeface
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -13,7 +16,8 @@ import android.widget.TextView
 /**
  * 2.88.0: the speed limit warning's settings (SpeedAlert) - the owner's own list of limits and how far over each is
  * fine, the sound (AlertSounds, or none) and how many times in a row it plays. Every change is saved at once.
- * 2.88.1: its own page, Tablet > Settings > "Speed limit warning" (a Rail after "Voice alerts" in SettingsActivity.areas,
+ * 2.88.1: tapping the speed sign opens it over the driving screen (showDialog), and its own page, Tablet > Settings >
+ * "Speed limit warning" (a Rail after "Voice alerts" in SettingsActivity.areas,
  * opened by hybPage at the start of buildPageUnsafe). 2.88.0 put it only under the Widgets switches, a page the settings
  * list never shows (Widgets are the screen editor's), so the owner couldn't find it; it stays there too (settings search
  * of the speed sign opens that page).
@@ -53,6 +57,49 @@ object SpeedAlertPage {
       Log.w(TAG, "page", e)
     }
     return ScrollView(a).apply { addView(col) }
+  }
+
+  @Volatile private var open: Dialog? = null
+
+  /** 2.88.1: tapping the speed sign opens this page over the driving screen, with a Close button */
+  fun showDialog(a: Activity) {
+    if (open?.isShowing == true || a.isFinishing) return
+    val ui = CarUi(a, false)
+    val bg = CarUi.Companion.getBG()
+    val root = LinearLayout(a).apply { orientation = LinearLayout.VERTICAL }
+    val bar = LinearLayout(a).apply {
+      orientation = LinearLayout.HORIZONTAL
+      gravity = Gravity.CENTER_VERTICAL
+      setPadding(ui.dp(22), ui.dp(12), ui.dp(16), ui.dp(8))
+    }
+    bar.addView(TextView(a).apply {
+      text = "Speed limit warning"
+      textSize = 24f
+      setTextColor(CarUi.Companion.getTEXT())
+      typeface = Typeface.DEFAULT_BOLD
+    }, LinearLayout.LayoutParams(0, -2, 1f))
+    val d = Dialog(a)
+    bar.addView(ui.button("Close", true) { try { d.dismiss() } catch (_: Exception) {} })
+    root.addView(bar, LinearLayout.LayoutParams(-1, -2))
+    val col = LinearLayout(a).apply {
+      orientation = LinearLayout.VERTICAL
+      setPadding(ui.dp(14), 0, ui.dp(18), ui.dp(24))
+    }
+    build(a, col, header = false)
+    root.addView(ScrollView(a).apply { addView(col) }, LinearLayout.LayoutParams(-1, 0, 1f))
+    d.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    d.setContentView(root)
+    d.setOnDismissListener { if (open === d) open = null }
+    val w = d.window ?: return
+    w.setBackgroundDrawable(ui.rounded(bg, 18, null))
+    val dm = a.resources.displayMetrics
+    w.setLayout((dm.widthPixels * 0.72f).toInt(), (dm.heightPixels * 0.9f).toInt())
+    // keep the driving screen full screen: show without focus, copy its system UI flags, then take focus
+    w.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+    d.show()
+    w.decorView.systemUiVisibility = a.window.decorView.systemUiVisibility
+    w.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+    open = d
   }
 
   fun build(ctx: Context, col: LinearLayout, header: Boolean = true) {

@@ -27,6 +27,14 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
   private val rect = RectF()
   private var drawnKey = ""
 
+  init {
+    // 2.88.1: tap the sign for the speed limit warning's settings (own limits, sound) - not while editing the screen
+    setOnClickListener {
+      val a = context as? android.app.Activity
+      if (a != null && !NavOverlay.editing) try { SpeedAlertPage.showDialog(a) } catch (_: Exception) {}
+    }
+  }
+
   companion object {
     val RED = Color.rgb(214, 18, 32)
     const val SAMPLE = 25                 // what the screen editor shows
