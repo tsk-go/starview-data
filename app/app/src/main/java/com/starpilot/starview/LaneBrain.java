@@ -1020,6 +1020,34 @@ public final class LaneBrain {
         hybAnswer();
     }
 
+    /** 2.89.3: a road edge farther out than the road's lanes reach is a wide shoulder, not more lanes. With a sure lane
+     *  count for our way (your count, or HPMS on a highway or ramp, with the map's exit / merge lanes added), the edge's
+     *  "lo-hi lanes away" keeps only the counts that fit the road beside the lanes on the other side; when none fit, the
+     *  edge says nothing (a shoulder wider than 12 ft). Belt Parkway, Nov 16: a right shoulder as wide as a lane read
+     *  "right road edge 2 lanes away" again and again, and the card and the Scene stayed on 4 lanes for minutes on a
+     *  3-lane road you had counted yourself. Cars driving in a lane still count it, as before. */
+    final Integer hybEdgeRoom(Integer v, int side) {
+        try {
+            RoadModel m = this.model;
+            if (v == null || m == null || m.getLanes() <= 0 || m.getConf() < 0.85d) {
+                return v;
+            }
+            int lo = v / 10;
+            int hi = v % 10;
+            Pair<Integer, Double> o = side(-side);
+            int room = m.getTotal() - 1 - (o.getSecond().doubleValue() >= 0.7d ? o.getFirst().intValue() : 0);
+            if (hi == 0 || room < 0 || hi <= room) {
+                return v;
+            }
+            if (lo > room) {
+                return null;
+            }
+            return Integer.valueOf(lo * 10 + room);
+        } catch (Throwable e) {
+            return v;
+        }
+    }
+
     /** 2.87.0: the lane from OpenStreetMap's lane layout lined up with the camera (LaneFit) weighs in like one more
      *  sensor - only while that fit is fresh and shown (the map lines up with the camera's lines), the car isn't
      *  between lanes, and the road has 1 to 6 lanes our way. How hard it pulls goes with how well the map lines up. */
@@ -2209,6 +2237,7 @@ public final class LaneBrain {
                 }
 
                 Integer var18 = var0.vote(var5, var15 * 10 + var16, var2, 2500L);
+                var18 = var0.hybEdgeRoom(var18, var4);   // 2.89.3: past the road's lanes = a wide shoulder
                 if (var18 != null) {
                     var16 = var18.intValue();
                     var15 = var16 / 10;

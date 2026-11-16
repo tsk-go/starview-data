@@ -73,6 +73,10 @@ PATCHES = {
     ('    return-void\n',
      '    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybAnswer()V\n    return-void\n'),
   ],
+  ('LaneBrain', 'edges$side$12(Lcom/starpilot/starview/LaneBrain;FJILcom/starpilot/starview/LaneBrain$Vote;FFFLcom/starpilot/starview/LaneMarks$Mark;F)V'): [
+    ('    if-eqz v0, :cond_e\n',
+     '    invoke-virtual {v9, v0, v10}, Lcom/starpilot/starview/LaneBrain;->hybEdgeRoom(Ljava/lang/Integer;I)Ljava/lang/Integer;\n    move-result-object v0\n    if-eqz v0, :cond_e\n'),
+  ],
   ('MapPane', '<init>(Landroid/content/Context;Lcom/starpilot/starview/MapPane$Host;)V'): [
     ('    return-void\n',
      '    invoke-virtual/range {p0 .. p0}, Lcom/starpilot/starview/MapPane;->hybInit()V\n    return-void\n'),

@@ -217,6 +217,13 @@ assert "sideLanes(I)Lkotlin/Pair;" in "".join(m.lines[i - 60:i]) and "move/from1
 # 2.87.0: the lane from the map lined up with the camera weighs in after the road model (hybAnswer)
 m = M("LaneBrain", "answer()V")
 m.insert_before("return-void", ["invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybAnswer()V"])
+# 2.89.3: a road edge past a sure lane count is a wide shoulder (hybEdgeRoom on the vote: v0 = the voted lo*10+hi,
+# v9 = this$0, v10 = the side; null -> the edge says nothing, :cond_e returns)
+m = M("LaneBrain", "edges$side$12(Lcom/starpilot/starview/LaneBrain;FJILcom/starpilot/starview/LaneBrain$Vote;FFF"
+                   "Lcom/starpilot/starview/LaneMarks$Mark;F)V")
+m.insert_before("if-eqz v0, :cond_e", ["invoke-virtual {v9, v0, v10}, Lcom/starpilot/starview/LaneBrain;->hybEdgeRoom"
+                                       "(Ljava/lang/Integer;I)Ljava/lang/Integer;", "move-result-object v0"])
+assert "LaneBrain;->vote(" in "".join(m.lines[m.find("if-eqz v0, :cond_e") - 4:m.find("if-eqz v0, :cond_e")])
 # ---------------------------------------------------------------- MapPane
 MP = "Lcom/starpilot/starview/MapPane;"
 m = M("MapPane", "<init>(Landroid/content/Context;Lcom/starpilot/starview/MapPane$Host;)V")

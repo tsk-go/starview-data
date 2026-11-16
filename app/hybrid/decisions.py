@@ -81,6 +81,7 @@ DECISIONS = {
   },
   "LaneBrain": {
     "answer()V": ("patch", "48e94868aa19"),
+    "edges$side$12(Lcom/starpilot/starview/LaneBrain;FJILcom/starpilot/starview/LaneBrain$Vote;FFFLcom/starpilot/starview/LaneMarks$Mark;F)V": ("patch", "e5fc79ddb7c7"),
   },
   "VoiceNote": {
     "start(Ljava/io/File;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": ("patch", "68e8f99ee3f0"),

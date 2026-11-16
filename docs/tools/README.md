@@ -71,6 +71,9 @@ fork: sure of no lane on the left, then "maybe one" right before the fork). Copy
 `app/app/src/test/java/com/starpilot/starview/`, add Robolectric as for PicTest (LaneBrain is plain Java but needs the
 Android stubs) and run `./gradlew :app:testDebugUnitTest --offline --tests com.starpilot.starview.ExitGuardTest`.
 
+`EdgeRoomTest.kt` (2.89.3): a road edge past a sure lane count is a wide shoulder (`LaneBrain.hybEdgeRoom`), on the
+lane tracker itself fed the camera's edge as `edges()` does - same setup as ExitGuardTest.
+
 `SpeedAlertTest.kt` (2.88.0): the speed limit warning's list and when its sound plays, every sound written as a WAV
 file by the app's own code (AlertSounds, once and 3 times) and a picture of its settings section, into `-DpicOut`.
 
