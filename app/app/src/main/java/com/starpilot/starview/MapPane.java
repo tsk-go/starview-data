@@ -2811,7 +2811,8 @@ public final class MapPane extends FrameLayout {
         }
 
         public final String style() {
-            return this.this$0.getS().get("map_traffic") ? this.this$0.host.getNight() ? "trafficDark" : "trafficLight" : this.this$0.host.getNight() ? "dark" : "light";
+            // 2.89.0: Galaxy's Map provider "Google" -> Google's map with traffic, through the comma (GoogleMaps)
+            return GoogleMaps.style(this.this$0.getS().get("map_traffic") ? this.this$0.host.getNight() ? "trafficDark" : "trafficLight" : this.this$0.host.getNight() ? "dark" : "light");
         }
 
         private final float focusX() {
@@ -3669,7 +3670,7 @@ public final class MapPane extends FrameLayout {
             this.textP.setTextAlign(Paint.Align.LEFT);
             this.textP.setTextSize(this.this$0.dp(10.0f));
             this.textP.setColor(this.this$0.host.getNight() ? Color.argb(150, 255, 255, 255) : Color.argb(150, i4, i4, i4));
-            canvas.drawText("© Mapbox © OpenStreetMap", this.this$0.dp(8.0f), (getHeight() - this.this$0.dp(4.0f)) - (this.this$0.bottomBar.getVisibility() == 0 ? this.this$0.dp(10.0f) + this.this$0.bottomBar.getHeight() : 0.0f), this.textP);
+            canvas.drawText(GoogleMaps.attribution("© Mapbox © OpenStreetMap"), this.this$0.dp(8.0f), (getHeight() - this.this$0.dp(4.0f)) - (this.this$0.bottomBar.getVisibility() == 0 ? this.this$0.dp(10.0f) + this.this$0.bottomBar.getHeight() : 0.0f), this.textP);
             this.textP.setTextAlign(Paint.Align.CENTER);
             this.textP.setColor(-1);
         }

@@ -25,6 +25,7 @@ DECISIONS = {
     "navigateTo$lambda$177$lambda$176(Lcom/starpilot/starview/MainActivity;Ljava/lang/String;Lorg/json/JSONObject;)Lkotlin/Unit;": ("patch", "7299839d73ef"),
     "openMap()V": ("orig", "645fd8d44b5f"),
     "setDestinationNow$lambda$181(Lcom/starpilot/starview/MainActivity;Lorg/json/JSONObject;)Lkotlin/Unit;": ("patch", "da183b947a9a"),
+    "shareIntent$lambda$18(Ljava/lang/String;Ljava/lang/String;Lcom/starpilot/starview/MainActivity;)V": ("patch", "8433d99f8e9a"),
     "setupMapFrame()V": ("patch", "2c996dd965fb"),
     "setupMapFrame$lambda$215(": ("orig", "ad0c9e0644a8"),
     "startHudEdit()V": ("patch", "27d3b9e1d510"),
@@ -44,7 +45,8 @@ DECISIONS = {
     "onDraw(Landroid/graphics/Canvas;)V": ("patch", "873fcc71eb73"),
   },
   "MapPane$MapCanvas": {
-    "onDraw(Landroid/graphics/Canvas;)V": ("orig", "a21a139b77dc"),
+    "onDraw(Landroid/graphics/Canvas;)V": ("patch", "fa7dff4d661f"),
+    "style()Ljava/lang/String;": ("patch", "974f6617827e"),
   },
   "SettingsActivity": {
     "areas()Ljava/util/List;": ("patch", "daa27f5f3019"),
@@ -52,7 +54,7 @@ DECISIONS = {
     "catalogPage(Ljava/lang/String;Z)Landroid/view/View;": ("orig", "cc736eb6e3f0"),
     "tabletAboutPage()Landroid/view/View;": ("patch", "10cee18e6a78"),
     "tabletBlinkerPage()Landroid/view/View;": ("orig", "2638fbace510"),
-    "tabletNavPage()Landroid/view/View;": ("patch", "5ee19106b275"),
+    "tabletNavPage()Landroid/view/View;": ("patch", "4a2c842277c1"),
     "tabletNavPage$lambda$254(Lcom/starpilot/starview/UiSettings;)Z": ("patch", "4ac2bfb2b9bc"),
     "tabletNavPage$lambda$255(Lcom/starpilot/starview/UiSettings;Z)Lkotlin/Unit;": ("patch", "96487089a5bf"),
     "tabletVoicePage()Landroid/view/View;": ("orig", "4064ec1fde65"),

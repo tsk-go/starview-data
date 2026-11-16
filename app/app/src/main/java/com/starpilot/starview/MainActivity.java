@@ -697,6 +697,8 @@ public final class MainActivity extends AppCompatActivity {
             }
         }
 
+        // 2.89.0: what StarView can't read itself (Waze links...) the comma reads with upstream's share rules
+        var9.element = GoogleMaps.shared(var0, (SharedPlace.Place)var9.element);
         var2.runOnUiThread(new MainActivity$$ExternalSyntheticLambda97(var2, var9));
     }
 

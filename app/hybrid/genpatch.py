@@ -121,6 +121,9 @@ METHODS = []
 
 
 def M(cls, sig):
+  for m in METHODS:            # one entry per method: later edits of the same method add to it
+    if (m.cls, m.sig) == (cls, sig):
+      return m
   m = Method(cls, sig)
   METHODS.append(m)
   return m
@@ -349,6 +352,28 @@ m.add(i, j + 1, [f"    invoke-virtual {{p0}}, {VN}->hybListener()Landroid/speech
                  "    move-result-object v9\n"])
 m.insert_before("invoke-virtual {v4, v7}, Landroid/speech/SpeechRecognizer;->startListening(Landroid/content/Intent;)V",
                 [f"invoke-virtual {{p0, v7}}, {VN}->hybIntent(Landroid/content/Intent;)V"])
+
+# ---------------------------------------------------------------- 2.89.0: Galaxy's Google navigation (GoogleMaps)
+GM = "Lcom/starpilot/starview/GoogleMaps;"
+# the map's style: Google's when Galaxy's Map provider is Google (every path ends at :goto_0 / return-object v0)
+m = M("MapPane$MapCanvas", "style()Ljava/lang/String;")
+m.insert_before("return-object v0", [f"invoke-static {{v0}}, {GM}->style(Ljava/lang/String;)Ljava/lang/String;",
+                                     "move-result-object v0"])
+# the map's corner credit
+m = M("MapPane$MapCanvas", "onDraw(Landroid/graphics/Canvas;)V")
+m.insert_after('const-string v3, "\\u00a9 Mapbox \\u00a9 OpenStreetMap"',
+               [f"invoke-static {{v3}}, {GM}->attribution(Ljava/lang/String;)Ljava/lang/String;", "move-result-object v3"])
+# Tablet > Settings > Navigation map: the Google section at the end (v6 = this, v8 = col)
+m = M("SettingsActivity", "tabletNavPage()Landroid/view/View;")
+m.insert_before("return-object v4", [f"invoke-static {{v6, v8}}, {GM}->addTo(Landroid/app/Activity;Landroid/widget/LinearLayout;)V"])
+# a shared link StarView couldn't read (Waze...): the comma's reading (p0 = the shared text, v4 = the place's ObjectRef)
+m = M("MainActivity", "shareIntent$lambda$18(Ljava/lang/String;Ljava/lang/String;Lcom/starpilot/starview/MainActivity;)V")
+m.insert_after(":cond_4", ["iget-object v1, v4, Lkotlin/jvm/internal/Ref$ObjectRef;->element:Ljava/lang/Object;",
+                           "check-cast v1, Lcom/starpilot/starview/SharedPlace$Place;",
+                           f"invoke-static {{p0, v1}}, {GM}->shared(Ljava/lang/String;Lcom/starpilot/starview/SharedPlace$Place;)"
+                           "Lcom/starpilot/starview/SharedPlace$Place;",
+                           "move-result-object v1",
+                           "iput-object v1, v4, Lkotlin/jvm/internal/Ref$ObjectRef;->element:Ljava/lang/Object;"])
 
 # ---------------------------------------------------------------- checks + output
 for m in METHODS:

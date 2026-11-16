@@ -96,6 +96,8 @@ PATCHES = {
      '    const-string v2, "See-through map under the turn card"\n'),
     ('    const-string v3, "Also a destination set in Galaxy or on the comma."\n',
      '    const-string v3, "Street lines over the road view while the car is on, and your route while one is set. Move or resize it, the turn card and every button in the screen editor (hold the road view). Tap the map or the card for the full navigation screen."\n'),
+    ('    return-object v4\n',
+     '    invoke-static {v6, v8}, Lcom/starpilot/starview/GoogleMaps;->addTo(Landroid/app/Activity;Landroid/widget/LinearLayout;)V\n    return-object v4\n'),
   ],
   ('SettingsActivity', 'tabletNavPage$lambda$254(Lcom/starpilot/starview/UiSettings;)Z'): [
     ('    const-string v0, "map_auto_open"\n',
@@ -158,5 +160,17 @@ PATCHES = {
      '    invoke-virtual {p0}, Lcom/starpilot/starview/VoiceNote;->hybListener()Landroid/speech/RecognitionListener;\n\n    move-result-object v9\n'),
     ('    invoke-virtual {v4, v7}, Landroid/speech/SpeechRecognizer;->startListening(Landroid/content/Intent;)V\n',
      '    invoke-virtual {p0, v7}, Lcom/starpilot/starview/VoiceNote;->hybIntent(Landroid/content/Intent;)V\n    invoke-virtual {v4, v7}, Landroid/speech/SpeechRecognizer;->startListening(Landroid/content/Intent;)V\n'),
+  ],
+  ('MapPane$MapCanvas', 'style()Ljava/lang/String;'): [
+    ('    return-object v0\n',
+     '    invoke-static {v0}, Lcom/starpilot/starview/GoogleMaps;->style(Ljava/lang/String;)Ljava/lang/String;\n    move-result-object v0\n    return-object v0\n'),
+  ],
+  ('MapPane$MapCanvas', 'onDraw(Landroid/graphics/Canvas;)V'): [
+    ('    const-string v3, "\\u00a9 Mapbox \\u00a9 OpenStreetMap"\n',
+     '    const-string v3, "\\u00a9 Mapbox \\u00a9 OpenStreetMap"\n    invoke-static {v3}, Lcom/starpilot/starview/GoogleMaps;->attribution(Ljava/lang/String;)Ljava/lang/String;\n    move-result-object v3\n'),
+  ],
+  ('MainActivity', 'shareIntent$lambda$18(Ljava/lang/String;Ljava/lang/String;Lcom/starpilot/starview/MainActivity;)V'): [
+    ('    :cond_4\n',
+     '    :cond_4\n    iget-object v1, v4, Lkotlin/jvm/internal/Ref$ObjectRef;->element:Ljava/lang/Object;\n    check-cast v1, Lcom/starpilot/starview/SharedPlace$Place;\n    invoke-static {p0, v1}, Lcom/starpilot/starview/GoogleMaps;->shared(Ljava/lang/String;Lcom/starpilot/starview/SharedPlace$Place;)Lcom/starpilot/starview/SharedPlace$Place;\n    move-result-object v1\n    iput-object v1, v4, Lkotlin/jvm/internal/Ref$ObjectRef;->element:Ljava/lang/Object;\n'),
   ],
 }

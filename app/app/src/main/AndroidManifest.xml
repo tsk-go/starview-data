@@ -73,6 +73,16 @@
         <data android:host="www.google.com" android:pathPrefix="/maps" />
         <data android:host="goo.gl" android:pathPrefix="/maps" />
       </intent-filter>
+      <!-- 2.89.0: Waze links (the comma reads them with upstream's share rules) -->
+      <intent-filter android:label="StarView route">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https" />
+        <data android:host="waze.com" />
+        <data android:host="www.waze.com" />
+        <data android:host="ul.waze.com" />
+      </intent-filter>
     </activity>
     <service android:name=".LinkService" android:exported="false" android:foregroundServiceType="connectedDevice" />
     <activity android:name=".FilesActivity" android:exported="false" android:screenOrientation="fullUser" android:theme="@style/Theme.StarView" />

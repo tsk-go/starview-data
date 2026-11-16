@@ -7638,6 +7638,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 handler.postDelayed(this, 1000L);
             }
         });
+        GoogleMaps.addTo(this, col);   // 2.89.0: Galaxy's Google map / routes / places
         return sv;
     }
 
