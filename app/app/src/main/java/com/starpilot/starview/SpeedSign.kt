@@ -50,7 +50,7 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
 
     /** The posted limit in m/s (NaN when unknown): the speed limit controller's reading (also in display-only mode),
      *  else any source's own valid reading (2.86.5: like Waze, the sign shows a limit whenever one is known, even
-     *  from a source the controller doesn't use), else the last one this drive, else the accepted one. */
+     *  from a source the controller doesn't use), else the last one this drive. */
     fun postedMps(t: Telemetry): Float {
       if (!t.started) {
         lastMps = Float.NaN
@@ -74,7 +74,9 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
         return fresh
       }
       if (ok(lastMps)) return lastMps
-      if (live != null && live.hasAccepted && ok(live.acceptedMps)) return live.acceptedMps
+      // 2.89.1: no longer the speed limit controller's accepted limit when nothing was read this drive: it keeps the
+      // last one it adopted (Nov 16: 50 from an earlier drive on a local street, every source unknown / absent), so the
+      // sign showed 50 instead of the "No limit known" amount (SpeedAlert.Conf.fallback)
       return Float.NaN
     }
 
