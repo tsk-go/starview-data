@@ -71,9 +71,13 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     private val GENERIC = arrayOf("car_sedan", "car_suv", "car_hatch", "car_coupe")
     /** Traffic's id for radarState's leadOne, the car openpilot follows (its LEAD_ID_BASE) */
     private const val FOLLOWED_ID = -100L
+    /** 2.89.2: a traffic light hangs this high over the road (the bottom of its head, m), from a mast arm */
+    private const val HANG = 4.6
   }
 
-  class Thing(val id: Long, val model: String, var r: Double, var f: Double, var psi: Double, val lead: Boolean, val remembered: Boolean) {
+  /** [pole]: 2.89.2, a traffic light's mast pole sideways (m right of us; NaN = 4 m right of the light) */
+  class Thing(val id: Long, val model: String, var r: Double, var f: Double, var psi: Double, val lead: Boolean, val remembered: Boolean,
+              val pole: Double = Double.NaN) {
     /** a place and a direction that can be drawn (no NaN, no infinity) */
     fun ok() = r.isFinite() && f.isFinite() && psi.isFinite()
   }
@@ -275,8 +279,11 @@ class LaneSceneView(ctx: Context) : View(ctx) {
           if (!cx.isFinite() || !cy.isFinite()) continue
           if (vehicle && things.any { abs(it.f - cx) < cx * 0.2 + 4 && abs(it.r - cy) < cx * 0.06 + 2.2 }) continue
           val hd = o.heading.toDouble()
-          val psi = if (!vehicle) 0.0 else if (hd.isFinite()) hd else roadHeading(m, cx)
-          things.add(Thing(-o.id - 5_000_000L, name, cy, cx, psi, false, false))
+          // 2.89.2: traffic lights and stop signs face us (they were drawn from behind: black boxes standing in the lane)
+          val facing = o.cls == 9 || o.cls == 11
+          val psi = if (!vehicle) (if (facing) Math.PI else 0.0) else if (hd.isFinite()) hd else roadHeading(m, cx)
+          val pole = if (o.cls == 9) curbRight(m, cx, cy) else Double.NaN
+          things.add(Thing(-o.id - 5_000_000L, name, cy, cx, psi, false, false, pole))
         }
       }
       if (t.s("car_memory")) carMemory?.ghosts?.forEach { g ->
@@ -299,6 +306,16 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     seen.values.removeAll { nowNs - it[3] > 2e9 }
     val lanes = try { Lanes.live() } catch (e: Exception) { null }
     return Frame(m, fit, pose, odo[3], things, t.latActive, t.leftBlindspot, t.rightBlindspot, detector?.laneMarks?.marks, lanes)
+  }
+
+  /** 2.89.2: where a traffic light's mast pole stands: the right road edge openpilot sees at [f] m (+1 m), else 4 m right
+   *  of the light; never left of it */
+  private fun curbRight(m: ModelSnapshot?, f: Double, r: Double): Double {
+    if (m != null && m.edgeStd.size > 1 && m.edgeStd[1] <= 1.5f && f <= m.edgeX[1].last() + 20) {
+      val e = LaneFit.interp(m.edgeX[1], m.edgeY[1], f) + 1.0
+      if (e.isFinite()) return max(e, r + 1.0)
+    }
+    return r + 4.0
   }
 
   /** the road's direction at [x] m ahead, from openpilot's path (radians, right = positive) */
@@ -370,8 +387,9 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     val b = fit.built
     val reach = fit.reach
     val ways = ArrayList<LaneMap.BWay>()
+    val beside = alongside(fit, pose)
     for ((i, w) in b.ways.withIndex()) {
-      if (reach != null && i < reach.size && !reach[i]) continue
+      if (reach != null && i < reach.size && !reach[i] && !(beside != null && i < beside.size && beside[i])) continue
       if (w.near(pose.x, pose.y, FMAX)) ways.add(w)
     }
     ways.sortBy { it.layer }
@@ -394,6 +412,38 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     path.rewind()
     for (w in ways) for (a in w.arrows) arrow(a, pose)
     grad(c, ya, yb, pal.arrow and 0x00FFFFFF, pal.arrow)
+  }
+
+  private var besideFit: LaneFit.Fit? = null
+  private var besideWays: BooleanArray? = null
+
+  /** 2.89.2 (owner, Nov 16, on the highway: "lines the other side ... make it look good"): roads we can't drive onto from
+   *  here were left out, so the highway's other side (and a road running beside it) was bare ground with its cars
+   *  floating on it. Also drawn now: a road on our level (OSM layer) running alongside ours (within 25 degrees) within
+   *  70 m sideways somewhere from 30 m behind to 220 m ahead. A road on another level (a viaduct's street below) stays
+   *  out. Worked out once per fit. */
+  private fun alongside(fit: LaneFit.Fit, pose: LaneFit.Pose): BooleanArray? {
+    if (fit === besideFit) return besideWays
+    besideFit = fit
+    val m = fit.match
+    val b = fit.built
+    if (m == null || m.way !in b.ways.indices) { besideWays = null; return null }
+    val layer = b.ways[m.way].layer
+    val fx = sin(pose.h); val fy = cos(pose.h)
+    val out = BooleanArray(b.ways.size)
+    for ((i, w) in b.ways.withIndex()) {
+      if (w.layer != layer || !w.near(pose.x, pose.y, 250.0)) continue
+      for (j in 0 until w.px.size - 1) {
+        val f = pose.fwd(w.px[j], w.py[j])
+        if (f < -30 || f > 220 || abs(pose.right(w.px[j], w.py[j])) > 70) continue
+        val dx = w.px[j + 1] - w.px[j]; val dy = w.py[j + 1] - w.py[j]
+        val l = hypot(dx, dy)
+        if (l < 1e-3) continue
+        if (abs(fx * dy - fy * dx) / l < 0.42) { out[i] = true; break }
+      }
+    }
+    besideWays = out
+    return out
   }
 
   /** a map line the camera's own lines stand for near the car: where it's nearest to the car within 30 m ahead, it
@@ -424,13 +474,26 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       if (!ok && start >= 0) {
         if (i - start >= 2) {
           var first = true
+          // 2.89.2: the piece before the first point in range, cut at the near edge (fMin) - starting at that point left a
+          // straight cut across a road beside us on the screen (the points are 5 m apart or more)
+          if (start > 0 && nearEdge(lx, ly, start, pose)) { path.moveTo(px, py); first = false }
           for (j in start until i) { if (proj(pose.right(lx[j].toDouble(), ly[j].toDouble()), pose.fwd(lx[j].toDouble(), ly[j].toDouble()))) { if (first) path.moveTo(px, py) else path.lineTo(px, py); first = false } }
           for (j in i - 1 downTo start) { if (proj(pose.right(rx[j].toDouble(), ry[j].toDouble()), pose.fwd(rx[j].toDouble(), ry[j].toDouble()))) path.lineTo(px, py) }
+          if (start > 0 && nearEdge(rx, ry, start, pose)) path.lineTo(px, py)
           path.close()
         }
         start = -1
       }
     }
+  }
+
+  /** the point of side line [xs]/[ys] between [j]-1 (out of range) and [j] where it is fMin ahead, projected (px, py) */
+  private fun nearEdge(xs: FloatArray, ys: FloatArray, j: Int, pose: LaneFit.Pose): Boolean {
+    val f0 = pose.fwd(xs[j - 1].toDouble(), ys[j - 1].toDouble()); val f1 = pose.fwd(xs[j].toDouble(), ys[j].toDouble())
+    if (f0 >= fMin || f1 <= f0) return false
+    val k = ((fMin - f0) / (f1 - f0)).coerceIn(0.0, 1.0)
+    val x = xs[j - 1] + (xs[j] - xs[j - 1]) * k; val y = ys[j - 1] + (ys[j] - ys[j - 1]) * k
+    return proj(pose.right(x, y), pose.fwd(x, y))
   }
 
   private fun mapLine(ln: LaneMap.MLine, pose: LaneFit.Pose, styleAt: ArrayList<DoubleArray>) {
@@ -455,7 +518,15 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     var start = -1
     for (i in 0..n) {
       val ok = i < n && fs[i] in fMin..FMAX && abs(rs[i]) < 200
-      if (ok && start < 0) start = i
+      if (ok && start < 0) {
+        start = i
+        // 2.89.2: from the near edge (fMin), not from the first point past it (a line beside us started mid-screen)
+        if (i > 0 && fs[i - 1] < fMin && fs[i] > fs[i - 1] && abs(rs[i - 1]) < 200) {
+          val k = (fMin - fs[i - 1]) / (fs[i] - fs[i - 1])
+          rs[i - 1] += (rs[i] - rs[i - 1]) * k; fs[i - 1] = fMin
+          start = i - 1
+        }
+      }
       if (!ok && start >= 0) { if (i - start >= 2) ribbon(start, i, off, w); start = -1 }
     }
   }
@@ -748,11 +819,14 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     val vehicle = th.model.startsWith("car") || th.model == "truck" || th.model == "bus" || th.model == "motorcycle"
     val fade = ((200 - th.f) / 60).coerceIn(0.0, 1.0)
     if (vehicle) shadow(c, th.r, th.f, th.psi, mdl.L + 1.0, mdl.W + 0.7, pal, (0x80 * fade).toInt())
-    if (!proj(th.r, th.f)) return
+    // 2.89.2: a traffic light hangs over the road from a mast arm (it stood in the lane like a post before)
+    val lift = if (th.model == "traffic_light") HANG else 0.0
+    if (lift > 0) mast(c, th, lift + mdl.H, fade)
+    if (!proj(th.r, th.f, lift)) return
     val ax = px; val ay = py; val z = pz
     // which picture: the height we look from, and the turn of the car against our line of sight
     val df = th.f - camF
-    val el = Math.toDegrees(atan2(camU, hypot(th.r, df)))
+    val el = Math.toDegrees(atan2(camU - lift, hypot(th.r, df)))
     var pi = 0
     for (k in mdl.pitches.indices) if (abs(mdl.pitches[k] - el) < abs(mdl.pitches[pi] - el)) pi = k
     var yaw = Math.toDegrees(th.psi - atan2(th.r, df))
@@ -776,6 +850,26 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     } finally {
       p.alpha = a0
     }
+  }
+
+  private val pMast = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
+
+  /** a traffic light's mast: the arm at [top] m from the light out to its pole at the roadside, and the pole */
+  private fun mast(c: Canvas, th: Thing, top: Double, fade: Double) {
+    val pole = if (th.pole.isFinite()) th.pole else th.r + 4.0
+    if (!proj(th.r, th.f, top)) return
+    val x0 = px; val y0 = py; val z0 = pz
+    if (!proj(pole, th.f, top)) return
+    val x1 = px; val y1 = py
+    if (!proj(pole, th.f, 0.0)) return
+    val x2 = px; val y2 = py
+    if (!(x0.isFinite() && y0.isFinite() && x1.isFinite() && y1.isFinite() && x2.isFinite() && y2.isFinite())) return
+    val k = (F / z0).toFloat()
+    pMast.color = (((0xE0 * fade).toInt()) shl 24) or (if (night) 0x5A6068 else 0x4A5058)
+    pMast.strokeWidth = max(1.5f, 0.13f * k)
+    c.drawLine(x0, y0, x1, y1, pMast)
+    pMast.strokeWidth = max(2f, 0.22f * k)
+    c.drawLine(x1, y1, x2, y2, pMast)
   }
 
   private fun drawEgo(c: Canvas, pal: Pal) {

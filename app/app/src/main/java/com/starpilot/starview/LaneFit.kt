@@ -32,6 +32,8 @@ object LaneFit {
   private const val TAG = "StarView/LaneFit"
   private val ZS = doubleArrayOf(8.0, 15.0, 22.0, 30.0, 40.0)
   private const val CAM_TO = 90.0
+  /** 2.89.2: how far the last fit is carried on when the camera sees no lines (an intersection) */
+  private const val BLIND_M = 150.0
   const val HIDE_COST = 1.0
   private const val SHOW_COST = 0.85
   private const val REACH = 420.0
@@ -59,7 +61,10 @@ object LaneFit {
 
   class Fit(val built: LaneMap.Built, val pose: Pose, val odo: DoubleArray, val atMs: Long, val cost: Double,
             val hidden: Boolean, val shift: Double, val dh: Double, val match: Match?, val reach: BooleanArray?,
-            val camLines: Int, val camEdges: Int) {
+            val camLines: Int, val camEdges: Int,
+            /** 2.89.2: carried on without the camera (an intersection): how far the car had driven (Odometry metres) at
+             *  the last fit the camera's lines took part in; NaN for a fit of its own */
+            val blindFrom: Double = Double.NaN) {
     /** the OSM ids of [reach] (the next fit keeps to these, even after the map is rebuilt: a road stacked over ours,
      *  like the bridge's other level, looks the same to the camera) */
     val reachIds: Set<Long>? = reach?.let { r -> HashSet<Long>().also { s -> for (i in r.indices) if (r[i]) s.add(built.ways[i].id) } }
@@ -139,14 +144,25 @@ object LaneFit {
     val live = prev != null && sameFrame(prev.built, b) && !prev.hidden && now - prev.atMs < 1500
     val prevPose = if (live) carry(prev!!.pose, prev.odo, odo) else null
     val allowed = if (live) prev!!.reachIds else null
-    if (samples.size < 3) return hiddenFit(b, gps, odo, now, nLines, nEdges, "camera sees too little")
+    if (samples.size < 3 || !gps.h.isFinite()) {
+      // 2.89.2 (owner, Nov 16: "intersection doesn't look good"): inside an intersection there's no paint, so the camera
+      // sees too little and the map was hidden - the Scene showed bare ground with the cars on it, stopped at a light too
+      // (no GPS heading standing still). The last fit carries on by the car's own motion for up to BLIND_M of driving.
+      val from = prev?.blindFrom?.takeIf { it.isFinite() } ?: prev?.odo?.getOrNull(3) ?: Double.NaN
+      if (prevPose != null && from.isFinite() && odo.size > 3 && odo[3] - from <= BLIND_M) {
+        status = String.format(java.util.Locale.US, "carried on %.0f m (%s)", odo[3] - from,
+          if (samples.size < 3) "camera sees too little" else "no heading")
+        return Fit(b, prevPose, odo, now, prev!!.cost, false, prev.shift, prev.dh, prev.match, prev.reach, nLines, nEdges, from)
+      }
+      return hiddenFit(b, gps, odo, now, nLines, nEdges, if (samples.size < 3) "camera sees too little" else "no heading")
+    }
 
     // ------------------------------------------------ map lines near the car, in its frame
     val segs = ArrayList<FloatArray>()      // r0, f0, r1, f1, edge(1/0)
     for (w in b.ways) {
       if (!w.near(gps.x, gps.y, 60.0)) continue
       if (allowed != null && w.id !in allowed) continue
-      for (ln in w.lines) {
+      for (ln in w.fitLines) {
         val edge = if (LaneMap.isEdge(ln.style)) 1f else 0f
         var pr = 0.0; var pf = 0.0
         for (k in ln.x.indices) {

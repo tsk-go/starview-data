@@ -25,8 +25,8 @@ import kotlin.math.hypot
  * The new Scene view on a recorded drive, off the tablet: the drive's model lines and GPS (laneData/drive_*.json),
  * OpenStreetMap ways (laneData/osm_all.json), LaneMap + LaneFit replayed over the 90 s before each moment, then
  * LaneSceneView drawn at the tablet's size. Moments in laneData/picks.txt: "window,YYYY-MM-DD HH:MM:SS (Eastern),name
- * [,day][,cars][,nan][,lcL|lcR][,lanes=L:R[:E]][,nomap][,top][,zoom=D][,tilt=E]" (nan: two cars with the detector's
- * NaN; lcL / lcR: a lane change to that side; lanes: the lane card's count; nomap: camera only). Writes picOut/<name>.png (+ _top.png: bird's-eye check) and log.txt.
+ * [,day][,cars][,nan][,lights][,lcL|lcR][,lanes=L:R[:E]][,nomap][,top][,zoom=D][,tilt=E]" (nan: two cars with the detector's
+ * NaN; lights: two traffic lights over the lanes ahead; lcL / lcR: a lane change to that side; lanes: the lane card's count; nomap: camera only). Writes picOut/<name>.png (+ _top.png: bird's-eye check) and log.txt.
  * Drive data never goes in git.
  */
 @RunWith(RobolectricTestRunner::class)
@@ -167,6 +167,10 @@ class LaneSceneTest {
       if ("nan" in p) {      // what the camera's car detector hands over when it doesn't know (2.87.1)
         things.add(LaneSceneView.Thing(5, "car_suv", 3.6, 16.0, Double.NaN, false, false))
         things.add(LaneSceneView.Thing(6, "car_coupe", Double.NaN, Double.NaN, 0.0, false, false))
+      }
+      if ("lights" in p) {   // 2.89.2: traffic lights over the lanes ahead, where the camera's detector puts them
+        things.add(LaneSceneView.Thing(7, "traffic_light", -1.7, 34.0, Math.PI, false, false, 7.5))
+        things.add(LaneSceneView.Thing(8, "traffic_light", 1.7, 36.0, Math.PI, false, false, 7.5))
       }
       val lcDir = if ("lcR" in p) 1 else if ("lcL" in p) -1 else 0
       val v = LaneSceneView(ctx)

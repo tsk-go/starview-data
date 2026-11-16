@@ -90,6 +90,9 @@ object LaneMap {
     val flow: Int,
     val minX: Double, val minY: Double, val maxX: Double, val maxY: Double,
   ) {
+    /** 2.89.2: the lines as built, before trim cut them at junctions: what LaneFit lines the camera's lines up with
+     *  (the camera's lane lines carry on through a junction, so lines cut there made the fit worse just before one) */
+    val fitLines: List<MLine> = lines
     fun near(x: Double, y: Double, r: Double) = x > minX - r && x < maxX + r && y > minY - r && y < maxY + r
     /** road class: motorway 10 .. residential 4, a ramp half a step below its road */
     val rank: Double get() = rankOf(hw)
@@ -468,34 +471,86 @@ object LaneMap {
   /** A ramp or side road is drawn up to its junction node, which OSM puts on the bigger road's centre line: its lines
    *  would run across the bigger road's lanes. They stop where they enter its carriageway (within 120 m of the shared
    *  node; the same road going on is left alone). */
+  /** Lines inside the surface of a road they meet are left out. 2.89.2 (owner, Nov 16: "intersection doesn't look good,
+   *  yellow lines doesn't look right"): before, only a smaller road's lines gave way to a bigger road's surface, so where
+   *  two roads of the same class crossed (or the smaller one was the wider), the other road's yellow centre line ran
+   *  across our lanes - long, where a diagonal avenue crosses at a slant - and our lane lines ran on through the
+   *  junction. Now at a real crossing (more than 30 degrees apart) both roads' lines stop at the other's edge, as the
+   *  paint does at a junction; a bigger road still cuts a smaller one joining at a slant (a ramp). The cut is at the edge
+   *  itself, not at the nearest point of the line (up to 5 m off before). A road going on under the same name isn't cut. */
   private fun trim(ways: List<BWay>, at: Map<Long, IntArray>) {
+    fun dirAt(px: DoubleArray, py: DoubleArray, vi: Int): DoubleArray {
+      val a = if (vi + 1 < px.size) vi else vi - 1
+      if (a < 0) return doubleArrayOf(0.0, 0.0)
+      return unit(px[a + 1] - px[a], py[a + 1] - py[a])
+    }
+    val polys = HashMap<Int, Pair<FloatArray, FloatArray>>()
+    fun poly(o: Int): Pair<FloatArray, FloatArray> = polys.getOrPut(o) {
+      val u = ways[o]
+      val px = FloatArray(u.left.size + u.right.size); val py = FloatArray(px.size)
+      for (i in u.left.indices) { px[i] = u.left[i]; py[i] = u.leftY[i] }
+      for (i in u.right.indices) { px[u.left.size + i] = u.right[u.right.size - 1 - i]; py[u.left.size + i] = u.rightY[u.right.size - 1 - i] }
+      px to py
+    }
+    val cuts = ArrayList<List<MLine>?>()
     for ((wi, w) in ways.withIndex()) {
       val nodes = HashMap<Int, Int>()                        // other way -> one shared vertex of w
       for ((vi, k) in w.keys.withIndex()) for (code in at[k] ?: continue) { val o = code ushr 20; if (o != wi) nodes.putIfAbsent(o, vi) }
-      if (nodes.isEmpty()) continue
+      if (nodes.isEmpty()) { cuts.add(null); continue }
       var lines = w.lines
       for ((o, vi) in nodes) {
         val u = ways[o]
         val major = u.rank > w.rank || (u.rank == w.rank && u.width > w.width + 0.5 && u.name != w.name)
-        if (!major) continue
+        val uk = u.keys.indexOf(w.keys[vi])
+        val dw = dirAt(w.px, w.py, vi)
+        val du = if (uk >= 0) dirAt(u.px, u.py, uk) else dw
+        val crossing = abs(dw[0] * du[0] + dw[1] * du[1]) < 0.87
+        // u goes on across w here (through the point, or another way going on from it under u's name or straight on):
+        // a side street that just ends on w (a T) doesn't cut w's lines - the paint goes on past it
+        val node = w.keys[vi]
+        val through = uk in 1 until u.keys.size - 1 || (at[node] ?: IntArray(0)).any { code ->
+          val v = code ushr 20
+          if (v == o || v == wi) return@any false
+          val vw = ways[v]
+          val dv = dirAt(vw.px, vw.py, code and 0xFFFFF)
+          (u.name.isNotEmpty() && vw.name == u.name) || abs(dv[0] * du[0] + dv[1] * du[1]) > 0.87
+        }
+        if (!major && !(crossing && through)) continue
         val nx = w.px[vi]; val ny = w.py[vi]
-        val px = FloatArray(u.left.size + u.right.size); val py = FloatArray(px.size)
-        for (i in u.left.indices) { px[i] = u.left[i]; py[i] = u.leftY[i] }
-        for (i in u.right.indices) { px[u.left.size + i] = u.right[u.right.size - 1 - i]; py[u.left.size + i] = u.rightY[u.right.size - 1 - i] }
+        val (px, py) = poly(o)
         val out = ArrayList<MLine>()
         for (ln in lines) {
-          var cur = ArrayList<Int>()
-          fun flush() { if (cur.size >= 2) out.add(MLine(ln.style, FloatArray(cur.size) { ln.x[cur[it]] }, FloatArray(cur.size) { ln.y[cur[it]] })); cur = ArrayList() }
+          var cx = ArrayList<Float>(); var cy = ArrayList<Float>()
+          fun flush() {
+            var len = 0f
+            for (j in 1 until cx.size) len += hypot(cx[j] - cx[j - 1], cy[j] - cy[j - 1])
+            if (cx.size >= 2 && len > 0.8f) out.add(MLine(ln.style, cx.toFloatArray(), cy.toFloatArray()))   // no slivers at the corners
+            cx = ArrayList(); cy = ArrayList()
+          }
+          var prevIn = false
           for (i in ln.x.indices) {
-            val inside = hypot(ln.x[i] - nx, ln.y[i] - ny) < 120 && insidePoly(ln.x[i], ln.y[i], px, py)
-            if (inside) flush() else cur.add(i)
+            val x = ln.x[i]; val y = ln.y[i]
+            val inside = hypot(x - nx, y - ny) < 120 && insidePoly(x, y, px, py)
+            if (i > 0 && inside != prevIn) {
+              // where the line crosses the edge, between the two points
+              val x0 = ln.x[i - 1]; val y0 = ln.y[i - 1]
+              var lo = 0f; var hi = 1f
+              repeat(10) { val m = (lo + hi) / 2; if (insidePoly(x0 + (x - x0) * m, y0 + (y - y0) * m, px, py) == prevIn) lo = m else hi = m }
+              val m = (lo + hi) / 2
+              cx.add(x0 + (x - x0) * m); cy.add(y0 + (y - y0) * m)
+              if (inside) flush()
+            }
+            if (!inside) { cx.add(x); cy.add(y) }
+            prevIn = inside
           }
           flush()
         }
         lines = out
       }
-      w.lines = lines
+      cuts.add(lines)
     }
+    // applied after all were cut, so every road is cut against the others' surfaces, not against lines already cut
+    for ((wi, w) in ways.withIndex()) cuts[wi]?.let { w.lines = it }
   }
 
   private fun insidePoly(x: Float, y: Float, px: FloatArray, py: FloatArray): Boolean {
