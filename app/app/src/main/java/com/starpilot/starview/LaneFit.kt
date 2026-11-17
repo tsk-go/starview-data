@@ -238,7 +238,7 @@ object LaneFit {
           cost += sm.w * d * d
         }
         cost = cost / samples.size + 0.3 * (shift / sigma) * (shift / sigma) + 0.05 * (dhDeg / 3.0) * (dhDeg / 3.0)
-        if (!pShift.isNaN() && livePose != null) {      // (not toward a remembered place: that one only has to be left on evidence)
+        if (!pShift.isNaN()) {
           cost += 0.05 * (shift - pShift) * (shift - pShift) + 0.03 * ((dhDeg - Math.toDegrees(pDh)) / 1.5).let { it * it }
         }
         if (cost < best[0]) best = doubleArrayOf(cost, shift, dhDeg)
