@@ -161,6 +161,20 @@ class SceneSteadyTest {
     assertEquals(PI / 2, stopped, 0.15)
   }
 
+  @Test fun aCarPastTheYellowLineFacesUsUnlessItDrivesOurWay() {
+    // standing past the yellow line (we stand too), the detector guessing "our way": it faces us
+    val a = SceneSteady.Facing()
+    var psi = 0.0
+    var t = 0.0
+    while (t < 5) { psi = a.update(-5.5, 20.0, 0.0, 0.0, 0.0, 0.05, true); t += 0.05 }
+    assertEquals(PI, psi, 1e-9)
+    // but one really driving our way over there (passing, a turn lane) is drawn our way
+    val b = SceneSteady.Facing()
+    t = 0.0
+    while (t < 5) { psi = b.update(-5.5, 20.0 + 2.0 * t, 12.0, 0.0, Double.NaN, 0.05, true); t += 0.05 }
+    assertEquals(0.0, psi, 1e-9)
+  }
+
   @Test fun theSpeedLimitSignHolds() {
     val h = SceneSteady.SpeedHold()
     val s = 1_000_000_000L

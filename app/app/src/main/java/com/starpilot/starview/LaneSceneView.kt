@@ -290,7 +290,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       val name = GENERIC[v.kind and 3]
       val L = SceneSprites.models[name]?.L ?: 4.6f
       // 2.87.1: only the car openpilot follows (radarState's leadOne) is blue, not the second lead or the cars beside us
-      things.add(Thing(v.id, name, v.y, v.x + L / 2, roadHeading(m, v.x), v.id == FOLLOWED_ID, false))
+      things.add(Thing(v.id, name, v.y, v.x + L / 2, roadHeading(m, v.x), v.id == FOLLOWED_ID, false).also { if (v.id != FOLLOWED_ID) it.road = it.psi })
     }
     if (showTraffic) {
       val det = detector
@@ -324,6 +324,15 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     return frameOf(m, fit, odo, nowNs, things, t.latActive, t.leftBlindspot, t.rightBlindspot, detector?.laneMarks?.marks, lanes, t.vEgo.toDouble())
   }
 
+  /** 2.90.0: [r] / [f] is left of a yellow line drawn on our left (the other direction's side of the road) */
+  private fun pastYellow(r: Double, f: Double): Boolean {
+    for (t in sLines.tracks) {
+      if (t.alpha < 0.5f || t.r >= 0 || (t.style != LaneMap.EDGE_YELLOW && t.style != LaneMap.DOUBLE_YELLOW)) continue
+      if (r < LaneFit.interp(t.x, t.y, f.coerceIn(0.0, 80.0)) - 0.6) return true
+    }
+    return false
+  }
+
   private class Seen(var r: Double, var f: Double, var psi: Double, var ns: Long, var alpha: Double, var th: Thing) {
     var facing: SceneSteady.Facing? = null
   }
@@ -351,7 +360,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       // 2.90.0: a detected car faces the way it moves, not the way the detector guessed in this frame
       if (steady && th.road.isFinite()) {
         val fc = s?.facing ?: SceneSteady.Facing()
-        th.psi = fc.update(th.r, th.f, vEgo, th.road, th.hint, dt)
+        th.psi = fc.update(th.r, th.f, vEgo, th.road, th.hint, dt, pastYellow(th.r, th.f))
         if (s != null) s.facing = fc else { s = Seen(th.r, th.f, th.psi, nowNs, if (first) 1.0 else 0.0, th).also { it.facing = fc }; seen[th.id] = s; th.alpha = s.alpha; continue }
       }
       if (s == null || abs(s.f - th.f) > 8 || abs(s.r - th.r) > 3 || !(s.r + s.f + s.psi).isFinite()) {
@@ -823,6 +832,29 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     }
   }
 
+  /**
+   * 2.90.0 (owner, Nov 17, on the first try of this version: "the yellow line is jumping ... take a look at Tesla"):
+   * the paint belongs to the line. Until now the lane card's count said which of the camera's lines is the road's left
+   * edge, and that one was painted yellow - so each time the count changed its mind the yellow hopped a lane over, or
+   * went from single to double. Now a line is painted the way the camera's line reader sees it (yellow or white, solid,
+   * dashed, double); with no reading, like the map's line it lies on; with neither, plain grey ([LaneMap.CURB]: a line
+   * is there, its paint isn't known) - never by a guess. SceneSteady.Lines keeps that paint on the same line of the
+   * road as it moves across the screen. The count only still says which lines lie past the road's edge (not drawn).
+   */
+  private fun linePaint(i: Int, m: ModelSnapshot, fr: Frame, styleAt: ArrayList<DoubleArray>, reach: Double): Int {
+    val mk = fr.marks?.getOrNull(i)
+    if (mk != null && mk.kind >= LaneMarks.DASHED) return when {
+      mk.yellow && mk.double -> LaneMap.DOUBLE_YELLOW
+      mk.yellow -> LaneMap.EDGE_YELLOW
+      mk.kind == LaneMarks.SOLID -> LaneMap.SOLID_WHITE
+      else -> LaneMap.DASH_WHITE
+    }
+    val r20 = LaneFit.interp(m.laneX[i], m.laneY[i], min(20.0, reach * 0.5))
+    val near = styleAt.minByOrNull { abs(it[0] - r20) }
+    if (near != null && abs(near[0] - r20) < 0.9) return near[1].toInt().let { if (it == LaneMap.EDGE_WHITE) LaneMap.SOLID_WHITE else it }
+    return LaneMap.CURB
+  }
+
   private val lsStyle = IntArray(4); private val lsWant = BooleanArray(4); private val lsReach = DoubleArray(4)
 
   /**
@@ -837,7 +869,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
         lsWant[i] = role != Lanes.ROLE_BEYOND
         val full = lineReach(m, i)
         lsReach[i] = full + (min(42.0, full) - full) * mapA
-        lsStyle[i] = lineStyle(i, m, fr, role, styleAt, lsReach[i])
+        lsStyle[i] = linePaint(i, m, fr, styleAt, lsReach[i])
       }
       sLines.update(m.laneX, m.laneY, m.laneProb, lsWant, lsStyle, lsReach, fr.atNs)
       if (sLines.shift != 0) pendingShift = sLines.shift
@@ -888,9 +920,10 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     when (style) {
       LaneMap.DASH_WHITE -> camDashes(n, fr.travelled)
       LaneMap.DOUBLE_YELLOW -> { runs(n, -0.1, 0.11); runs(n, 0.1, 0.11) }
+      LaneMap.CURB -> runs(n, 0.0, 0.12)
       else -> runs(n, 0.0, 0.15)
     }
-    val color = if (style == LaneMap.EDGE_YELLOW || style == LaneMap.DOUBLE_YELLOW) pal.yellow else pal.white
+    val color = if (style == LaneMap.EDGE_YELLOW || style == LaneMap.DOUBLE_YELLOW) pal.yellow else if (style == LaneMap.CURB) pal.curb else pal.white
     val col = (color and 0x00FFFFFF) or ((a * 255).roundToInt().coerceIn(0, 255) shl 24)
     val fa = reach * 0.65 + (25.0 - reach * 0.65) * mapA; val fb = reach + (40.0 - reach) * mapA
     grad(c, yAt(fa), yAt(fb), col, col and 0x00FFFFFF)

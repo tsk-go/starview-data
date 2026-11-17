@@ -196,7 +196,9 @@ object SceneSteady {
         val cur = t.style
         val yellowNow = cur == LaneMap.EDGE_YELLOW || cur == LaneMap.DOUBLE_YELLOW
         val yellowNew = style[i] == LaneMap.EDGE_YELLOW || style[i] == LaneMap.DOUBLE_YELLOW
-        val got = t.held.put(style[i] + 1, nowMs, if (yellowNow && !yellowNew) YELLOW_MS else 900L) - 1
+        // a paint once known stays through 4 s of "not known" (grey): the reader loses a line behind a car, in a gap
+        val unknownNew = style[i] == LaneMap.CURB && cur != LaneMap.CURB && cur >= 0
+        val got = t.held.put(style[i] + 1, nowMs, if (unknownNew) 4000L else if (yellowNow && !yellowNew) YELLOW_MS else 1500L) - 1
         if (got != cur) { t.from = cur; t.style = got; t.mixAt = nowMs; t.mix = 0f }
         if (t.mix < 1f) t.mix = ((nowMs - t.mixAt).toFloat() / MIX_MS).coerceIn(0f, 1f)
         val target = if (seen && want[i]) ((prob[i] - 0.3f) / 0.4f).coerceIn(0.3f, 1f) else 0f
@@ -233,20 +235,24 @@ object SceneSteady {
     private var crossPsi = 0.0
 
     /** [r] / [f]: where it is now (m right / ahead, as reported); [vEgo]: our speed; [road]: the road's direction there;
-     *  [hint]: the detector's heading (NaN = none). Returns the direction to draw (radians, right = positive). */
-    fun update(r: Double, f: Double, vEgo: Double, road: Double, hint: Double, dt: Double): Double {
+     *  [hint]: the detector's heading (NaN = none); [farSide]: it is past the yellow line on our left - the other
+     *  direction's side, so it faces us unless it is seen driving our way (owner, Nov 17: "a car going the wrong
+     *  direction, it's after the yellow line"). Returns the direction to draw (radians, right = positive). */
+    fun update(r: Double, f: Double, vEgo: Double, road: Double, hint: Double, dt: Double, farSide: Boolean = false): Double {
       if (pr.isFinite() && dt > 1e-3 && abs(r - pr) < 6 && abs(f - pf) < 12) {
         val k = 1 - exp(-dt / 0.8)
         val ir = (r - pr) / dt; val jf = (f - pf) / dt + vEgo
         if (!have) { vr = ir * 0.3; vf = jf * 0.3; have = true } else { vr += (ir - vr) * k; vf += (jf - vf) * k }
       } else if (!pr.isFinite()) {
         // first sight: the detector's word, until the motion says otherwise
-        if (hint.isFinite()) { opposite = kotlin.math.cos(hint - road) < 0; score = if (opposite) 0.6 else -0.6 }
+        if (farSide) { opposite = true; score = 1.0 }
+        else if (hint.isFinite()) { opposite = kotlin.math.cos(hint - road) < 0; score = if (opposite) 0.6 else -0.6 }
       }
       pr = r; pf = f
       // along the road: our way or toward us
       val along = vf * kotlin.math.cos(road) + vr * kotlin.math.sin(road)
       if (have && along < -3.0) score += 3 * dt else if (have && along > 2.0) score -= 3 * dt
+      else if (farSide) score += dt
       else if (hint.isFinite()) score += (if (kotlin.math.cos(hint - road) < 0) 1 else -1) * dt
       score = score.coerceIn(-1.5, 1.5)
       if (opposite && score < -0.75) opposite = false else if (!opposite && score > 0.75) opposite = true

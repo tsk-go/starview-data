@@ -104,6 +104,7 @@ class SceneSeqTest {
         val rnd = java.util.Random(7)
         var hint = doubleArrayOf(0.0, 0.0, PI)
         var hintAt = -1.0
+        var lastLane: IntArray? = null
         var t = t0 - 29.0
         while (t <= t0 + secs) {
           // every recorded moment up to now: a fit (the tablet fits 5 times a second; the recording has 4)
@@ -137,15 +138,15 @@ class SceneSeqTest {
           val ts = t - t0
           val vEgo = a.f.getDouble("speed")
           if ("spin" in p && ts >= 0) {
-            // what the detector does: three cars (one ahead on the left going our way, one parked on the right that we
+            // what the detector does: three cars (one ahead in the lane on our right going our way, one parked on the right that we
             // pass, one coming toward us), each with a heading guess that is right most of the time and flips
             if (ts - hintAt >= 0.3) { hintAt = ts; hint = doubleArrayOf(pick(rnd, 0.0), pick(rnd, 0.0), pick(rnd, PI)) }
             fun car(id: Long, model: String, r: Double, f: Double, hd: Double) {
               if (f < -6 || f > 120) return
               things.add(LaneSceneView.Thing(id, model, r, f, if (steady) 0.0 else hd, false, false).also { if (steady) { it.hint = hd; it.road = 0.0 } })
             }
-            car(-5_000_001, "car_suv", -3.6, 20.0 + 2 * sin(ts / 3), hint[0])
-            car(-5_000_002, "car_hatch", 3.7, 60.0 - (ts % 12.0) * vEgo.coerceAtLeast(4.0), hint[1])
+            car(-5_000_001, "car_suv", 3.6, 20.0 + 2 * sin(ts / 3), hint[0])
+            car(-5_000_002, "car_hatch", 7.4, 60.0 - (ts % 12.0) * vEgo.coerceAtLeast(4.0), hint[1])
             car(-5_000_003, "car_sedan", -7.4, 110.0 - (ts % 8.0) * (vEgo + 12.0), hint[2])
           }
           // the lane card: from the lane the map puts us in; "flip": changing its mind as in the owner's video
@@ -154,10 +155,24 @@ class SceneSeqTest {
           if ("flip" in p && ts >= 0) {
             val script = arrayOf(intArrayOf(0, 2), intArrayOf(1, 1), intArrayOf(0, 2), intArrayOf(0, 1), intArrayOf(1, 1), intArrayOf(0, 1))
             val s = script[((ts / secs) * script.size).toInt().coerceIn(0, script.size - 1)]
-            lanes = LaneSceneView.Lanes(s[0], s[1], if (((ts / 4).toInt() and 1) == 0) LaneMap.DOUBLE_YELLOW else LaneMap.EDGE_YELLOW)
+            lanes = LaneSceneView.Lanes(s[0], s[1], LaneMap.DOUBLE_YELLOW)
+          }
+          // the camera's line reader, reading the road right: our lane's left line is the double yellow when the map
+          // puts us in the left lane, the right one solid in the right lane, the rest dashed (the reader itself isn't
+          // in the recording)
+          if (mt != null) lastLane = intArrayOf(mt.lane, mt.of)
+          val ll = lastLane
+          val marks = if (ll == null) null else Array(4) { i ->
+            val leftN = ll[0] - 1; val rightN = ll[1] - ll[0]
+            when {
+              (i == 1 && leftN == 0) || (i == 0 && leftN == 1) -> LaneMarks.Mark(LaneMarks.SOLID, true, true)
+              (i == 2 && rightN == 0) || (i == 3 && rightN == 1) -> LaneMarks.Mark(LaneMarks.SOLID, false, false)
+              (i == 0 && leftN == 0) || (i == 3 && rightN == 0) -> LaneMarks.Mark(LaneMarks.NONE, false, false)
+              else -> LaneMarks.Mark(LaneMarks.DASHED, false, false)
+            }
           }
           val nowNs = ((t - (t0 - 30)) * 1e9).toLong() + 1_000_000_000L
-          val fr = v.frameOf(m, fit, odo, nowNs, things, true, false, false, null, lanes, vEgo)
+          val fr = v.frameOf(m, fit, odo, nowNs, things, true, false, false, marks, lanes, vEgo)
           v.frame = fr
           if (t >= t0) {
             v.draw(cv)
