@@ -238,7 +238,7 @@ object LaneFit {
           cost += sm.w * d * d
         }
         cost = cost / samples.size + 0.3 * (shift / sigma) * (shift / sigma) + 0.05 * (dhDeg / 3.0) * (dhDeg / 3.0)
-        if (!pShift.isNaN()) {
+        if (!pShift.isNaN() && livePose != null) {      // (not toward a remembered place: that one only has to be left on evidence)
           cost += 0.05 * (shift - pShift) * (shift - pShift) + 0.03 * ((dhDeg - Math.toDegrees(pDh)) / 1.5).let { it * it }
         }
         if (cost < best[0]) best = doubleArrayOf(cost, shift, dhDeg)
@@ -268,7 +268,8 @@ object LaneFit {
     val hidden: Boolean
     if (wasHidden) {
       shownRuns = if (cost < SHOW_COST) shownRuns + 1 else 0
-      hidden = shownRuns < 2
+      // 2.90.0: back only after a second of fitting (5 fits; 2 before - it came back for a moment and went again)
+      hidden = shownRuns < (if (steadyJumps) 5 else 2)
       if (!hidden) hiddenRuns = 0
     } else {
       hiddenRuns = if (cost > HIDE_COST) hiddenRuns + 1 else 0
