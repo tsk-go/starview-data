@@ -232,6 +232,13 @@ m = M("MapPane", "goWithLooked$lambda$33(Lcom/starpilot/starview/MapPane;Ljava/l
 m.insert_after(f"invoke-direct {{p0}}, {MP}->refreshBars()V",
                [f"iget-object v0, p0, {MP}->host:Lcom/starpilot/starview/MapPane$Host;",
                 "invoke-interface {v0}, Lcom/starpilot/starview/MapPane$Host;->closeMap()V"])
+# 2.89.4: the map's arrival time and minutes left are the comma's (live traffic), like the turn card (NavEta)
+m = M("MapPane", "refreshBars()V")
+i = m.find("invoke-virtual {v2}, Lcom/starpilot/starview/Nav;->remaining()Lkotlin/Pair;")
+k = next(j for j in range(i + 1, len(m.lines)) if m.lines[j].strip())
+assert m.lines[k].strip() == "move-result-object v17"
+m.add(k + 1, k + 1, ["    invoke-static/range {v17 .. v17}, Lcom/starpilot/starview/NavEta;->remaining(Lkotlin/Pair;)Lkotlin/Pair;\n",
+                     "    move-result-object v17\n"])
 m = M("MapPane$Banner", "onDraw(Landroid/graphics/Canvas;)V")
 m.replace_line("const v2, -0xfe891ba", ["sget-object v2, Lcom/starpilot/starview/NavOverlay;->INSTANCE:Lcom/starpilot/starview/NavOverlay;",
                                         "invoke-virtual {v2}, Lcom/starpilot/starview/NavOverlay;->getBG()I", "move-result v2"])

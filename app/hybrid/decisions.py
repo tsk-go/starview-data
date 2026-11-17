@@ -39,7 +39,7 @@ DECISIONS = {
   "MapPane": {
     "<init>(Landroid/content/Context;Lcom/starpilot/starview/MapPane$Host;)V": ("patch", "048b5f0d357e"),
     "goWithLooked$lambda$33(Lcom/starpilot/starview/MapPane;Ljava/lang/String;)Lkotlin/Unit;": ("patch", "f8eb9f7ce999"),
-    "refreshBars()V": ("orig", "f014a32e961e"),
+    "refreshBars()V": ("patch", "e52aa17dc6f2"),
   },
   "MapPane$Banner": {
     "onDraw(Landroid/graphics/Canvas;)V": ("patch", "873fcc71eb73"),

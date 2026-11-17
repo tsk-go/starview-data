@@ -1037,6 +1037,7 @@ public final class MapPane extends FrameLayout {
             double var1;
             label212: {
                 var30 = Nav.INSTANCE.remaining();
+                var30 = NavEta.remaining(var30);   // 2.89.4: the comma's live-traffic time, like the turn card
                 String var49 = Nav.INSTANCE.getStatus();
                 var5 = var49.hashCode();
                 var1 = 0.0;

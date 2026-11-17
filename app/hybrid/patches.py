@@ -85,6 +85,10 @@ PATCHES = {
     ('    invoke-direct {p0}, Lcom/starpilot/starview/MapPane;->refreshBars()V\n',
      '    invoke-direct {p0}, Lcom/starpilot/starview/MapPane;->refreshBars()V\n    iget-object v0, p0, Lcom/starpilot/starview/MapPane;->host:Lcom/starpilot/starview/MapPane$Host;\n    invoke-interface {v0}, Lcom/starpilot/starview/MapPane$Host;->closeMap()V\n'),
   ],
+  ('MapPane', 'refreshBars()V'): [
+    ('    move-result-object v17\n',
+     '    move-result-object v17\n    invoke-static/range {v17 .. v17}, Lcom/starpilot/starview/NavEta;->remaining(Lkotlin/Pair;)Lkotlin/Pair;\n    move-result-object v17\n'),
+  ],
   ('MapPane$Banner', 'onDraw(Landroid/graphics/Canvas;)V'): [
     ('    const v2, -0xfe891ba\n',
      '    sget-object v2, Lcom/starpilot/starview/NavOverlay;->INSTANCE:Lcom/starpilot/starview/NavOverlay;\n    invoke-virtual {v2}, Lcom/starpilot/starview/NavOverlay;->getBG()I\n    move-result v2\n'),
