@@ -67,6 +67,8 @@ object LaneFit {
             val blindFrom: Double = Double.NaN) {
     /** the OSM ids of [reach] (the next fit keeps to these, even after the map is rebuilt: a road stacked over ours,
      *  like the bridge's other level, looks the same to the camera) */
+    /** 2.90.0: on a fit that didn't line up (hidden): the last one that did, to come back to the same place */
+    @JvmField var anchor: Fit? = null
     val reachIds: Set<Long>? = reach?.let { r -> HashSet<Long>().also { s -> for (i in r.indices) if (r[i]) s.add(built.ways[i].id) } }
   }
 
@@ -83,6 +85,8 @@ object LaneFit {
   @Volatile private var hiddenRuns = 0
   @Volatile private var shownRuns = 0
   @Volatile private var jumpRuns = 0
+  /** 2.90.0: false = a jump holds after 2 fits, as before (tests compare the two) */
+  @Volatile var steadyJumps = true
   @Volatile private var reachAt = 0L
   @Volatile private var reachWay = -1
   @Volatile private var reachMemo: BooleanArray? = null
@@ -120,8 +124,24 @@ object LaneFit {
     return Pose(p.x + fwd * sin(p.h) - left * cos(p.h), p.y + fwd * cos(p.h) + left * sin(p.h), p.h - (o1[2] - o0[2]))
   }
 
-  /** One fit (pure: the tests call it with a recorded drive). */
+  /**
+   * One fit (pure: the tests call it with a recorded drive).
+   * 2.90.0: a fit that doesn't line up remembers the last one that did ([Fit.anchor], for 20 s / 800 ft of driving).
+   * The map used to come back wherever the camera's lines happened to match best - on a wide road that is any lane,
+   * so in 45 s of a recorded drive it came back 7 times at +9, -15, +2, -10, +2, -7 ft: the road jumping sideways.
+   * Now the place the car's own motion carried the last good fit to is where the search is pulled to, and leaving it
+   * needs the same lasting evidence as any other jump.
+   */
   fun run(b: LaneMap.Built, gps: Pose, acc: Double, cam: Cam, odo: DoubleArray, now: Long, prev: Fit?): Fit {
+    val last = if (prev == null) null else if (!prev.hidden) prev else prev.anchor
+    val anc = if (steadyJumps && last != null && sameFrame(last.built, b) && now - last.atMs < 20_000 && odo.size > 3 &&
+      last.odo.size > 3 && odo[3] - last.odo[3] in -5.0..250.0) last else null
+    val f = fitOnce(b, gps, acc, cam, odo, now, prev, anc)
+    if (f.hidden) f.anchor = anc
+    return f
+  }
+
+  private fun fitOnce(b: LaneMap.Built, gps: Pose, acc: Double, cam: Cam, odo: DoubleArray, now: Long, prev: Fit?, anc: Fit?): Fit {
     // ------------------------------------------------ camera samples
     class S(val zi: Int, val r: Double, val w: Double, val edge: Boolean)
     val samples = ArrayList<S>()
@@ -142,17 +162,18 @@ object LaneFit {
       for (k in 0 until 3) if (ZS[k] <= xs.last()) samples.add(S(k, interp(xs, ys, ZS[k]), 0.6, true))
     }
     val live = prev != null && sameFrame(prev.built, b) && !prev.hidden && now - prev.atMs < 1500
-    val prevPose = if (live) carry(prev!!.pose, prev.odo, odo) else null
+    val livePose = if (live) carry(prev!!.pose, prev.odo, odo) else null
+    val prevPose = livePose ?: anc?.let { carry(it.pose, it.odo, odo) }
     val allowed = if (live) prev!!.reachIds else null
     if (samples.size < 3 || !gps.h.isFinite()) {
       // 2.89.2 (owner, Nov 16: "intersection doesn't look good"): inside an intersection there's no paint, so the camera
       // sees too little and the map was hidden - the Scene showed bare ground with the cars on it, stopped at a light too
       // (no GPS heading standing still). The last fit carries on by the car's own motion for up to BLIND_M of driving.
       val from = prev?.blindFrom?.takeIf { it.isFinite() } ?: prev?.odo?.getOrNull(3) ?: Double.NaN
-      if (prevPose != null && from.isFinite() && odo.size > 3 && odo[3] - from <= BLIND_M) {
+      if (livePose != null && from.isFinite() && odo.size > 3 && odo[3] - from <= BLIND_M) {
         status = String.format(java.util.Locale.US, "carried on %.0f m (%s)", odo[3] - from,
           if (samples.size < 3) "camera sees too little" else "no heading")
-        return Fit(b, prevPose, odo, now, prev!!.cost, false, prev.shift, prev.dh, prev.match, prev.reach, nLines, nEdges, from)
+        return Fit(b, livePose, odo, now, prev!!.cost, false, prev.shift, prev.dh, prev.match, prev.reach, nLines, nEdges, from)
       }
       return hiddenFit(b, gps, odo, now, nLines, nEdges, if (samples.size < 3) "camera sees too little" else "no heading")
     }
@@ -183,6 +204,7 @@ object LaneFit {
     }
     val sigma = if (acc < 1.0) 2.5 else 3.5
     var best = doubleArrayOf(Double.MAX_VALUE, 0.0, 0.0)
+    var stay = doubleArrayOf(Double.MAX_VALUE, 0.0, 0.0)      // the best spot near where the last fit carried on to
     val xsLine = Array(ZS.size) { DoubleArray(64) }; val nLine = IntArray(ZS.size)
     val xsEdge = Array(ZS.size) { DoubleArray(64) }; val nEdge = IntArray(ZS.size)
     var dhDeg = -5.0
@@ -220,15 +242,26 @@ object LaneFit {
           cost += 0.05 * (shift - pShift) * (shift - pShift) + 0.03 * ((dhDeg - Math.toDegrees(pDh)) / 1.5).let { it * it }
         }
         if (cost < best[0]) best = doubleArrayOf(cost, shift, dhDeg)
+        if (!pShift.isNaN() && cost < stay[0] && abs(shift - pShift) <= 0.6 && abs(dhDeg - Math.toDegrees(pDh)) <= 1.01) stay = doubleArrayOf(cost, shift, dhDeg)
         shift += 0.1
       }
       dhDeg += 0.5
     }
-    val cost = best[0]; var shift = best[1]; var dh = Math.toRadians(best[2])
+    var cost = best[0]; var shift = best[1]; var dh = Math.toRadians(best[2])
     // a jump of more than 4 ft from where the last fit carried on to has to hold for two fits in a row
     if (!pShift.isNaN() && abs(shift - pShift) > 1.2) {
-      jumpRuns++
-      if (jumpRuns < 2) { shift = pShift; dh = pDh }
+      if (!steadyJumps) {
+        jumpRuns++
+        if (jumpRuns < 2) { shift = pShift; dh = pDh }
+      } else {
+        // 2.90.0: the road moved over by a lane under the van, and back (two lanes look alike to the camera, and two
+        // fits in a row took 0.4 s). Now the spot next to where we were stays unless the far one is clearly better
+        // (by 0.12, about a foot of average miss) for 5 fits in a row - a second. Staying is judged by its own cost,
+        // so a spot that really stopped fitting still hides the map, and the next fit is free to land anywhere.
+        jumpRuns = if (stay[0] - cost >= 0.12) jumpRuns + 1 else 0
+        if (jumpRuns < 5 && stay[0] < Double.MAX_VALUE) { cost = stay[0]; shift = stay[1]; dh = Math.toRadians(stay[2]) }
+        else if (jumpRuns < 5) { shift = pShift; dh = pDh }
+      }
     } else jumpRuns = 0
     // hide / show with some hysteresis
     val wasHidden = prev?.hidden ?: true
