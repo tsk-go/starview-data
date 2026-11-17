@@ -368,9 +368,9 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       th.r = s.r; th.f = s.f; th.psi = s.psi; th.alpha = s.alpha; s.th = th
     }
     if (steady) {
-      // a road user no longer reported fades out where it was (0.4 s) instead of blinking off
+      // a road user no longer reported fades out where it was (0.3 s) instead of blinking off
       for (s in seen.values) if (s.ns != nowNs) {
-        s.alpha -= dt / 0.4
+        s.alpha -= dt / 0.3
         if (s.alpha > 0.02) things.add(Thing(s.th.id, s.th.model, s.r, s.f, s.psi, s.th.lead, s.th.remembered, s.th.pole).also { it.alpha = s.alpha })
       }
       seen.values.removeAll { it.ns != nowNs && it.alpha <= 0.02 }
@@ -572,7 +572,10 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       val d = abs(f - 10)
       if (d < best) { best = d; r = pose.right(ln.x[i].toDouble(), ln.y[i].toDouble()); any = true }
     }
-    return !any || (r > covL - 1.0 && r < covR + 1.0)
+    // 2.90.0: 7 ft past the camera's outer lines, not 3: a map line half a lane off the camera's own (the fit is never
+    // exact) was drawn beside it - two double yellow lines next to each other. A full lane further out is another line.
+    val pad = if (steady) 2.2 else 1.0
+    return !any || (r > covL - pad && r < covR + pad)
   }
 
   /** road surface between two side lines, cut where it leaves the drawn range */
