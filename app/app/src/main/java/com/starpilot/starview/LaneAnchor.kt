@@ -44,8 +44,11 @@ object LaneAnchor {
     private set
   /** from the Scene: we drove across one of our lane's lines since the last run (1 = to the right, -1 = left) */
   @Volatile var pendingShift = 0
-  /** 2.90.5: our lane and the lanes our way (from the left, 1..) by the RTK fix, for the lane card: only on a map the
-   *  camera has shown to be right here, or during a lane change the fix is following; null otherwise. [rtkLaneMs]: when */
+  /** 2.90.5: our lane and the lanes our way (from the left, 1..) by the RTK fix, for the lane card - which then shows
+   *  what the Scene shows. 2.90.6: with any fix under 2 ft, unless the camera has shown the map's lanes to lie elsewhere
+   *  here (owner, Nov 18: at night in traffic the camera's word that they lie right never came, and the card went by
+   *  its own count while the Scene was right); null otherwise. Then also how many of the lanes at the left and the
+   *  right edge are turn lanes. [rtkLaneMs]: when */
   @Volatile var rtkLane: IntArray? = null
   @Volatile var rtkLaneMs = 0L
   /** from the Scene: the camera's line reader (which paint), null = not running */
@@ -133,12 +136,17 @@ object LaneAnchor {
     internal var hRel = Double.NaN
     internal var rtkGood = false
     internal var roadBrg = Double.NaN
+    /** 2.90.6: where the last perfect fix was (m east / north on the map) */
+    internal var fx = Double.NaN; internal var fy = Double.NaN
     internal var trk = false; internal var trkDir = 0; internal var trkLat = 0.0; internal var trkN = 0
     internal var trkSignalMs = 0L; internal var trkFixMs = 0L
     internal var rtkShiftDir = 0; internal var rtkShiftMs = 0L
     /** 2.90.5: how far the map's lanes have been shown to lie where they are (0..1): the RTK fix's place in our lane on
      *  the map against the camera's place in our lane, while the camera sees our lines */
     internal var trust = 0.0
+    /** 2.90.6: the camera has shown the map's lanes to lie elsewhere here (half a second of 3 ft and more apart), on the
+     *  street [doubtOn]; over once it shows them right again (2 s within 2 ft) or we're on another street */
+    internal var doubt = false; internal var bad = 0.0; internal var doubtOn = ""
     /** the lane drawn and how sure (for the tests and the developer's line) */
     val lane: Int get() = shown
     val sure: Double get() = p.getOrElse(shown) { 0.0 }
@@ -259,33 +267,43 @@ object LaneAnchor {
     val refJ = if (shown in 0 until n) shown else -1
     val roadBrg = if (refJ >= 0) lanes[refJ].pr.bearing else Double.NaN
     val ds = st.odo?.let { (odo[3] - it[3]).coerceIn(0.0, 60.0) } ?: 0.0
+    // 2.90.6: the road carries on under us - the same piece, or the next one going the same way. The map cuts a road at
+    // every lane more or fewer, near a crossing every few hundred feet, and following a change ended at every cut.
+    val dBrg = if (roadBrg.isFinite() && st.roadBrg.isFinite()) wrap(roadBrg - st.roadBrg) else Double.NaN
+    val onRoad = !fresh && refJ >= 0 && dBrg.isFinite() && abs(dBrg) < 0.35
     var dLat = Double.NaN
-    if (sameRoad && refJ >= 0 && roadBrg.isFinite()) {
-      if (st.hRel.isFinite() && st.roadBrg.isFinite() && st.odo != null)
-        st.hRel = wrap(st.hRel - (odo[2] - st.odo!![2]) - wrap(roadBrg - st.roadBrg))
+    if (onRoad) {
+      if (st.hRel.isFinite() && st.odo != null) st.hRel = wrap(st.hRel - (odo[2] - st.odo!![2]) - dBrg)
       val pred = if (st.hRel.isFinite()) ds * sin(st.hRel) else Double.NaN
       dLat = if (rtkGood && st.rtkGood) {
-        val d = -(lat[refJ] - st.lat[refJ])
-        if (pred.isFinite() && abs(d - pred) > 0.3 + 0.1 * ds) pred else d
+        // on the same piece, how far the lanes' middles moved across from us; onto the next, how far the fix moved
+        // across the road (its way between the two pieces')
+        val m = st.roadBrg + dBrg / 2
+        val d = if (sameRoad) -(lat[refJ] - st.lat[refJ]) else (qx - st.fx) * cos(m) - (qy - st.fy) * sin(m)
+        if (!d.isFinite() || pred.isFinite() && abs(d - pred) > 0.3 + 0.1 * ds) pred else d
       } else pred
     }
     if (rtkGood && speed.isFinite() && speed > 3.0 && gps.h.isFinite() && roadBrg.isFinite()) st.hRel = wrap(gps.h - roadBrg)
     if (fresh || !roadBrg.isFinite()) st.hRel = Double.NaN
     st.rtkGood = rtkGood; st.roadBrg = roadBrg
-    if (rtkGood) st.trkFixMs = now
+    if (rtkGood) { st.trkFixMs = now; st.fx = qx; st.fy = qy }
     if (signal != 0) st.trkSignalMs = now
     var rtkShift = 0
-    if (!st.trk && signal != 0 && rtkGood && sameRoad && refJ >= 0) {
+    if (!st.trk && signal != 0 && rtkGood && onRoad) {
       st.trk = true; st.trkDir = if (signal < 0) -1 else 1; st.trkLat = 0.0; st.trkN = 0
     }
+    // turning into another street with the blinker on isn't a lane change: we stop following once we point more than
+    // 30 degrees off the road (a lane change, even squeezing in at walking pace, stays well under that; a corner is
+    // past it within 4 ft of moving across)
+    if (st.trk && st.hRel.isFinite() && abs(st.hRel) > 0.5) st.trk = false
     if (st.trk) {
       if (dLat.isFinite()) { st.trkLat += st.trkDir * dLat; st.off += dLat }
       val lw = laneWidth(lat, refJ.coerceAtLeast(0))
       if (st.trkLat >= (st.trkN + 0.5) * lw + 0.15 && st.trkN < 3) { st.trkN++; rtkShift = st.trkDir }
       else if (st.trkLat <= (st.trkN - 0.5) * lw - 0.15 && st.trkN > 0) { st.trkN--; rtkShift = -st.trkDir }
       if (rtkShift != 0) { st.rtkShiftDir = rtkShift; st.rtkShiftMs = now }
-      // done: 3 s after the signal went off, the way changed under us, or 4 s without a perfect fix
-      if (now - st.trkSignalMs > 3000 || !sameRoad || now - st.trkFixMs > 4000) st.trk = false
+      // done: 3 s after the signal went off, the road turned or ended under us, or 4 s without a perfect fix
+      if (now - st.trkSignalMs > 3000 || !onRoad || now - st.trkFixMs > 4000) st.trk = false
     }
     // while we follow it ourselves the camera's and openpilot's word on the same crossing isn't counted again
     val viewShift = if (st.trk || (shift == st.rtkShiftDir && now - st.rtkShiftMs in 0..6000)) 0 else shift
@@ -304,6 +322,10 @@ object LaneAnchor {
     // moved us over into it, the car beside us drawn across the yellow line (owner, Nov 18: "messed up position wise").
     // So standing, the belief stays as it was when we stopped (from the start, the GPS place alone).
     val standing = speed.isFinite() && speed < 1.0
+    // 2.90.6: with a fix under 2 ft the lane card shows our lane (below), unless the camera has shown the map off here -
+    // and then its count is only ours back again: we don't go by it
+    if (st.doubt && st.doubtOn != w.name.ifEmpty { "#" + w.id }) { st.doubt = false; st.bad = 0.0 }
+    val follow = rtkGood && !st.doubt
     // a little doubt creeps in with time (a lane change the camera missed)
     val eps = if (standing) 0.0 else min(0.02, 0.03 * dt)
     val q = DoubleArray(n)
@@ -336,7 +358,7 @@ object LaneAnchor {
       val mk = marks?.getOrNull(1)
       if (mk != null && mk.kind >= LaneMarks.DASHED && mk.yellow) l *= if (j == 0) 1.0 else 0.17
       // the lane card: so many lanes our way on our left / right
-      if (hint != null) {
+      if (hint != null && !follow) {
         if (hint.left >= 0) l *= if (j == min(hint.left, n - 1)) 1.0 else 0.55
         if (hint.right >= 0) l *= if (j == max(0, n - 1 - hint.right)) 1.0 else 0.55
       }
@@ -401,10 +423,22 @@ object LaneAnchor {
     val lim = wMap / 2 + 0.4
     // 2.90.5: the map's lanes against the camera: the RTK fix's place right of our lane's middle on the map, and the
     // camera's place in our lane, while it sees our lines and we aren't changing lanes. Within 2 ft: the map is right
-    // here (2 s of that to trust it); 3 ft and more apart: it isn't (gone in half a second)
-    if (rtkGood && !st.trk && meas.isFinite() && !st.parked && shown in 0 until n) {
-      val err = -lat[shown] - meas
+    // here (2 s of that to trust it); 3 ft and more apart: it isn't (gone in half a second).
+    // 2.90.6: "our lane" is the lane the fix is in, not the lane drawn. Drawn a lane off (a change nobody saw), the two
+    // were always a lane apart, so the map "wasn't right" and the fix - the one thing that could put it right - was not
+    // listened to: a Scene a lane off stayed so. And as the two are places in a lane, a lane's width apart is no
+    // difference. Half a second of 3 ft and more apart: the map's lanes lie elsewhere here (st.doubt), and the lane
+    // card goes by its own count again until the camera shows them right or we're on another street.
+    if (rtkGood && !st.trk && meas.isFinite() && !st.parked && n > 0) {
+      val k = (0 until n).minByOrNull { abs(lat[it]) } ?: 0
+      // (as we cross a line, one may flip a moment before the other)
+      val lw = laneWidth(lat, k)
+      var err = -lat[k] - meas
+      err -= lw * Math.rint(err / lw)
       st.trust = if (abs(err) < 0.6) min(1.0, st.trust + dt / 2.0) else if (abs(err) > 1.0) max(0.0, st.trust - dt / 0.5) else st.trust
+      st.bad = if (abs(err) > 1.0) st.bad + dt else if (abs(err) < 0.6) max(0.0, st.bad - dt) else st.bad
+      if (st.bad >= 0.5) { st.doubt = true; st.doubtOn = w.name.ifEmpty { "#" + w.id } }
+      if (st.trust >= 0.6) { st.doubt = false; st.bad = 0.0 }
     } else if (!rtkGood) st.trust = max(0.0, st.trust - dt / 10.0)
     if (st.trk && st.rtkGood) { /* moved sideways by the fix above */ }
     else if (st.parked) st.off *= exp(-dt / 1.0)             // at the curb there are no lines of our own to go by
@@ -426,14 +460,21 @@ object LaneAnchor {
     var ne = 0; for (i in 0 until min(2, cam.estd.size)) if (cam.estd[i] <= 1.2f) ne++
     val f = LaneFit.Fit(b, pose, odo, now, 0.0, false, 0.0, st.yaw, match, rc, nl, ne)
     st.wayId = w.id; st.p = p; st.lat = lat; st.shown = shown; st.lastMs = now; st.pose = pose; st.odo = odo; st.built = b
-    // 2.90.5: for the lane card - our lane by the RTK fix on a map shown to be right, or a lane change it is following
-    rtkLane = if (rtkGood && (st.trust >= 0.6 || st.trk) && n in 1..6) intArrayOf(shown + 1, n) else null
+    // 2.90.5: for the lane card - our lane with a fix under 2 ft (2.90.6: unless the camera has shown the map off here)
+    rtkLane = if (rtkGood && !st.doubt && n in 1..6) {
+      // and the turn lanes at the edges (the card counts the through lanes and adds those: "Lane 1 of 3 + turn lane")
+      var tl = 0; while (tl < n && turnOnly(lanes[tl].lane.turn, -1)) tl++
+      var tr = 0; while (tr < n - tl && turnOnly(lanes[n - 1 - tr].lane.turn, 1)) tr++
+      if (tl + tr >= n) { tl = 0; tr = 0 }            // no through lane at all (a road ending at a T): all are lanes
+      intArrayOf(shown + 1, n, tl, tr)
+    } else null
     rtkLaneMs = now
     st.reach = f.reachIds
     st.wayIdx = bestWay; st.mlane = c.lane; st.px = c.pr.cx; st.py = c.pr.cy; st.wMap = wMap
     status = String.format(java.util.Locale.US, "lane %d of %d (%.0f %%) on %s, %+.1f m in it%s%s", shown + 1, n, p[shown] * 100,
       w.name.ifEmpty { w.hw }, st.off, if (same.size != n) " ?" else "",
-      if (st.parked) String.format(java.util.Locale.US, ", parked (%.0f %%)", st.park * 100) else if (st.park > 0.1) String.format(java.util.Locale.US, ", parking %.0f %%", st.park * 100) else "")
+      if (st.parked) String.format(java.util.Locale.US, ", parked (%.0f %%)", st.park * 100) else if (st.park > 0.1) String.format(java.util.Locale.US, ", parking %.0f %%", st.park * 100) else "") +
+      if (st.doubt) ", the map's lanes off here" else ""
     return f
   }
 
@@ -475,7 +516,15 @@ object LaneAnchor {
     return false
   }
 
-  private fun reset(st: State) { st.park = 0.02; st.parked = false; st.parkedD = 0.0; st.parkMs = 0L; st.expect = null; st.laneNums = null; st.mlane = null; st.wayIdx = -1; st.farMs = 0L; st.pose = null; st.p = DoubleArray(0); st.shown = -1; st.cand = -1; st.wayId = Long.MIN_VALUE; st.reach = null; st.trk = false; st.hRel = Double.NaN; st.rtkGood = false; st.trust = 0.0 }
+  private fun reset(st: State) { st.park = 0.02; st.parked = false; st.parkedD = 0.0; st.parkMs = 0L; st.expect = null; st.laneNums = null; st.mlane = null; st.wayIdx = -1; st.farMs = 0L; st.pose = null; st.p = DoubleArray(0); st.shown = -1; st.cand = -1; st.wayId = Long.MIN_VALUE; st.reach = null; st.trk = false; st.hRel = Double.NaN; st.rtkGood = false; st.trust = 0.0; st.doubt = false; st.bad = 0.0 }
+
+  /** a lane for turning only, to the left ([side] -1) or the right (OpenStreetMap's turn:lanes; "slight_" turns and
+   *  merges are exit / merge lanes, which the lane card has from the map's ramps and the route) */
+  internal fun turnOnly(turn: String, side: Int): Boolean {
+    val t = turn.split(';').map { it.trim() }.filter { it.isNotEmpty() && it != "none" }
+    if (t.isEmpty()) return false
+    return t.all { if (side < 0) it == "left" || it == "sharp_left" || it == "reverse" else it == "right" || it == "sharp_right" }
+  }
 
   private fun wrap(a: Double): Double { var x = a; while (x > PI) x -= 2 * PI; while (x < -PI) x += 2 * PI; return x }
 

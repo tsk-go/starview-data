@@ -82,6 +82,10 @@ DECISIONS = {
   "LaneBrain": {
     "answer()V": ("patch", "48e94868aa19"),
     "edges$side$12(Lcom/starpilot/starview/LaneBrain;FJILcom/starpilot/starview/LaneBrain$Vote;FFFLcom/starpilot/starview/LaneMarks$Mark;F)V": ("patch", "e5fc79ddb7c7"),
+    # 2.90.6: with the RTK fix placing us, the card's count is the Scene's (hybCount) and its title counts through lanes
+    # and adds the turn lanes (hybLabel)
+    "laneCount()Lkotlin/Pair;": ("patch", "7f5da679f49e"),
+    "label()Ljava/lang/String;": ("patch", "20194559f73c"),
   },
   # 2.90.1: Galaxy's settings rows as StarPilot's Nov 18 testing update presents them (GalaxyMirror)
   "GalaxyRow": {

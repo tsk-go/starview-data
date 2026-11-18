@@ -1048,15 +1048,57 @@ public final class LaneBrain {
         }
     }
 
+    /** 2.90.6: with the RTK fix placing us (hybAnswer), the card's count is the Scene's, said so ("Scene, RTK" after the
+     *  road's own counts; it said "camera" before); null otherwise: the card's own count. */
+    final Pair<Integer, String> hybCount() {
+        try {
+            int[] rl = LaneAnchor.INSTANCE.getRtkLane();
+            if (rl == null || System.currentTimeMillis() - LaneAnchor.INSTANCE.getRtkLaneMs() >= 1500L) {
+                return null;
+            }
+            return TuplesKt.to(Integer.valueOf(rl[1]), "Scene, RTK");
+        } catch (Throwable e) {
+            return null;
+        }
+    }
+
+    /** 2.90.6: with the RTK fix placing us on a stretch with turn lanes (the map's turn arrows: a lane on the left edge
+     *  for left turns only, on the right edge for right turns only), the through lanes are counted and the turn lanes
+     *  added after them, as the card does for exit lanes - owner, Nov 18: "Lane 1 of 3 + turn lane", not "Lane 2 of 4";
+     *  in a turn lane, which one. null otherwise: the card's own title. */
+    final String hybLabel() {
+        try {
+            int[] rl = LaneAnchor.INSTANCE.getRtkLane();
+            if (rl == null || rl.length < 4 || System.currentTimeMillis() - LaneAnchor.INSTANCE.getRtkLaneMs() >= 1500L
+                    || rl[2] + rl[3] <= 0) {
+                return null;
+            }
+            int lane = rl[0], n = rl[1], tl = rl[2], tr = rl[3];
+            int through = n - tl - tr;
+            String of = through + (through == 1 ? " lane" : " lanes");
+            if (lane <= tl) {
+                return "Left turn lane" + (tl > 1 ? " " + lane + " of " + tl : "") + " (left of " + of + ")";
+            }
+            if (lane > n - tr) {
+                return "Right turn lane" + (tr > 1 ? " " + (lane - (n - tr)) + " of " + tr : "") + " (right of " + of + ")";
+            }
+            String t = (tl > 0 ? " + turn lane ←" : "") + (tr > 0 ? " + turn lane →" : "");
+            return "Lane " + (lane - tl) + " of " + through + t;
+        } catch (Throwable e) {
+            return null;
+        }
+    }
+
     /** 2.87.0: the lane from OpenStreetMap's lane layout lined up with the camera (LaneFit) weighs in like one more
      *  sensor - only while that fit is fresh and shown (the map lines up with the camera's lines), the car isn't
      *  between lanes, and the road has 1 to 6 lanes our way. How hard it pulls goes with how well the map lines up. */
     final void hybAnswer() {
         try {
-            // 2.90.5: our lane by the RTK fix (under 2 ft) on a map the camera has shown to lie where it is here, or a
-            // lane change the fix is following (counted half way over): it decides - the lanes on our left from it,
-            // strongly; those on our right as the map counts them, a little (the card may count an exit lane the map
-            // starts later). Owner, Nov 18: "you know already how many lanes there are ... instead of relying on the camera"
+            // 2.90.5: our lane by the RTK fix (under 2 ft) on the map: it decides. Owner, Nov 18: "you know already how
+            // many lanes there are ... instead of relying on the camera". 2.90.6: the lanes on our right too, as strongly
+            // (the count is the Scene's, hybCount) - and whether the camera has shown the map right here or not, unless
+            // it has shown it off (LaneAnchor): the owner, Nov 18 at night in traffic, "Scene view is correct but the
+            // card doesn't even know", four stops in a row.
             int[] rl = LaneAnchor.INSTANCE.getRtkLane();
             if (rl != null && System.currentTimeMillis() - LaneAnchor.INSTANCE.getRtkLaneMs() < 1500L) {
                 int wantL = rl[0] - 1;
@@ -1064,7 +1106,7 @@ public final class LaneBrain {
                 double s = 0.0d;
                 for (int l = 0; l < 6; l++) {
                     for (int r = 0; r < 6; r++) {
-                        double v = this.q[l][r] * (Math.exp(-3.0d * Math.abs(l - wantL) - 0.7d * Math.abs(r - wantR)) + 1.0e-4d);
+                        double v = this.q[l][r] * (Math.exp(-3.0d * (Math.abs(l - wantL) + Math.abs(r - wantR))) + 1.0e-4d);
                         this.q[l][r] = v;
                         s += v;
                     }
@@ -1184,6 +1226,10 @@ public final class LaneBrain {
     }
 
     public final Pair<Integer, String> laneCount() {
+        Pair<Integer, String> hc = hybCount();
+        if (hc != null) {
+            return hc;
+        }
         int i;
         Pair<Integer, Double> pair = total();
         int t = pair.component1().intValue();
@@ -1244,6 +1290,10 @@ public final class LaneBrain {
     }
 
     public final String label() {
+        String hl = hybLabel();
+        if (hl != null) {
+            return hl;
+        }
         String str;
         int n = laneFromLeft().component1().intValue();
         if (n <= 0) {

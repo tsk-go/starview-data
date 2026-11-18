@@ -117,9 +117,16 @@ side, one brought in over 500 ft in short pieces), and how much of the road behi
 drives the map at 34 mph with LaneAnchor placing us and checks the thread for bends that aren't there and the lane
 we're put in. 2.90.2: LaneAnchor parked at the curb and pulling out, standing still with the GPS heading the wrong way
 round, waiting at a crossing (not parked); LaneRibbon through a left-turn bay (no swing), a cross street's rounded
-corners (and their asphalt going round the same way as the road's), a street going off on one side only. Run:
+corners (and their asphalt going round the same way as the road's), a street going off on one side only. 2.90.5 /
+2.90.6: LaneAnchor following a lane change by the RTK fix (also across a cut in the map's road), a fix jumping where
+the car didn't go, a change no one counted put right by the fix, the lane card given our lane unless the camera shows
+the map's lanes off. Run:
 `./gradlew :app:testDebugUnitTest --offline --rerun --tests com.starpilot.starview.LaneRibbonTest` (likewise the other
 two).
+
+`LaneCardFollowTest.kt` (2.90.6): the lane card with the Scene's lane by the RTK fix - its lane and count are the
+Scene's whatever its own count and the survey's say, through lanes counted and the turn lanes added after them ("Lane
+1 of 3 + turn lane ←", "Left turn lane (left of 3 lanes)"), which lanes are for turning only; without it, its own.
 
 `ExitGuardTest.kt` (2.87.1): when the route's exit may signal by itself, on a made-up lane tracker (the Nov 12 left
 fork: sure of no lane on the left, then "maybe one" right before the fork). Copy into

@@ -77,6 +77,14 @@ PATCHES = {
     ('    if-eqz v0, :cond_e\n',
      '    invoke-virtual {v9, v0, v10}, Lcom/starpilot/starview/LaneBrain;->hybEdgeRoom(Ljava/lang/Integer;I)Ljava/lang/Integer;\n    move-result-object v0\n    if-eqz v0, :cond_e\n'),
   ],
+  ('LaneBrain', 'laneCount()Lkotlin/Pair;'): [
+    ('    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->total()Lkotlin/Pair;\n',
+     '    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybCount()Lkotlin/Pair;\n    move-result-object v0\n    if-eqz v0, :hyb_count_own\n    return-object v0\n    :hyb_count_own\n    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->total()Lkotlin/Pair;\n'),
+  ],
+  ('LaneBrain', 'label()Ljava/lang/String;'): [
+    ('    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->laneFromLeft()Lkotlin/Pair;\n',
+     '    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybLabel()Ljava/lang/String;\n    move-result-object v0\n    if-eqz v0, :hyb_label_own\n    return-object v0\n    :hyb_label_own\n    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->laneFromLeft()Lkotlin/Pair;\n'),
+  ],
   ('MapPane', '<init>(Landroid/content/Context;Lcom/starpilot/starview/MapPane$Host;)V'): [
     ('    return-void\n',
      '    invoke-virtual/range {p0 .. p0}, Lcom/starpilot/starview/MapPane;->hybInit()V\n    return-void\n'),

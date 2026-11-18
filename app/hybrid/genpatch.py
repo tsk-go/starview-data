@@ -224,6 +224,16 @@ m = M("LaneBrain", "edges$side$12(Lcom/starpilot/starview/LaneBrain;FJILcom/star
 m.insert_before("if-eqz v0, :cond_e", ["invoke-virtual {v9, v0, v10}, Lcom/starpilot/starview/LaneBrain;->hybEdgeRoom"
                                        "(Ljava/lang/Integer;I)Ljava/lang/Integer;", "move-result-object v0"])
 assert "LaneBrain;->vote(" in "".join(m.lines[m.find("if-eqz v0, :cond_e") - 4:m.find("if-eqz v0, :cond_e")])
+# 2.90.6: with the RTK fix placing us, the card's count is the Scene's (hybCount) and its title counts through lanes and
+# adds the turn lanes (hybLabel); null -> the card's own
+m = M("LaneBrain", "laneCount()Lkotlin/Pair;")
+m.insert_before("invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->total()Lkotlin/Pair;",
+                ["invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybCount()Lkotlin/Pair;", "move-result-object v0",
+                 "if-eqz v0, :hyb_count_own", "return-object v0", ":hyb_count_own"])
+m = M("LaneBrain", "label()Ljava/lang/String;")
+m.insert_before("invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->laneFromLeft()Lkotlin/Pair;",
+                ["invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybLabel()Ljava/lang/String;", "move-result-object v0",
+                 "if-eqz v0, :hyb_label_own", "return-object v0", ":hyb_label_own"])
 # ---------------------------------------------------------------- MapPane
 MP = "Lcom/starpilot/starview/MapPane;"
 m = M("MapPane", "<init>(Landroid/content/Context;Lcom/starpilot/starview/MapPane$Host;)V")

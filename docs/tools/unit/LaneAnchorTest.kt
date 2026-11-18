@@ -2,6 +2,7 @@ package com.starpilot.starview
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -149,6 +150,87 @@ class LaneAnchorTest {
     }
     assertTrue("fix $acc: in the left lane within half a second of half way over ($crossedAt s): $switched", switched >= crossedAt - 0.21 && switched <= crossedAt + 0.5)
     assertEquals(0, st.lane)
+  }
+
+  @Test fun aLaneChangeNobodySawIsPutRightByTheFix() {
+    // 2.90.6: drawn a lane off after a change no one counted (no blinker followed, the lines hidden by the cars around us
+    // in stop-and-go traffic at night), the check of the map against the camera compared the fix with the lane drawn - a
+    // lane apart - so once the camera saw our lines again the map "wasn't right" and the fix wasn't listened to; the
+    // lane card's count kept us there. Here: middle lane to the left one at 4 mph, no signal, no line crossed, the camera
+    // seeing nothing of our lines until we're over (and unsure of the road's edges), the lane card saying the middle lane.
+    val st = LaneAnchor.State()
+    var t = 0.0; var y = -300.0; var fixedAt = Double.NaN
+    while (t <= 30.0) {
+      val v = if (t < 8) 15.0 else 1.8
+      y += v * 0.2
+      val k = ((t - 10.0) / 4.0).coerceIn(0.0, 1.0)
+      val x = mid[1] + (mid[0] - mid[1]) * (1 - cos(PI * k)) / 2
+      val c0 = if (t < 14.0) blind() else cam(0, x - mid[0])
+      val c = LaneFit.Cam(c0.lx, c0.ly, c0.lp, c0.ex, c0.ey, floatArrayOf(2.0f, 2.0f))
+      val f = LaneAnchor.run(b, LaneFit.Pose(x, y, 0.0), 0.5, c, doubleArrayOf(x, y, PI / 2, y + 300), (t * 1000).toLong() + 1000, st,
+        LaneSceneView.Lanes(1, 1, -1), null, 0, v, 0.05, 0)
+      assertNotNull("a fit at $t s: ${LaneAnchor.status}", f)
+      if (t in 3.0..10.0) assertEquals("the lane drawn at $t s: ${LaneAnchor.status}", 1, st.lane)
+      if (t > 12 && fixedAt.isNaN() && st.lane == 0) fixedAt = t
+      t += 0.2
+    }
+    assertTrue("in the left lane within 6 s of being over: $fixedAt", fixedAt <= 20.0)
+    assertEquals(LaneAnchor.status, 0, st.lane)
+  }
+
+  @Test fun aLaneChangeOverTheMapsCutIsFollowed() {
+    // 2.90.6: the map cuts a road at every lane more or fewer - near a crossing every few hundred feet - and following a
+    // change by the fix ended at every cut. Here the road is two pieces cut 15 ft before we're half way over.
+    LaneMap.parse("""{"elements":[{"type":"way","id":21,"tags":{"highway":"primary","name":"Cut Road","oneway":"yes","lanes":"3"},
+      "geometry":[{"lat":${lat0 - 0.004},"lon":${lon0 - 0.006}},{"lat":$lat0,"lon":${lon0 - 0.006}}]},
+      {"type":"way","id":22,"tags":{"highway":"primary","name":"Cut Road","oneway":"yes","lanes":"3","maxspeed":"40 mph"},
+      "geometry":[{"lat":$lat0,"lon":${lon0 - 0.006}},{"lat":${lat0 + 0.012},"lon":${lon0 - 0.006}}]}]}""")
+    LaneMap.buildNow(lat0, lon0 - 0.006)
+    val cb = LaneMap.built!!
+    assertTrue("two pieces", cb.ways.any { it.id == 21L } && cb.ways.any { it.id == 22L })
+    val m = cb.ways.single { it.id == 21L }.lanes.map { it.x[0].toDouble() }.sorted()
+    val y0 = cb.xy(lat0, lon0 - 0.006)[1] - 15.0 * 6.5          // at the cut 6.5 s in, half way over at 7.5 s
+    val st = LaneAnchor.State()
+    var t = 0.0; var switched = Double.NaN; var lastX = Double.NaN
+    while (t <= 16.0) {
+      val k = ((t - 6.0) / 3.0).coerceIn(0.0, 1.0)
+      val x = m[1] + (m[0] - m[1]) * (1 - cos(PI * k)) / 2
+      val vx = if (t in 6.0..9.0) (m[0] - m[1]) * PI / 6.0 * sin(PI * k) else 0.0
+      val h = atan2(vx, 15.0)
+      val y = y0 + 15.0 * t
+      val signal = if (t in 5.5..9.5) -1 else 0
+      val c = if (t < 6.0) cam(1, 0.0) else if (t < 9.5) blind() else cam(0, 0.0)
+      val f = LaneAnchor.run(cb, LaneFit.Pose(x, y, h), 0.5, c, doubleArrayOf(x, y, PI / 2 - h, 15.0 * t), (t * 1000).toLong() + 1000,
+        st, null, null, 0, 15.0, 0.05, signal)
+      assertNotNull("a fit at $t s: ${LaneAnchor.status}", f)
+      if (t > 3) {
+        if (lastX.isFinite()) assertTrue("drawn without a jump at $t s: ${f!!.pose.x} after $lastX", abs(f.pose.x - lastX) < 0.6)
+        if (switched.isNaN() && st.lane == 0) switched = t
+      }
+      lastX = f!!.pose.x
+      t += 0.2
+    }
+    assertTrue("in the left lane within half a second of half way over (7.5 s): $switched", switched in 7.29..8.0)
+    assertEquals(0, st.lane)
+  }
+
+  @Test fun theLaneCardFollowsUnlessTheCameraShowsTheMapOff() {
+    // 2.90.6: with a fix under 2 ft the lane card is given our lane - also with the camera seeing no lines at all (at
+    // night in traffic: the owner, Nov 18, "Scene view is correct but the card doesn't even know"); the camera putting
+    // us 4 ft from where the fix is in our lane on the map: no longer, until it shows the map right again
+    val st = LaneAnchor.State()
+    var t = 0.0
+    while (t <= 30.0) {
+      val y = -300.0 + 15.0 * t
+      val c = when { t < 10 -> blind(); t < 20 -> cam(1, -1.2); else -> cam(1, 0.0) }
+      LaneAnchor.run(b, LaneFit.Pose(mid[1], y, 0.0), 0.5, c, doubleArrayOf(mid[1], y, PI / 2, 15.0 * t), (t * 1000).toLong() + 1000,
+        st, null, null, 0, 15.0, 0.05, 0)
+      val rl = LaneAnchor.rtkLane
+      if (t in 1.0..10.0) assertTrue("given at $t s: ${rl?.toList()}", rl != null && rl[0] == 2 && rl[1] == 3)
+      if (t in 11.0..20.0) assertNull("not given at $t s: ${rl?.toList()}", rl)
+      if (t > 23) assertTrue("given again at $t s", rl != null && rl[0] == 2)
+      t += 0.2
+    }
   }
 
   @Test fun aFixThatJumpsWhereTheCarDidntGoIsNotALaneChange() {
