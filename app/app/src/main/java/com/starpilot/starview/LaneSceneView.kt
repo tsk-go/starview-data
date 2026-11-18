@@ -199,6 +199,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   private val sPose = SceneSteady.Pose()
   private val sLanes = SceneSteady.Lanes()
   private val sLines = SceneSteady.Lines()
+  private val crossings = SceneSteady.Crossings()
   private val mapEase = SceneSteady.Ease(0.16, 0.0)
   private var shownFit: LaneFit.Fit? = null      // the last fit that lined up: carried on while the next ones don't
   private var shownNs = 0L
@@ -887,7 +888,8 @@ class LaneSceneView(ctx: Context) : View(ctx) {
         lsStyle[i] = linePaint(i, m, fr, styleAt, lsReach[i])
       }
       sLines.update(m.laneX, m.laneY, m.laneProb, lsWant, lsStyle, lsReach, fr.atNs)
-      if (sLines.shift != 0) { pendingShift = sLines.shift; if (anchor && frame == null) LaneAnchor.pendingShift = sLines.shift; crossed = sLines.shift }
+      val cr = crossings.update(sLines.shift, m.laneChanging, m.laneChangeFinishing, m.laneChangeDir, fr.atNs / 1_000_000)
+      if (cr != 0) { pendingShift = cr; if (anchor && frame == null) LaneAnchor.pendingShift = cr; crossed = cr }
       if (show > 0.02f) for (t in sLines.tracks) {
         if (t.alpha < 0.02f) continue
         if (t.mix < 1f) camLine(c, t, t.from, t.alpha * (1 - t.mix) * show, fr, pal, mapA)

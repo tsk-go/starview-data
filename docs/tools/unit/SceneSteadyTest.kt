@@ -186,4 +186,27 @@ class SceneSteadyTest {
     assertEquals(17.88f, h.put(15.65f, 6 * s), 0f)
     assertEquals(15.65f, h.put(15.65f, 6 * s + s / 2 + 1), 0f)   // read for 2.5 s: now 35
   }
+
+  @Test fun aLineCrossedCountsOnceWhoeverTellsIt() {
+    // 2.90.5 (owner, Nov 18: openpilot changed lanes, the camera's lines never showed it, the Scene moved over 10 s
+    // later). [ms, camera, openpilot's state ("" off, "s" starting, "f" finishing), its direction] -> what the Scene does
+    fun run(vararg steps: Array<Any>): List<Int> {
+      val c = SceneSteady.Crossings()
+      return steps.map { (ms, cam, st, dir) -> c.update(cam as Int, st != "", st == "f", dir as Int, (ms as Int).toLong()) }
+    }
+    fun s(ms: Int, cam: Int, st: String, dir: Int) = arrayOf<Any>(ms, cam, st, dir)
+    // openpilot alone (the camera missed it): at once, once
+    assertEquals(listOf(0, 0, -1, 0, 0), run(s(0, 0, "", 0), s(1000, 0, "s", -1), s(4000, 0, "f", -1), s(4500, 0, "f", -1), s(5000, 0, "", 0)))
+    // the camera first, openpilot 1 s later: once
+    assertEquals(listOf(-1, 0, 0), run(s(3000, -1, "s", -1), s(4000, 0, "f", -1), s(4500, 0, "", 0)))
+    // openpilot first, the camera after: once
+    assertEquals(listOf(1, 0), run(s(4000, 0, "f", 1), s(4800, 1, "", 0)))
+    // two lane changes to the left, 8 s apart, each told by both: twice
+    assertEquals(listOf(-1, 0, 0, -1, 0, 0), run(s(3000, -1, "s", -1), s(3800, 0, "f", -1), s(4500, 0, "", 0),
+      s(11000, 0, "f", -1), s(11400, -1, "f", -1), s(12000, 0, "", 0)))
+    // by hand, no openpilot lane change: the camera alone
+    assertEquals(listOf(1, 0, -1), run(s(1000, 1, "", 0), s(2000, 0, "", 0), s(9000, -1, "", 0)))
+    // the camera seeing it twice (back over at once): both count, and openpilot's own then matches the last
+    assertEquals(listOf(-1, 1, -1, 0), run(s(1000, -1, "s", -1), s(1300, 1, "s", -1), s(1600, -1, "s", -1), s(2500, 0, "f", -1)))
+  }
 }

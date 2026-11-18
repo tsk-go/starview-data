@@ -48,14 +48,19 @@ class SceneSeqTest {
 
   private class Rec(val t: Double, val f: JSONObject, val x: FloatArray, val px: FloatArray, val py: FloatArray, val lanes: Array<FloatArray>,
                     val lp: FloatArray, val edges: Array<FloatArray>, val estd: FloatArray, val lstd: FloatArray,
-                    var ox: Double = 0.0, var oy: Double = 0.0, var yaw: Double = 0.0, var dist: Double = 0.0)
+                    var ox: Double = 0.0, var oy: Double = 0.0, var yaw: Double = 0.0, var dist: Double = 0.0) {
+    // openpilot's own lane change (exports from Nov 18 on: "lc" [state, direction])
+    val lcState = f.optJSONArray("lc")?.optString(0) ?: ""
+    val lcDir = when (f.optJSONArray("lc")?.optString(1)) { "left" -> -1; "right" -> 1; else -> 0 }
+  }
 
   private fun snap(a: Rec, b: Rec, k: Float): ModelSnapshot {
     val z = FloatArray(a.x.size)
     return ModelSnapshot(0L, mix(a.px, b.px, k), mix(a.py, b.py, k), z, z,
       Array(4) { a.x }, Array(4) { mix(a.lanes[it], b.lanes[it], k) }, Array(4) { z }, mix(a.lp, b.lp, k),
       Array(2) { a.x }, Array(2) { mix(a.edges[it], b.edges[it], k) }, Array(2) { z }, mix(a.estd, b.estd, k),
-      mix(a.lstd, b.lstd, k), z, false, 0f, false, 0, false, FloatArray(8), 0f)
+      mix(a.lstd, b.lstd, k), z, false, 0f, a.lcState == "laneChangeStarting" || a.lcState == "laneChangeFinishing", a.lcDir,
+      a.lcState == "laneChangeFinishing", FloatArray(8), 0f)
   }
 
   @Test fun film() {

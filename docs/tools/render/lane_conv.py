@@ -51,6 +51,8 @@ for wn, w in d["windows"].items():
     j = bisect.bisect_right(kt, m["t"]) - 1
     if j >= 0 and m["t"] - kt[j] <= 0.6:
       k = rtk[j]; fr["rtk"] = [k["lat"], k["lon"], k["acc"], k["bearing"], k["speed"]]
+    if m.get("lc"):                              # openpilot's own lane change [state, direction] (exports from Nov 18 on)
+      fr["lc"] = m["lc"]
     frames.append(fr)
   json.dump(frames, open(f"drive_{wn}.json", "w"))
   print(wn, len(frames), frames[0]["t"], frames[-1]["t"])

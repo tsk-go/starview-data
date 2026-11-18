@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """sv_export.py NAME T0 T1: the lane data of a stretch of drive (unix times T0..T1) for StarView's off-tablet Scene
-replay (docs/tools/render: lane_conv.py, SceneSeqTest.kt) - modelV2 lines / edges / path / leads, the comma's GPS, the
+replay (docs/tools/render: lane_conv.py, SceneSeqTest.kt) - modelV2 lines / edges / path / leads / lane change, the comma's GPS, the
 RTK receiver's fix as the comma passed it on (starpilotNavigation.phoneGps), radar lead and blinkers at 4 a second -
 plus the OpenStreetMap extract around it and the segments' qcamera.ts. Reads only the finished rlogs it needs (run it
 parked); nice 19 / idle I/O. Copy it to /data/sv_export.py on the comma. Writes /data/starview/export_NAME.tar.gz,
@@ -46,7 +46,8 @@ for d in segs:
                     "lane_p": [round(p, 3) for p in v.laneLineProbs], "lane_std": [round(s, 3) for s in v.laneLineStds],
                     "edges": [{"y": [round(y, 3) for y in e.y]} for e in v.roadEdges],
                     "edge_std": [round(s, 3) for s in v.roadEdgeStds],
-                    "path": {"x": [round(x, 2) for x in v.position.x], "y": [round(y, 3) for y in v.position.y]}, "leads": ld})
+                    "path": {"x": [round(x, 2) for x in v.position.x], "y": [round(y, 3) for y in v.position.y]}, "leads": ld,
+                    "lc": [str(v.meta.laneChangeState), str(v.meta.laneChangeDirection)]})
     elif w == "radarState":
       l = m.radarState.leadOne
       radar.append({"mono": m.logMonoTime, "lead1": [l.dRel, l.yRel, l.vRel, bool(l.present)]})

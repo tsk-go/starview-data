@@ -143,6 +143,37 @@ object SceneSteady {
    * 2 are our lane's), so at a lane change the same paint gets another number, and a line the model drops for a moment
    * was gone from one frame to the next. Here a line is the same line while it stays within [MATCH] m of where it was.
    */
+  /**
+   * 2.90.5: we crossed a line - told by the camera (our lane's line came out on our other side: [Lines.shift]) or by
+   * openpilot's own lane change (its state turning to "finishing": it is across). Owner, Nov 18: "you don't see right
+   * away that I switched lanes, it takes a few seconds, the lane card you do see it right away" - openpilot changed
+   * lanes, the camera's lines never showed the crossing, and the Scene moved over only 10 s later on what lasts (the
+   * lane card had it at once from openpilot). One crossing told by both counts once: what one tells within 6 s after
+   * the other told the same way is the same crossing.
+   */
+  class Crossings {
+    private var lastDir = 0; private var lastSrc = 0; private var lastMs = 0L
+    private var opWas = false
+
+    /** the crossing to act on now: 1 right, -1 left, 0 none. [camShift]: [Lines.shift]; the rest: openpilot's lane change */
+    fun update(camShift: Int, opChanging: Boolean, opFinishing: Boolean, opDir: Int, nowMs: Long): Int {
+      val op = opChanging && opFinishing && opDir != 0
+      var out = 0
+      if (op && !opWas) out = take(if (opDir < 0) -1 else 1, OP, nowMs)
+      opWas = op
+      if (camShift != 0) { val c = take(camShift, CAM, nowMs); if (out == 0) out = c }
+      return out
+    }
+
+    private fun take(dir: Int, src: Int, now: Long): Int {
+      if (dir == lastDir && src != lastSrc && now - lastMs in 0..6000) { lastDir = 0; return 0 }   // the other told it
+      lastDir = dir; lastSrc = src; lastMs = now
+      return dir
+    }
+
+    private companion object { const val CAM = 1; const val OP = 2 }
+  }
+
   class Lines {
     val tracks = ArrayList<Line>()
     /** set by [update] when we crossed one of our lane's lines: 1 = to the right, -1 = to the left */
