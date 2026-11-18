@@ -350,9 +350,11 @@ object LaneAnchor {
   }
 
   /** Standing still with no heading yet: the direction of the lane nearest to us - we stand on our side of the road
-   *  (right-hand traffic: next to our lanes, or in the parking lane beside them). NaN = no road near. */
+   *  (right-hand traffic: next to our lanes, or in the parking lane beside them). NaN = no road near: none within 33 ft
+   *  (2.90.3: 20 ft left the Scene empty parked at the curb of a street whose middle line the map has 10 ft off - the
+   *  RTK fix 26 ft from it, 21 ft from our lane's middle). */
   private fun standingHeading(b: LaneMap.Built, x: Double, y: Double): Double {
-    var best = 6.0; var h = Double.NaN
+    var best = 10.0; var h = Double.NaN
     for (w in b.ways) {
       if (!w.near(x, y, 15.0)) continue
       for (ln in w.lanes) { val pr = project(ln.x, ln.y, x, y) ?: continue; if (pr.over < 3.0 && pr.dist < best) { best = pr.dist; h = pr.bearing } }

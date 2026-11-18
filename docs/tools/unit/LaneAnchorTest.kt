@@ -186,6 +186,24 @@ class LaneAnchorTest {
     assertTrue("mid-block: parked: ${LaneAnchor.status}", s2.parked)
   }
 
+  @Test fun parkedAtACurbTheMapHasFeetOff() {
+    // Nov 18: parked at the curb, the RTK fix 26 ft from the map's middle line (the map's street lies 10 ft off) and no
+    // heading: the Scene showed no road at all. We are on that street, at the curb, facing our side's way.
+    val (av, lane, park) = avenue()
+    val st = LaneAnchor.State()
+    var f: LaneFit.Fit? = null
+    var t = 0.0
+    while (t <= 10.0) {
+      f = LaneAnchor.run(av, LaneFit.Pose(lane + 6.2, av.xy(lat0, lon0 + 0.006)[1] - 100.0, Double.NaN), 0.5, blind(),
+        doubleArrayOf(0.0, 0.0, PI / 2, 0.0), (t * 1000).toLong() + 1000, st, null, null, 0, 0.0)
+      assertNotNull("placed at $t s: ${LaneAnchor.status}", f)
+      t += 0.25
+    }
+    assertTrue("facing north: ${f!!.pose.h}", abs(f.pose.h) < 0.1)
+    assertTrue("parked: ${LaneAnchor.status}", st.parked)
+    assertTrue("at the curb: ${f.pose.x} (parking lane $park)", abs(f.pose.x - park) < 0.6)
+  }
+
   @Test fun standingStillTheWayRoundIsTheSideOfTheStreetWeAreOn() {
     // started while standing, the GPS heading pointing south (noise): we are on the east side, so we face north
     val (av, lane, _) = avenue()
