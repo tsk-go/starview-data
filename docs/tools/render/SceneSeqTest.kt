@@ -82,12 +82,17 @@ class SceneSeqTest {
       }
       recs[0].yaw = recs[1].yaw
       val log = StringBuilder()
-      for (steady in listOf(false, true)) {
-        val mode = if (steady) "after" else "before"
+      for (mode in (System.getenv("SEQ_MODES") ?: "before,after,anchor").split(',')) {
+        val steady = mode != "before"
+        val anchored = mode == "anchor"
+        val ast = LaneAnchor.State()
+        var afit: LaneFit.Fit? = null
+        var lastLaneShown = -1; var laneChanges = 0
         val od = File(out, "${name}_$mode").apply { mkdirs() }
         LaneFit.steadyJumps = steady
         val v = LaneSceneView(ctx)
         v.steady = steady
+        v.anchor = anchored
         v.night = "day" !in p
         val w = 1472; val h = 920
         v.measure(View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.EXACTLY))
@@ -105,6 +110,7 @@ class SceneSeqTest {
         var hint = doubleArrayOf(0.0, 0.0, PI)
         var hintAt = -1.0
         var lastLane: IntArray? = null
+        var cardNow: LaneSceneView.Lanes? = null
         var t = t0 - 29.0
         while (t <= t0 + secs) {
           // every recorded moment up to now: a fit (the tablet fits 5 times a second; the recording has 4)
@@ -117,7 +123,18 @@ class SceneSeqTest {
             val xy = b.xy(lat, lon)
             val odo = doubleArrayOf(r.ox, r.oy, r.yaw, r.dist)
             val cam = LaneFit.Cam.of(snap(r, r, 0f))!!
-            fit = LaneFit.run(b, LaneFit.Pose(xy[0], xy[1], Math.toRadians(r.f.getDouble("bearing"))), r.f.getDouble("acc"), cam, odo, (r.t * 1000).toLong(), fit)
+            val gps = LaneFit.Pose(xy[0], xy[1], Math.toRadians(r.f.getDouble("bearing")))
+            fit = LaneFit.run(b, gps, r.f.getDouble("acc"), cam, odo, (r.t * 1000).toLong(), fit)
+            if (anchored) {
+              val sh = v.crossed; v.crossed = 0
+              afit = LaneAnchor.run(b, gps, r.f.getDouble("acc"), cam, odo, (r.t * 1000).toLong(), ast, cardNow, null, sh)
+              if (r.t >= t0) {
+                if (lastLaneShown >= 0 && ast.lane != lastLaneShown) { laneChanges++; log.append(String.format("anchor %6.2f s: drawn in lane %d (was %d), crossed %d, %s\n", r.t - t0, ast.lane + 1, lastLaneShown + 1, sh, LaneAnchor.status)) }
+                if (afit == null) log.append(String.format("anchor %6.2f s: %s\n", r.t - t0, LaneAnchor.status))
+              }
+              if (System.getenv("ANCHOR_LOG") != null && r.t >= t0) log.append(String.format("  . %6.2f %s | spd %.1f brg %.0f acc %.1f\n", r.t - t0, LaneAnchor.status, r.f.getDouble("speed"), r.f.getDouble("bearing"), r.f.getDouble("acc")))
+              lastLaneShown = ast.lane
+            }
             if (r.t >= t0) {
               if (fit.hidden) hidden++
               if (lastHidden != null && lastHidden != fit.hidden) { toggles++; log.append(String.format("%s %6.2f s: map %s (%s)\n", mode, r.t - t0, if (fit.hidden) "hidden" else "shown", LaneFit.status)) }
@@ -138,16 +155,17 @@ class SceneSeqTest {
           val ts = t - t0
           val vEgo = a.f.getDouble("speed")
           if ("spin" in p && ts >= 0) {
-            // what the detector does: three cars (one ahead in the lane on our right going our way, one parked on the right that we
-            // pass, one coming toward us), each with a heading guess that is right most of the time and flips
+            // what the detector does: a car ahead in the lane beside ours, going our way, with a heading guess that is
+            // right most of the time and flips
             if (ts - hintAt >= 0.3) { hintAt = ts; hint = doubleArrayOf(pick(rnd, 0.0), pick(rnd, 0.0), pick(rnd, PI)) }
             fun car(id: Long, model: String, r: Double, f: Double, hd: Double) {
               if (f < -6 || f > 120) return
               things.add(LaneSceneView.Thing(id, model, r, f, if (steady) 0.0 else hd, false, false).also { if (steady) { it.hint = hd; it.road = 0.0 } })
             }
-            car(-5_000_001, "car_suv", 3.6, 20.0 + 2 * sin(ts / 3), hint[0])
-            car(-5_000_002, "car_hatch", 7.4, 60.0 - (ts % 12.0) * vEgo.coerceAtLeast(4.0), hint[1])
-            car(-5_000_003, "car_sedan", -7.4, 110.0 - (ts % 8.0) * (vEgo + 12.0), hint[2])
+            // (in a lane that is there: on our left when we have one, else on our right)
+            val ln = if (anchored && ast.lane >= 0) intArrayOf(ast.lane + 1, afit?.match?.of ?: 1) else fit?.match?.let { intArrayOf(it.lane, it.of) }
+            val side = if (ln == null) 0.0 else if (ln[0] > 1) -3.6 else if (ln[0] < ln[1]) 3.6 else 0.0
+            if (side != 0.0) car(-5_000_001, "car_suv", side, 20.0 + 2 * sin(ts / 3), hint[0])
           }
           // the lane card: from the lane the map puts us in; "flip": changing its mind as in the owner's video
           val mt = fit?.match
@@ -171,8 +189,9 @@ class SceneSeqTest {
               else -> LaneMarks.Mark(LaneMarks.DASHED, false, false)
             }
           }
+          cardNow = lanes
           val nowNs = ((t - (t0 - 30)) * 1e9).toLong() + 1_000_000_000L
-          val fr = v.frameOf(m, fit, odo, nowNs, things, true, false, false, marks, lanes, vEgo)
+          val fr = v.frameOf(m, if (anchored) afit else fit, odo, nowNs, things, true, false, false, marks, lanes, vEgo)
           v.frame = fr
           if (t >= t0) {
             v.draw(cv)
@@ -182,6 +201,7 @@ class SceneSeqTest {
           t += 0.1
         }
         log.append("$mode: $n frames, fits hidden $hidden, map shown/hidden changes $toggles, sideways jumps of the fit $jumps\n")
+        if (anchored) log.append("anchor: the lane we're drawn in changed $laneChanges times\n")
       }
       File(out, "$name.txt").writeText(log.toString())
     }

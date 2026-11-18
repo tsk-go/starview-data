@@ -61,6 +61,9 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   /** 2.90.0: the picture holds still (SceneSteady). false = every frame from that instant's guess, as before (kept to
    *  compare the two on a recorded drive) */
   var steady = true
+  /** 2.90.0: the map is the road and the only lines drawn; the camera only places us on it (LaneAnchor). false = the
+   *  camera's lines near the van joined to the map's beyond (LaneFit), as before. Needs [steady]. */
+  var anchor = true
 
   companion object {
     const val DEF_DIST = 17.24f
@@ -280,8 +283,9 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   private fun liveFrame(t: Telemetry): Frame {
     val nowNs = System.nanoTime()
     val odo = Odometry.at(nowNs)
-    var fit = LaneFit.fit
+    var fit = if (steady && anchor) LaneAnchor.fit else LaneFit.fit
     if (fit != null && System.currentTimeMillis() - fit.atMs > 2000) fit = null
+    if (steady && anchor) LaneAnchor.marks = detector?.laneMarks?.marks
     val m = t.model
     val things = ArrayList<Thing>()
     val nowMs = System.currentTimeMillis()
@@ -469,6 +473,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     } else {
       // 2.90.0: the map and the camera's own road cross-fade (the map used to appear and vanish between two frames)
       val a = if (mapOn) fr.mapAlpha else 0f
+      anchorDraw = anchor
       if (a < 0.995f && m != null) drawCamRoadSteady(c, m, pal, 1f - a, ddt)
       if (a >= 0.995f) drawMap(c, fr.fit!!, fr.pose!!, pal, styleAt, m, ddt)
       else if (a > 0.005f) {
@@ -477,7 +482,11 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       }
     }
     if (m != null) {
-      if (steady) drawCamLinesSteady(c, m, fr, pal, if (mapOn) fr.mapAlpha else 0f, styleAt, ddt)
+      val ma = if (mapOn) fr.mapAlpha else 0f
+      // with the map as the road (LaneAnchor) its lines are the lines: the camera's own are only followed (for the
+      // moment we cross one) and drawn where there is no map
+      if (steady && anchor) drawCamLinesSteady(c, m, fr, pal, 0f, styleAt, ddt, 1f - ma)
+      else if (steady) drawCamLinesSteady(c, m, fr, pal, ma, styleAt, ddt, 1f)
       else drawCamLines(c, m, fr, pal, mapOn, styleAt)
       drawLaneTints(c, m, fr, pal)
       drawPath(c, m, fr, pal)
@@ -538,6 +547,9 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     grad(c, ya, yb, pal.arrow and 0x00FFFFFF, pal.arrow)
   }
 
+  private var anchorDraw = false
+  /** tests: the last line crossing the camera's lines showed (1 right, -1 left), 0 once read */
+  var crossed = 0
   private var besideFit: LaneFit.Fit? = null
   private var besideWays: BooleanArray? = null
 
@@ -573,7 +585,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   /** a map line the camera's own lines stand for near the car: where it's nearest to the car within 30 m ahead, it
    *  lies between the camera's outermost lines (+-1 m) */
   private fun coveredBy(ln: LaneMap.MLine, pose: LaneFit.Pose, covL: Double, covR: Double): Boolean {
-    if (covL.isNaN()) return false
+    if (covL.isNaN() || (steady && anchorDraw)) return false
     var best = Double.MAX_VALUE; var r = 0.0; var any = false
     for (i in ln.x.indices) {
       val f = pose.fwd(ln.x[i].toDouble(), ln.y[i].toDouble())
@@ -862,7 +874,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
    * the road, fades in and out, and changes its paint by cross-fading once the new paint held. [mapA]: how much of the
    * map is drawn - with it the camera's lines hand over to the map's at 80 - 130 ft, without it they run as far as seen.
    */
-  private fun drawCamLinesSteady(c: Canvas, m: ModelSnapshot, fr: Frame, pal: Pal, mapA: Float, styleAt: ArrayList<DoubleArray>, dt: Double) {
+  private fun drawCamLinesSteady(c: Canvas, m: ModelSnapshot, fr: Frame, pal: Pal, mapA: Float, styleAt: ArrayList<DoubleArray>, dt: Double, show: Float) {
     if (m.laneX.size >= 4 && m.laneY.size >= 4 && m.laneProb.size >= 4) {
       for (i in 0 until 4) {
         val role = fr.lanes?.role(i) ?: Lanes.ROLE_UNKNOWN
@@ -872,11 +884,11 @@ class LaneSceneView(ctx: Context) : View(ctx) {
         lsStyle[i] = linePaint(i, m, fr, styleAt, lsReach[i])
       }
       sLines.update(m.laneX, m.laneY, m.laneProb, lsWant, lsStyle, lsReach, fr.atNs)
-      if (sLines.shift != 0) pendingShift = sLines.shift
-      for (t in sLines.tracks) {
+      if (sLines.shift != 0) { pendingShift = sLines.shift; if (anchor && frame == null) LaneAnchor.pendingShift = sLines.shift; crossed = sLines.shift }
+      if (show > 0.02f) for (t in sLines.tracks) {
         if (t.alpha < 0.02f) continue
-        if (t.mix < 1f) camLine(c, t, t.from, t.alpha * (1 - t.mix), fr, pal, mapA)
-        camLine(c, t, t.style, t.alpha * t.mix, fr, pal, mapA)
+        if (t.mix < 1f) camLine(c, t, t.from, t.alpha * (1 - t.mix) * show, fr, pal, mapA)
+        camLine(c, t, t.style, t.alpha * t.mix * show, fr, pal, mapA)
       }
     }
     // road edges: each comes and goes softly (seen at a spread of 1.0 m, lost at 1.4) and moves smoothly
@@ -894,7 +906,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       }
       val target = if (edgeOn[e]) 1f else 0f
       edgeA[e] = if (dt < 0) target else (edgeA[e] + (target - edgeA[e]) * (1 - exp(-dt / (if (target > edgeA[e]) 0.3 else 0.45)))).toFloat()
-      if (!has || ys == null || edgeA[e] < 0.02f) continue
+      if (!has || ys == null || edgeA[e] * show < 0.02f) continue
       val xs = m.edgeX[e]
       val full = min(70.0, xs.last().toDouble())
       val reach = full + (min(42.0, full) - full) * mapA
@@ -904,7 +916,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       for (k in 0 until n) { val f = FMIN + k * 3.0; fs[k] = f; rs[k] = LaneFit.interp(xs, ys, f) }
       path.rewind()
       runs(n, 0.0, 0.12)
-      val col = (pal.curb and 0x00FFFFFF) or (((pal.curb ushr 24) * edgeA[e]).roundToInt().coerceIn(0, 255) shl 24)
+      val col = (pal.curb and 0x00FFFFFF) or (((pal.curb ushr 24) * edgeA[e] * show).roundToInt().coerceIn(0, 255) shl 24)
       grad(c, yAt(45.0 + (25.0 - 45.0) * mapA), yAt(70.0 + (40.0 - 70.0) * mapA), col, col and 0x00FFFFFF)
     }
   }

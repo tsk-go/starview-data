@@ -108,8 +108,13 @@ object LaneFit {
     val xy = b.xy(p[0], p[1])
     val gps = Pose(xy[0], xy[1], Math.toRadians(p[2]))
     busy = true; lastStart = now
+    // 2.90.0: the lane card's count for LaneAnchor, read here (this thread owns the lane tracker)
+    val hint = try { LaneSceneView.Lanes.live() } catch (e: Throwable) { null }
     worker.execute {
-      try { fit = run(b, gps, acc, cam, odo, now, fit) } catch (e: Throwable) { Log.w(TAG, "fit", e) } finally { busy = false }
+      try {
+        fit = run(b, gps, acc, cam, odo, now, fit)
+        LaneAnchor.tick(b, gps, acc, cam, odo, now, hint)
+      } catch (e: Throwable) { Log.w(TAG, "fit", e) } finally { busy = false }
     }
   }
 
@@ -334,7 +339,7 @@ object LaneFit {
    *  only their way; never from a highway down to a local road - that's the street under the bridge), the road behind
    *  it for 260 ft, and the roads that meet those (merges, the highway going on past our exit, cross streets). Not the other carriageway, not a level of a
    *  bridge stacked over ours. Worked out again when the car's road changes, else once a second. */
-  private fun reachFrom(b: LaneMap.Built, m: Match, pose: Pose, now: Long): BooleanArray {
+  internal fun reachFrom(b: LaneMap.Built, m: Match, pose: Pose, now: Long): BooleanArray {
     val memo = reachMemo
     if (memo != null && memo.size == b.ways.size && reachB === b && reachWay == m.way && now - reachAt < 1000) return memo
     val out = BooleanArray(b.ways.size)
