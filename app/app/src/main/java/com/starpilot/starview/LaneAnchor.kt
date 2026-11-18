@@ -117,12 +117,12 @@ object LaneAnchor {
   private val ribbon = LaneRibbon.State()
 
   /** LaneFit's worker thread, after its own fit. */
-  internal fun tick(b: LaneMap.Built, gps: LaneFit.Pose, acc: Double, cam: LaneFit.Cam, odo: DoubleArray, now: Long, hint: LaneSceneView.Lanes?) {
+  internal fun tick(b: LaneMap.Built, gps: LaneFit.Pose, acc: Double, cam: LaneFit.Cam, odo: DoubleArray, now: Long, hint: LaneSceneView.Lanes?, speed: Double) {
     val shift = pendingShift
     pendingShift = 0
     fit = try {
       // where we are (which road, which lane), then the road drawn around it (LaneRibbon)
-      if (run(b, gps, acc, cam, odo, now, live, hint, marks, shift) == null) null else LaneRibbon.update(b, live, ribbon, cam, odo, now)
+      if (run(b, gps, acc, cam, odo, now, live, hint, marks, shift, speed) == null) null else LaneRibbon.update(b, live, ribbon, cam, odo, now)
     } catch (e: Throwable) { android.util.Log.w("StarView/LaneAnchor", "run", e); null }
   }
 
@@ -133,7 +133,7 @@ object LaneAnchor {
    * lane card's count; [shift]: we crossed a line (1 right, -1 left). null = no road here.
    */
   fun run(b: LaneMap.Built, gps: LaneFit.Pose, acc: Double, cam: LaneFit.Cam, odo: DoubleArray, now: Long, st: State,
-          hint: LaneSceneView.Lanes?, marks: Array<LaneMarks.Mark>?, shift: Int): LaneFit.Fit? {
+          hint: LaneSceneView.Lanes?, marks: Array<LaneMarks.Mark>?, shift: Int, speed: Double = Double.NaN): LaneFit.Fit? {
     val fresh = st.pose == null || st.built == null || !LaneFit.sameFrame(st.built!!, b) || now - st.lastMs > 3000 || now < st.lastMs
     val ref = if (fresh) null else LaneFit.carry(st.pose!!, st.odo!!, odo)
     // a GPS place worth using: under a bridge deck or in a tunnel the fix drifts off by 100 ft and more (its own
@@ -163,6 +163,9 @@ object LaneAnchor {
         score = min(score, max(0.0, abs(pr.side) - 1.8) + 20 * (1 - along))
       }
       if (score == Double.MAX_VALUE) continue
+      // at 45 mph and more we are on the highway, not on the street under it (on the recorded drive the first place
+      // found on an elevated highway was the boulevard below, for 16 s)
+      if (speed.isFinite() && speed > 20.0 && w.hw !in LaneMap.FAST) score += 6.0
       if (w.id == st.wayId) own = score
       // the road we're on stays unless another is clearly nearer; one we can't drive onto from here (the bridge's
       // other level, the road alongside) only when nothing else is left

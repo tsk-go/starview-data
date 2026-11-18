@@ -130,7 +130,7 @@ class SceneSeqTest {
             fit = LaneFit.run(b, gps, r.f.getDouble("acc"), cam, odo, (r.t * 1000).toLong(), fit)
             if (anchored) {
               val sh = v.crossed; v.crossed = 0
-              afit = LaneAnchor.run(b, gps, r.f.getDouble("acc"), cam, odo, (r.t * 1000).toLong(), ast, cardNow, null, sh)
+              afit = LaneAnchor.run(b, gps, r.f.getDouble("acc"), cam, odo, (r.t * 1000).toLong(), ast, cardNow, null, sh, r.f.getDouble("speed"))
               val seen = afit
               afit = if (seen == null) null else LaneRibbon.update(b, ast, rst, cam, odo, (r.t * 1000).toLong())
               for (ln in trace) log.append(String.format("ribbon %6.2f s: %s\n", r.t - t0, ln))

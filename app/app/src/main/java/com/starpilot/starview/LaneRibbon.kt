@@ -38,6 +38,7 @@ object LaneRibbon {
   const val LW = 3.6
   private const val AHEAD = 430.0
   private const val BEHIND = 70.0
+  private const val KEEP = 320.0         // what is behind us is kept this far: a fork there can still be taken the other way
   private const val SHOULDER = 0.9
   private const val KS = 8               // the thread is smoothed over +-8 steps
   private const val KN = 24              // the lane count eases over 24 steps (240 ft): before it grows, after it shrinks
@@ -82,6 +83,7 @@ object LaneRibbon {
     var trace: ArrayList<String>? = null
     internal var strayMs = 0L               // since when LaneAnchor has had us on a road that isn't the thread's
     internal var laneD = Double.NaN         // our lane's middle, m right of the thread (at the last step)
+    internal var dWas = Double.NaN; internal var dRes = 0.0; internal var dMs = 0L   // a lane's jump being slid over
     internal var van = 0.0                  // where we are on the thread (step number, with a fraction)
     internal var pose: LaneFit.Pose? = null
     internal var odoD = Double.NaN          // the car's own distance count at the last step
@@ -621,7 +623,7 @@ object LaneRibbon {
       // laid again from that fork - what lies before it stays, and so do the steps and the dashes
       val idx = wayIndex(b, st)
       val near = if (s.isFinite()) s else st.van
-      val fk = st.forks.lastOrNull { f -> f.idx <= near + 6 && near - f.idx < 70 && f.took != wayId && f.opts.any { it[0] != f.took && leads(b, idx, it, wayId) } }
+      val fk = st.forks.lastOrNull { f -> f.idx <= near + 6 && near - f.idx < 105 && f.took != wayId && f.opts.any { it[0] != f.took && leads(b, idx, it, wayId) } }
       if (fk != null) {
         relay(st, fk, fk.opts.first { it[0] != fk.took && leads(b, idx, it, wayId) }[0], "we took the other branch")
         extend(b, st); settle(st)
@@ -642,6 +644,9 @@ object LaneRibbon {
     if (!held) st.strayMs = 0L
     val fresh = same == null
     if (same == null) {
+      if (st.smp.size >= 2) st.trace?.add("off the thread: on ${b.ways[wi].hw} '${b.ways[wi].name}' ${b.ways[wi].id}, " +
+        (if (turned) "a road that meets ours here" else if (!s.isFinite()) "nowhere near it" else "for 4 s") +
+        "; ${st.forks.size} forks behind and ahead, we're at step ${st.van.toInt()}")
       start(b, st, wi, lane, an.px, an.py)
       extend(b, st); settle(st)
       s = station(st, an.px, an.py, 0.0, 40)
@@ -660,7 +665,7 @@ object LaneRibbon {
     if (cam != null) review(b, st, cam)
     extend(b, st)
     // forget what is far behind (whole dashes, so the dashes stay where they are)
-    val drop = (((s - st.first) * STEP - BEHIND - 4 * STEP) / (4 * STEP)).toInt() * 4
+    val drop = (((s - st.first) * STEP - KEEP - 4 * STEP) / (4 * STEP)).toInt() * 4
     if (drop > 0) { st.smp.subList(0, drop).clear(); st.first += drop; st.arms.removeAll { it.idx < st.first }; st.forks.removeAll { it.idx < st.first } }
     settle(st)
     // where we are on it: the lane LaneAnchor has us in, counted from the thread's lane
@@ -670,7 +675,16 @@ object LaneRibbon {
     val t = s - st.first - i
     val laneD = if (held) st.laneD else (an.lane - same.ci) * LW
     st.laneD = laneD
-    val d = laneD + an.off * (LW / an.wMap)
+    var d = laneD + an.off * (LW / an.wMap)
+    // LaneAnchor changing its mind about our lane moves us a whole lane at once (driving across a line does not: there
+    // the lane and our place in it change together). That is slid over at 4 ft a second, not jumped.
+    val dt = if (st.dMs == 0L) 0.0 else ((now - st.dMs) / 1000.0).coerceIn(0.0, 1.0)
+    st.dMs = now
+    if (!fresh && st.dWas.isFinite() && abs(d - st.dWas) > 1.2) st.dRes += d - st.dWas
+    if (fresh) st.dRes = 0.0
+    st.dWas = d
+    st.dRes -= Math.signum(st.dRes) * min(abs(st.dRes), 1.2 * dt)
+    d -= st.dRes
     // LaneAnchor is told which roads we can be on: the thread's around us and the branches of the forks near us. A
     // road that only runs beside ours is taken by it only when nothing else is left.
     val vi = (s - st.first).toInt()

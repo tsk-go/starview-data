@@ -114,10 +114,11 @@ object LaneFit {
     busy = true; lastStart = now
     // 2.90.0: the lane card's count for LaneAnchor, read here (this thread owns the lane tracker)
     val hint = try { LaneSceneView.Lanes.live() } catch (e: Throwable) { null }
+    val speed = t.vEgo.toDouble()
     worker.execute {
       try {
         fit = run(b, gps, acc, cam, odo, now, fit)
-        LaneAnchor.tick(b, gps, acc, cam, odo, now, hint)
+        LaneAnchor.tick(b, gps, acc, cam, odo, now, hint, speed)
       } catch (e: Throwable) { Log.w(TAG, "fit", e) } finally { busy = false }
     }
   }
