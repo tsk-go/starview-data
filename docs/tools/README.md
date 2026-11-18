@@ -64,7 +64,35 @@ distance / heading, `lcL` / `lcR` a lane change to that side, `lanes=L:R[:E]` th
 only). Set up like PicTest, plus `it.systemProperty("laneData", DIR)`, and run with `--rerun` (Gradle doesn't see
 picks.txt change). Each moment replays LaneMap + LaneFit over the 90 s before it.
 
+## `render/SceneSeqTest.kt`: the Scene view as a film of a recorded drive (2.90.0)
+
+Pictures of single moments (LaneSceneTest) can't show a road that jumps; this replays whole stretches of a drive at 10
+frames a second. Same data folder as LaneSceneTest, plus `DIR/seq.txt`, one stretch per line:
+`window,YYYY-MM-DD HH:MM:SS (Eastern),seconds,name[,day][,flip][,spin]` (`flip`: the lane card changes its mind as in
+the owner's Nov 17 video, `spin`: three made-up detected cars whose guessed heading flickers). Set up like PicTest with
+`it.systemProperty("picOut", System.getenv("PIC_OUT") ?: "/tmp")`, `it.systemProperty("laneData",
+System.getenv("LANE_DATA") ?: "/tmp")` and `it.maxHeapSize = "3g"`, then
+`SEQ_MODES=before,anchor PIC_OUT=OUT LANE_DATA=DIR ./gradlew :app:testDebugUnitTest --offline --rerun --tests
+com.starpilot.starview.SceneSeqTest`. Modes: `before` (2.89: every frame from that instant's guess), `after`
+(SceneSteady over LaneFit, never released), `anchor` (2.90.0: LaneAnchor + LaneRibbon). It writes
+`OUT/<name>_<mode>/NNNN.png` and `OUT/<name>.txt` (when the drawn lane changed, every time the road ahead was laid
+again and why; `ANCHOR_LOG=1` adds LaneAnchor's line at every step). Two numbers to watch after a change: "the road
+ahead was laid N times" (once, plus once per fork really taken the other way) and the count of sudden picture changes
+(mean absolute difference of consecutive frames at 320 x 200 above 5: 2.89 gave 4 - 21 per stretch, 2.90.0 0 - 1).
+A film for the owner: `ffmpeg -framerate 10 -i OUT/<name>_before/%04d.png -framerate 10 -i OUT/<name>_anchor/%04d.png
+-filter_complex "[0]scale=960:600[a];[1]scale=960:600[b];[a][b]vstack" -pix_fmt yuv420p film.mp4`.
+
 ## `unit/`: plain JVM tests of single pieces
+
+`SceneSteadyTest.kt`, `LaneAnchorTest.kt`, `LaneRibbonTest.kt` (2.90.0, the Scene view; Robolectric as for PicTest, no
+drive data): SceneSteady's holds (the lane card's count, a line dropping out, a line's paint, a car's facing, the speed
+sign); LaneAnchor on a made-up 3-lane road (the lane card changing its mind, driving across a line, a wrong start, no
+GPS under a bridge); LaneRibbon on made-up maps of the places where the map's own lines are wrong - a lane more and a
+lane fewer, an exit the map starts at the middle of the road, ramps it ends there (one lane, two lanes from either
+side, one brought in over 500 ft in short pieces), and how much of the road behind us is drawn. Each LaneRibbon test
+drives the map at 34 mph with LaneAnchor placing us and checks the thread for bends that aren't there and the lane
+we're put in. Run: `./gradlew :app:testDebugUnitTest --offline --rerun --tests com.starpilot.starview.LaneRibbonTest`
+(likewise the other two).
 
 `ExitGuardTest.kt` (2.87.1): when the route's exit may signal by itself, on a made-up lane tracker (the Nov 12 left
 fork: sure of no lane on the left, then "maybe one" right before the fork). Copy into

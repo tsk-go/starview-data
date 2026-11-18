@@ -23,13 +23,16 @@ import kotlin.math.hypot
 import kotlin.math.sin
 
 /**
- * The Scene view as a film of a recorded drive, off the tablet, twice: as it was (every frame from that instant's
- * guess) and held still (2.90.0, SceneSteady) - to see and count what jumps. Same data as LaneSceneTest
- * (laneData/drive_*.json at 4 a second, osm_all.json); laneData/seq.txt lists the stretches, one per line:
+ * The Scene view as a film of a recorded drive, off the tablet - to see and count what jumps. Three ways (environment
+ * SEQ_MODES, default all): "before" = as it was up to 2.89 (every frame from that instant's guess), "after" = held
+ * still with the map still laid on the camera's lines (SceneSteady over LaneFit), "anchor" = 2.90.0 as released
+ * (LaneAnchor places us, LaneRibbon generates the road). Same data as LaneSceneTest (laneData/drive_*.json at 4 a
+ * second, osm_all.json); laneData/seq.txt lists the stretches, one per line:
  * "window,YYYY-MM-DD HH:MM:SS (Eastern),seconds,name[,day][,flip][,spin]" (flip: the lane card changes its mind like in
  * the owner's Nov 17 video; spin: three made-up detected cars whose guessed heading flickers). The 30 s before a stretch
- * are replayed without drawing. Writes picOut/<name>_before/NNNN.png, picOut/<name>_after/NNNN.png (10 a second) and
- * picOut/<name>.txt (what changed from one frame to the next). Drive data never goes in git.
+ * are replayed without drawing. Writes picOut/<name>_<mode>/NNNN.png (10 a second) and picOut/<name>.txt: what changed
+ * from one frame to the next, when the lane we're drawn in changed, how often the road ahead was laid again (with
+ * ANCHOR_LOG set, LaneAnchor's line at every step). Drive data never goes in git.
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
