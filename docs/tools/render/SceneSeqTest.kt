@@ -20,6 +20,7 @@ import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.hypot
+import kotlin.math.max
 import kotlin.math.sin
 
 /**
@@ -77,14 +78,16 @@ class SceneSeqTest {
           fa(f.getJSONArray("lp")), Array(2) { fa(ed.getJSONArray(it)) }, fa(f.getJSONArray("estd")), fa(f.getJSONArray("lstd"))))
       }
       if (recs.size < 8) continue
-      // "rtk": the tablet's RTK receiver instead of the comma's GPS (the recording only has the comma's): standing
-      // still, the place averaged over the stop (up to a minute: a receiver standing still stays put) with its
-      // accuracy then (0.9 m: what it showed parked on Nov 18, before its corrections came in); moving, the comma's
-      // own fix and accuracy
+      // "rtk": the RTK receiver's fix instead of the comma's GPS - as recorded (frames with "rtk": exports from Nov 18 on;
+      // its accuracy no better than 0.5 m and its heading, as LaneFit takes them), else a stand-in: standing still, the
+      // comma's place averaged over the stop (up to a minute: a receiver standing still stays put) with 0.9 m (what it
+      // showed parked on Nov 18, before its corrections came in); moving, the comma's own fix and accuracy
       val still = recs.map { it.f.getDouble("speed") < 1.0 }
       val rtk = recs.indices.map { i ->
         val r = recs[i]
-        if (!still[i]) doubleArrayOf(r.f.getDouble("lat"), r.f.getDouble("lon"), r.f.getDouble("acc")) else {
+        val k = r.f.optJSONArray("rtk")
+        if (k != null) doubleArrayOf(k.getDouble(0), k.getDouble(1), max(0.5, k.getDouble(2)), k.getDouble(3))
+        else if (!still[i]) doubleArrayOf(r.f.getDouble("lat"), r.f.getDouble("lon"), r.f.getDouble("acc")) else {
           var a = i; while (a > 0 && still[a - 1] && r.t - recs[a - 1].t <= 30.0) a--
           var b = i; while (b < recs.size - 1 && still[b + 1] && recs[b + 1].t - r.t <= 30.0) b++
           val k = recs.subList(a, b + 1)
@@ -152,7 +155,7 @@ class SceneSeqTest {
             val xy = b.xy(lat, lon)
             val odo = doubleArrayOf(r.ox, r.oy, r.yaw, r.dist)
             val cam = LaneFit.Cam.of(snap(r, r, 0f))!!
-            val gps = LaneFit.Pose(xy[0], xy[1], Math.toRadians(r.f.getDouble("bearing")))
+            val gps = LaneFit.Pose(xy[0], xy[1], Math.toRadians(if (useRtk && rtk[ri].size > 3) rtk[ri][3] else r.f.getDouble("bearing")))
             fit = LaneFit.run(b, gps, acc, cam, odo, (r.t * 1000).toLong(), fit)
             if (anchored) {
               val sh = v.crossed; v.crossed = 0

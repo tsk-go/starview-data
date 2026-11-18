@@ -64,14 +64,26 @@ distance / heading, `lcL` / `lcR` a lane change to that side, `lanes=L:R[:E]` th
 only). Set up like PicTest, plus `it.systemProperty("laneData", DIR)`, and run with `--rerun` (Gradle doesn't see
 picks.txt change). Each moment replays LaneMap + LaneFit over the 90 s before it.
 
+## `render/sv_export.py` + `render/lane_conv.py`: a stretch of drive for the replays (2.90.2)
+
+`sv_export.py NAME T0 T1` runs on the comma (copied to `/data/sv_export.py`; run parked - it reads the rlogs, nice 19,
+idle I/O): unix times T0..T1, the 90 s before for warming up. It writes `/data/starview/export_NAME.tar.gz` with the
+model's lines / edges / path / lead, the comma's GPS, the RTK receiver's fix as the comma passed it on
+(`starpilotNavigation.phoneGps`, from Nov 18), the radar lead and the blinkers at 4 a second, the OpenStreetMap
+extract around it and each segment's `qcamera.ts`. `lane_conv.py OSM_DIR EXPORT.json.gz DIR` turns it into LaneSceneTest
+/ SceneSeqTest data (`DIR/osm_all.json`, `DIR/drive_NAME.json`; a frame carries `rtk` [lat, lon, accuracy, bearing,
+speed] when there was a fix within 0.6 s). Run the converter with `python3 -I` on the extracted files in a folder of
+their own. The exports hold where the car drove: never in git.
+
 ## `render/SceneSeqTest.kt`: the Scene view as a film of a recorded drive (2.90.0)
 
 Pictures of single moments (LaneSceneTest) can't show a road that jumps; this replays whole stretches of a drive at 10
 frames a second. Same data folder as LaneSceneTest, plus `DIR/seq.txt`, one stretch per line:
 `window,YYYY-MM-DD HH:MM:SS (Eastern),seconds,name[,day][,flip][,spin][,rtk][,city][,lights=F[:G]][,zoom=D][,tilt=E]`
 (`flip`: the lane card changes its mind as in the owner's Nov 17 video, `spin`: three made-up detected cars whose
-guessed heading flickers; 2.90.2: `rtk` stands in for the tablet's RTK receiver - standing still, the comma's fix
-averaged over the stop with 3 ft accuracy, moving, the comma's own - `city` the cars the detector saw parked on Nov 18,
+guessed heading flickers; 2.90.2: `rtk` the RTK receiver's fix where the export has it (accuracy no better than 1.6 ft,
+as LaneFit takes it), else a stand-in - standing still, the comma's fix averaged over the stop with 3 ft accuracy,
+moving, the comma's own - `city` the cars the detector saw parked on Nov 18,
 `lights=F[:G]` two traffic lights F m ahead 16 ft right and G m ahead 30 ft left when the stretch starts, fixed in the
 world, `zoom=` / `tilt=` the camera farther back / higher). Set up like PicTest with
 `it.systemProperty("picOut", System.getenv("PIC_OUT") ?: "/tmp")`, `it.systemProperty("laneData",

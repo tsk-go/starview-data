@@ -28,8 +28,9 @@ for wn, w in d["windows"].items():
   model = sorted((r for s in segs for r in s["model"]), key=lambda r: r["t"])
   radar = sorted((r for s in segs for r in s["radar"]), key=lambda r: r["t"])
   car = sorted((r for s in segs for r in s["car"]), key=lambda r: r["t"])
+  rtk = sorted((r for s in segs for r in s.get("rtk", [])), key=lambda r: r["t"])
   if not gps or not model: continue
-  gt = [r["t"] for r in gps]; rt = [r["t"] for r in radar]; ct = [r["t"] for r in car]
+  gt = [r["t"] for r in gps]; rt = [r["t"] for r in radar]; ct = [r["t"] for r in car]; kt = [r["t"] for r in rtk]
   frames = []
   for m in model:
     i = bisect.bisect_left(gt, m["t"])
@@ -46,6 +47,10 @@ for wn, w in d["windows"].items():
           "edges": [e["y"] for e in m["edges"]], "estd": m["edge_std"], "px": m["path"]["x"], "py": m["path"]["y"],
           "lead": [lead["x"], lead["y"]] if lead else ([rad["lead1"][0] + 2.3, -rad["lead1"][1]] if rad and rad["lead1"][3] else None),
           "lb": bool(cr and cr.get("lb")), "rb": bool(cr and cr.get("rb"))}
+    # the RTK receiver's fix (exports from Nov 18 on): the latest within 0.6 s, [lat, lon, accuracy m, bearing, speed]
+    j = bisect.bisect_right(kt, m["t"]) - 1
+    if j >= 0 and m["t"] - kt[j] <= 0.6:
+      k = rtk[j]; fr["rtk"] = [k["lat"], k["lon"], k["acc"], k["bearing"], k["speed"]]
     frames.append(fr)
   json.dump(frames, open(f"drive_{wn}.json", "w"))
   print(wn, len(frames), frames[0]["t"], frames[-1]["t"])
