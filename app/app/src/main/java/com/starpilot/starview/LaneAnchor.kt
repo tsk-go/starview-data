@@ -103,6 +103,9 @@ object LaneAnchor {
     internal var reach: Set<Long>? = null
     /** from LaneRibbon: the roads we can be on by driving (its thread around us, the branches of the forks near us) */
     internal var expect: Set<Long>? = null
+    /** from LaneRibbon: for those roads, what to add to a lane's place from the left to get its number along the
+     *  thread - the same lane keeps its number from one piece of road to the next */
+    internal var laneNums: Map<Long, Int>? = null
     // for LaneRibbon: the road piece and lane we're on, the point of that lane's middle beside us, its width on the map
     internal var wayIdx = -1
     internal var mlane: LaneMap.MLane? = null
@@ -176,24 +179,33 @@ object LaneAnchor {
     if (gpsOk && own > 9.0 && own != Double.MAX_VALUE) { if (st.farMs == 0L) st.farMs = now } else st.farMs = 0L
     if (lost) st.farMs = 0L
     val w = b.ways[bestWay]
-    val lanes = cands.filter { it.wi == bestWay }.sortedBy { -it.pr.side }       // left to right
+    // every lane of that road our way, left to right in the road's own order. (Only the lanes whose lines were beside
+    // us, ordered by where those lines were, lost and swapped lanes at the ends of a piece: the map bends the lines
+    // together there, and some end before others.)
+    val dir = if (cands.first { it.wi == bestWay }.lane.dir < 0) -1 else 1
+    val lanes = LaneRibbon.lanesOf(w, dir, qx, qy).map { Cand(bestWay, it.first, it.second) }
     val n = lanes.size
     val lat = DoubleArray(n) { -lanes[it].pr.side }
 
     // ---------------------------------------------------------------- which lane
     var p = DoubleArray(n)
+    val hop = if (fresh || w.id == st.wayId || n == 0) null else st.laneNums?.let { m -> val a = m[st.wayId]; val z = m[w.id]; if (a != null && z != null) a - z else null }
     val sigGps = hypot(max(acc, 0.3), 2.0)                 // the map's own lines are a few feet off too
     if (fresh || st.p.isEmpty()) {
       for (j in 0 until n) p[j] = exp(-0.5 * (lat[j] / sigGps).pow(2)) + 0.02
     } else if (w.id != st.wayId || n != st.p.size) {
-      // another piece of road (or a lane more or fewer): each lane takes over from the lanes that were where it is
-      for (j in 0 until n) { var s = 1e-3; for (i in st.p.indices) s += st.p[i] * exp(-0.5 * ((lat[j] - st.lat[i]) / 1.2).pow(2)); p[j] = s }
+      // another piece of road (or a lane more or fewer). LaneRibbon knows how the lanes of the two carry on into one
+      // another (an exit takes our road's right lanes, a ramp from the left brings the first lanes...): each lane takes
+      // over from the lane it is. Without that, from the lanes that were where it is on the map - which the map has
+      // wrong right at an exit or a merge (it ends a ramp at the middle of the road it joins).
+      if (hop != null) for (i in st.p.indices) p[(i + hop).coerceIn(0, n - 1)] += st.p[i]
+      else for (j in 0 until n) { var s = 1e-3; for (i in st.p.indices) s += st.p[i] * exp(-0.5 * ((lat[j] - st.lat[i]) / 1.2).pow(2)); p[j] = s }
     } else p = st.p.copyOf()
     var shown = if (fresh || st.shown !in 0 until st.p.size) -1 else st.shown
     if (shown >= 0 && (w.id != st.wayId || n != st.p.size)) {
-      // drawn in the lane that is where our lane was
+      // drawn in the lane that is ours (or the one where our lane was)
       val was = st.lat[shown]
-      shown = (0 until n).minByOrNull { abs(lat[it] - was) } ?: -1
+      shown = if (hop != null) (shown + hop).coerceIn(0, n - 1) else (0 until n).minByOrNull { abs(lat[it] - was) } ?: -1
     }
     if (shift != 0 && n > 0) {
       // we drove across a line: the whole belief moves one lane over with us
@@ -287,7 +299,7 @@ object LaneAnchor {
     return f
   }
 
-  private fun reset(st: State) { st.expect = null; st.mlane = null; st.wayIdx = -1; st.farMs = 0L; st.pose = null; st.p = DoubleArray(0); st.shown = -1; st.cand = -1; st.wayId = Long.MIN_VALUE; st.reach = null }
+  private fun reset(st: State) { st.expect = null; st.laneNums = null; st.mlane = null; st.wayIdx = -1; st.farMs = 0L; st.pose = null; st.p = DoubleArray(0); st.shown = -1; st.cand = -1; st.wayId = Long.MIN_VALUE; st.reach = null }
 
   private fun norm(p: DoubleArray) {
     var s = 0.0

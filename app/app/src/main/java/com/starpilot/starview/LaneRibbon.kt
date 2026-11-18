@@ -43,6 +43,7 @@ object LaneRibbon {
   private const val KS = 8               // the thread is smoothed over +-8 steps
   private const val KN = 24              // the lane count eases over 24 steps (240 ft): before it grows, after it shrinks
   private val WT = DoubleArray(KN + 1) { val t = (it + 0.5) / (KN + 1); 6 * t * (1 - t) }
+  private const val NONE = Int.MIN_VALUE
   private const val J_TURN = 0; private const val J_SAME = 1; private const val J_LEAVE = 2; private const val J_JOIN = 3
   private val MINOR = setOf("residential", "service", "living_street", "unclassified", "road", "track")
 
@@ -52,15 +53,22 @@ object LaneRibbon {
     var done = false; var gap = false
     var openL = false; var openR = false   // a road leaves on that side here: no edge line across its mouth
     var tx = 0.0; var ty = 1.0           // the smoothed thread's direction here
+    /** lane [ci] + this = the lane's number counted along the whole thread: the same lane keeps it from piece to piece */
+    var gb = 0
+    /** a step of the straight run onto this piece (an exit's start, a merge's end): the piece it comes from - on the
+     *  map we are still on that one here - and that piece's [gb] */
+    var via = Long.MIN_VALUE; var viaGb = 0
+    /** the thread's own lane here, by that numbering ([ci] + [gb]; on a straight run that crosses lanes, in between) */
+    var g = 0.0
   }
 
   /** a road meeting ours near step [idx] of the thread: along way [wayId] from its point [v] going [d] */
   internal class Arm(var idx: Long, val wayId: Long, val v: Int, val d: Int)
 
   /** where the road could go on two ways (step [idx]): what was taken, the others, and the walk as it stood there */
-  internal class Fork(val idx: Long, val key: Long, val took: Long, val opts: List<LongArray>, val wayId: Long, val dir: Int,
+  internal class Fork(var idx: Long, val key: Long, val took: Long, val opts: List<LongArray>, val wayId: Long, val dir: Int,
                       val x: Double, val y: Double, val h: Double, val rem: Double, val prevWay: Long, val prevV: Int, val prevD: Int,
-                      val jKind: Int, val jCi: Int) {
+                      val jKind: Int, val jCi: Int, val base: Int) {
     var votes = 0; var want = -1
   }
 
@@ -77,6 +85,10 @@ object LaneRibbon {
     internal var dead = false
     // how the thread comes onto the piece it takes up next (see extend): which lane, and the joint it is at
     internal var jKind = J_TURN; internal var jCi = -1; internal var jSkip = 0.0; internal var jX = 0.0; internal var jY = 0.0
+    internal var jSide = 0                  // an exit: it leaves on the right (1) / the left (-1)
+    // lane numbers along the thread (Smp.gb): the next piece's, when the joint says how its lanes carry on ([NONE]: by
+    // the thread's own lane, which was lane [pCi] with [pBase] on the piece before)
+    internal var jBase = 0; internal var pCi = -1; internal var pBase = 0
     // the next steps are where our road narrows away from the lanes it left: no edge line on that side (1 left, 2 right)
     internal var jOpen = 0; internal var jOpenN = 0
     /** tests: what the thread did at each joint, when set */
@@ -137,12 +149,35 @@ object LaneRibbon {
   private fun wrap(a: Double) = Math.IEEEremainder(a, 2 * Math.PI)
   private fun link(hw: String) = hw.endsWith("_link")
 
-  /** the lanes of way [w] going [dir] along its points, left to right as driven, seen from ([x], [y]) */
-  private fun lanesOf(w: LaneMap.BWay, dir: Int, x: Double, y: Double): List<Pair<LaneMap.MLane, LaneAnchor.Proj>> {
+  /**
+   * The lanes of way [w] going [dir] along its points, left to right as driven, each seen from ([x], [y]). In the
+   * road's own order (each lane's distance from the road's middle line, at the middle of the piece) - not by where
+   * their lines are beside us: at the ends of a piece the map bends those lines together, some end before others, and
+   * ordered by them the lanes swapped places there (a ramp's left lane became the last lane of the road it joined).
+   */
+  internal fun lanesOf(w: LaneMap.BWay, dir: Int, x: Double, y: Double): List<Pair<LaneMap.MLane, LaneAnchor.Proj>> {
     val out = ArrayList<Pair<LaneMap.MLane, LaneAnchor.Proj>>()
-    for (l in w.lanes) if ((l.dir < 0) == (dir < 0)) { val p = LaneAnchor.project(l.x, l.y, x, y) ?: continue; out.add(l to p) }
-    out.sortBy { -it.second.side }
+    val n = w.px.size
+    val cx = FloatArray(n) { w.px[if (dir > 0) it else n - 1 - it].toFloat() }
+    val cy = FloatArray(n) { w.py[if (dir > 0) it else n - 1 - it].toFloat() }
+    val off = HashMap<LaneMap.MLane, Double>()
+    for (l in w.lanes) if ((l.dir < 0) == (dir < 0)) { val p = LaneAnchor.project(l.x, l.y, x, y) ?: continue; out.add(l to p); off[l] = laneOff(cx, cy, l) }
+    out.sortBy { off[it.first] }
     return out
+  }
+
+  /** how far right of the road's middle line ([cx], [cy], in our direction) lane [lane] runs, at the middle of the piece */
+  private fun laneOff(cx: FloatArray, cy: FloatArray, lane: LaneMap.MLane): Double {
+    var len = 0.0
+    for (k in 1 until lane.x.size) len += hypot((lane.x[k] - lane.x[k - 1]).toDouble(), (lane.y[k] - lane.y[k - 1]).toDouble())
+    var mx = lane.x[0].toDouble(); var my = lane.y[0].toDouble()
+    var at = 0.0
+    for (k in 1 until lane.x.size) {
+      val l = hypot((lane.x[k] - lane.x[k - 1]).toDouble(), (lane.y[k] - lane.y[k - 1]).toDouble())
+      if (at + l >= len / 2 && l > 1e-6) { val t = (len / 2 - at) / l; mx = lane.x[k - 1] + (lane.x[k] - lane.x[k - 1]) * t; my = lane.y[k - 1] + (lane.y[k] - lane.y[k - 1]) * t; break }
+      at += l
+    }
+    return LaneAnchor.project(cx, cy, mx, my)?.side ?: 0.0
   }
 
   /**
@@ -156,16 +191,7 @@ object LaneRibbon {
     val n = w.px.size
     val cx = FloatArray(n) { w.px[if (dir > 0) it else n - 1 - it].toFloat() }
     val cy = FloatArray(n) { w.py[if (dir > 0) it else n - 1 - it].toFloat() }
-    var len = 0.0
-    for (k in 1 until lane.x.size) len += hypot((lane.x[k] - lane.x[k - 1]).toDouble(), (lane.y[k] - lane.y[k - 1]).toDouble())
-    var mx = lane.x[0].toDouble(); var my = lane.y[0].toDouble()
-    var at = 0.0
-    for (k in 1 until lane.x.size) {
-      val l = hypot((lane.x[k] - lane.x[k - 1]).toDouble(), (lane.y[k] - lane.y[k - 1]).toDouble())
-      if (at + l >= len / 2 && l > 1e-6) { val t = (len / 2 - at) / l; mx = lane.x[k - 1] + (lane.x[k] - lane.x[k - 1]) * t; my = lane.y[k - 1] + (lane.y[k] - lane.y[k - 1]) * t; break }
-      at += l
-    }
-    val off = LaneAnchor.project(cx, cy, mx, my)?.side ?: 0.0
+    val off = laneOff(cx, cy, lane)
     val ox = FloatArray(n); val oy = FloatArray(n)
     for (i in 0 until n) {
       val a = max(0, i - 1); val z = min(n - 1, i + 1)
@@ -180,7 +206,8 @@ object LaneRibbon {
   private fun start(b: LaneMap.Built, st: State, wi: Int, lane: LaneMap.MLane, x: Double, y: Double) {
     st.smp.clear(); st.arms.clear(); st.forks.clear(); st.forced.clear()
     st.first = 0L; st.dead = false; st.rem = 0.0; st.prevWay = Long.MIN_VALUE
-    st.jKind = J_TURN; st.jCi = -1; st.jSkip = 0.0; st.jOpenN = 0
+    st.jKind = J_TURN; st.jCi = -1; st.jSkip = 0.0; st.jSide = 0; st.jOpenN = 0
+    st.jBase = 0; st.pCi = -1; st.pBase = 0
     st.strayMs = 0L; st.laneD = Double.NaN
     st.relaid++
     st.trace?.add("laid from scratch")
@@ -197,6 +224,7 @@ object LaneRibbon {
     var need = STEP; var done = 0.0
     var qx = p.cx; var qy = p.cy
     var bw = w; var bwi = wi; var bdir = dir; var bci = ci; var bn = ls.size; var bopp = opp
+    var bgb = 0
     var k = p.k - 1
     var hops = 0
     while (done < BEHIND && hops < 8) {
@@ -206,7 +234,7 @@ object LaneRibbon {
         val l = hypot(qx - ax, qy - ay)
         if (l > 1e-6) h = atan2(qx - ax, qy - ay)
         var at = need
-        while (l > 1e-6 && at <= l && done < BEHIND) { back.add(Smp(qx + (ax - qx) * at / l, qy + (ay - qy) * at / l, bw.id, bci, bn, bopp, bw.oneway, bw.hw)); at += STEP; done += STEP }
+        while (l > 1e-6 && at <= l && done < BEHIND) { back.add(Smp(qx + (ax - qx) * at / l, qy + (ay - qy) * at / l, bw.id, bci, bn, bopp, bw.oneway, bw.hw).also { it.gb = bgb; it.g = (bci + bgb).toDouble() }); at += STEP; done += STEP }
         need = at - l
         qx = ax; qy = ay; k--
       }
@@ -229,7 +257,9 @@ object LaneRibbon {
       bwi = nu; bw = b.ways[nu]; bdir = nd
       val bls = lanesOf(bw, bdir, qx, qy)
       if (bls.isEmpty()) break
+      val was = bci
       bci = bls.indices.minByOrNull { abs(bls[it].second.side) } ?: 0
+      bgb += was - bci
       bn = bls.size; bopp = bw.lanes.size - bn
       val line = laneLine(bw, bdir, bls[bci].first)
       blx = line.first; bly = line.second
@@ -270,6 +300,7 @@ object LaneRibbon {
       val kind = st.jKind
       val ci = if (st.jCi in ls.indices) st.jCi else ls.indices.minByOrNull { abs(ls[it].second.side) } ?: 0
       st.jKind = J_TURN; st.jCi = -1
+      val base = if (st.jBase != NONE) st.jBase else if (st.pCi >= 0) st.pBase + st.pCi - ci else 0
       val (lx, ly) = laneLine(w, st.endDir, ls[ci].first)
       var p = LaneAnchor.project(lx, ly, st.endX, st.endY) ?: run { st.dead = true; return }
       val opp = w.lanes.size - ls.size
@@ -280,17 +311,33 @@ object LaneRibbon {
       if ((kind == J_LEAVE || kind == J_JOIN) && st.jSkip > 0) {
         val node = LaneAnchor.project(lx, ly, st.jX, st.jY)
         if (node != null) {
-          var left = st.jSkip
-          var k = node.k; var t = node.t
-          var sx = node.cx; var sy = node.cy
-          while (k < lx.size && left > 0) {
-            val ax = lx[k - 1].toDouble(); val ay = ly[k - 1].toDouble()
-            val dx = lx[k] - ax; val dy = ly[k] - ay
-            val l = hypot(dx, dy) * (1 - t)
-            if (l >= left) { t += left / hypot(dx, dy).coerceAtLeast(1e-6); sx = ax + dx * t; sy = ay + dy * t; left = 0.0; break }
-            left -= l; sx = lx[k].toDouble(); sy = ly[k].toDouble(); t = 0.0; k++
+          /** the piece's point [dist] m past the joint; null past its end */
+          fun past(dist: Double): LaneAnchor.Proj? {
+            var left = dist
+            var k = node.k; var t = node.t
+            var sx = node.cx; var sy = node.cy
+            while (k < lx.size && left > 0) {
+              val ax = lx[k - 1].toDouble(); val ay = ly[k - 1].toDouble()
+              val dx = lx[k] - ax; val dy = ly[k] - ay
+              val l = hypot(dx, dy) * (1 - t)
+              if (l >= left) { t += left / hypot(dx, dy).coerceAtLeast(1e-6); sx = ax + dx * t; sy = ay + dy * t; left = 0.0; break }
+              left -= l; sx = lx[k].toDouble(); sy = ly[k].toDouble(); t = 0.0; k++
+            }
+            return if (k < lx.size) LaneAnchor.Proj(sx, sy, node.bearing, 0.0, 0.0, 0.0, k, t) else null
           }
-          if (k < lx.size) { p = LaneAnchor.Proj(sx, sy, node.bearing, 0.0, 0.0, 0.0, k, t); bridge = true }
+          var skip = st.jSkip
+          var q = past(skip)
+          if (kind == J_LEAVE && st.jSide != 0) {
+            // an exit the map still has inside our own lane there (it starts at the middle of the road and can take a
+            // long while to get out): on until it is clear of our lane on its own side, so the run never swings the
+            // other way first - an S-bend again
+            val c = cos(st.endH); val sn = sin(st.endH)
+            while (q != null && skip < st.jSkip + 80.0 && ((q.cx - st.endX) * c - (q.cy - st.endY) * sn) * st.jSide < 0.5) {
+              val more = past(skip + 5.0) ?: break
+              skip += 5.0; q = more
+            }
+          }
+          if (q != null) { p = q; bridge = true }
         }
       }
       var qx = p.cx; var qy = p.cy
@@ -311,6 +358,7 @@ object LaneRibbon {
       }
       fun put(x: Double, y: Double) {
         val q = Smp(x, y, w.id, ci, ls.size, opp, w.oneway, w.hw)
+        q.gb = base; q.g = (ci + base).toDouble()
         if (st.jOpenN > 0) { if (st.jOpen and 1 != 0) q.openL = true; if (st.jOpen and 2 != 0) q.openR = true; st.jOpenN-- }
         st.smp.add(q)
       }
@@ -329,7 +377,11 @@ object LaneRibbon {
         // the straight run from where the thread is to where it takes the piece up
         val l = hypot(p.cx - st.endX, p.cy - st.endY)
         var at = st.rem
-        while (l > 1e-6 && at <= l) { put(st.endX + (p.cx - st.endX) * at / l, st.endY + (p.cy - st.endY) * at / l); at += STEP }
+        while (l > 1e-6 && at <= l) {
+          put(st.endX + (p.cx - st.endX) * at / l, st.endY + (p.cy - st.endY) * at / l)
+          if (st.pCi >= 0) st.smp.last().let { it.via = st.prevWay; it.viaGb = st.pBase; it.g = (st.pCi + st.pBase) + (ci + base - st.pCi - st.pBase) * (at / l) }
+          at += STEP
+        }
         if (l > 1e-6) st.rem = at - l
       }
       for (k in p.k until lx.size) { if (stopK >= 0 && k > stopK) break; to(lx[k].toDouble(), ly[k].toDouble()) }
@@ -399,7 +451,7 @@ object LaneRibbon {
         // a road we could take from the middle of this piece: a fork like the ones at its end
         if (ways.isNotEmpty() && st.forks.none { it.key == w.keys[v] }) st.at(near)?.let { q ->
           ways.add(0, longArrayOf(w.id, v.toLong(), st.endDir.toLong()))
-          st.forks.add(Fork(near, w.keys[v], w.id, ways, w.id, st.endDir, q.x, q.y, hv, STEP, st.prevWay, st.prevV, st.prevD, kind, ci))
+          st.forks.add(Fork(near, w.keys[v], w.id, ways, w.id, st.endDir, q.x, q.y, hv, STEP, st.prevWay, st.prevV, st.prevD, kind, ci, base))
         }
       }
       if (bestU < 0) { st.dead = true; break }
@@ -411,7 +463,9 @@ object LaneRibbon {
       val fork = opts.size >= 2
       // of the roads going on from here, ours is the rightmost (1) / the leftmost (-1)
       val side = if (!fork) 0 else if (rels.all { it <= bestRel + 1e-9 }) 1 else if (rels.all { it >= bestRel - 1e-9 }) -1 else 0
-      st.jX = w.px[endV]; st.jY = w.py[endV]; st.jSkip = 0.0
+      st.jX = w.px[endV]; st.jY = w.py[endV]; st.jSkip = 0.0; st.jSide = 0
+      // how the next piece's lanes carry ours on: lane i here is lane i + sh there (a turn: the thread's own lane)
+      var sh = NONE
       if (abs(bestRel) > 0.6 || un == 0) { st.jKind = J_TURN; st.jCi = -1 }
       else if (into || (link(w.hw) && !link(u.hw))) {
         // joining: the first lane of that road on the side we come from (where the thread was 120 ft back)
@@ -419,33 +473,60 @@ object LaneRibbon {
         val back = st.smp.getOrNull(st.smp.size - 1 - 12) ?: st.smp.getOrNull((from - st.first).toInt())
         val near = ul.minByOrNull { abs(it.second.side) }!!.first
         val fromRight = if (back == null) true else (LaneAnchor.project(near.x, near.y, back.x, back.y)?.side ?: 1.0) > 0
-        st.jCi = if (un <= n) min(ci, un - 1) else if (fromRight) un - 1 else 0
-        // the last 100 ft of our piece run across that road's lanes on the map: taken out again
-        var mine = 0
-        while (mine < 40 && st.smp.getOrNull(st.smp.size - 1 - mine)?.wayId == w.id) mine++
-        val cut = min(10, mine / 2)
-        if (cut > 0 && un > n) {
-          st.smp.subList(st.smp.size - cut, st.smp.size).clear()
-          val e = st.smp.last()
-          st.endX = e.x; st.endY = e.y; st.rem = STEP
-          to = st.first + st.smp.size
-          for (a in st.arms) if (a.idx >= to) a.idx = to - 1
-          st.jSkip = 15.0
+        // (a ramp of two lanes brings both: its lanes are the road's first ones on that side, in their order)
+        sh = if (un > n && fromRight) un - n else 0
+        st.jCi = (ci + sh).coerceIn(0, un - 1)
+        // the end of our road runs across that road's lanes on the map (the map brings a ramp in to the middle of the
+        // road): taken out again - its last 100 ft, and on back for as long as the thread still lies in the lane we
+        // join or beyond it, so the straight run to that lane never swings back first (an S-bend again: the recorded
+        // ramp came in over 300 ft, in four pieces). Up to 400 ft, never past a fork or a road leaving, nor to within
+        // 120 ft of where we are.
+        if (un > n) {
+          var mine = 0
+          while (mine < 40 && st.smp.getOrNull(st.smp.size - 1 - mine)?.wayId == w.id) mine++
+          val least = min(10, mine / 2)
+          val (tx, ty) = laneLine(u, bestD, ul[st.jCi].first)
+          var floor = max(st.first + 2, st.van.toLong() + 12)
+          for (f in st.forks) floor = max(floor, f.idx + 1)
+          var cut = 0
+          while (cut < 40) {
+            val k = st.smp.size - 1 - cut                               // the step that would be the thread's end
+            if (k < 2 || st.first + k <= floor) break
+            if (cut >= least) {
+              val q = st.smp[k]
+              val off = LaneAnchor.project(tx, ty, q.x, q.y)?.side ?: break
+              if ((if (fromRight) off else -off) >= 0.5) break          // clear of that lane, on the side we come from
+              if (st.arms.any { it.idx >= st.first + k }) break
+            }
+            cut++
+          }
+          if (cut > 0) {
+            st.smp.subList(st.smp.size - cut, st.smp.size).clear()
+            val e = st.smp.last()
+            st.endX = e.x; st.endY = e.y; st.rem = STEP
+            to = st.first + st.smp.size
+            for (a in st.arms) if (a.idx >= to) a.idx = to - 1
+            st.jSkip = 15.0
+          }
         }
       } else if (fork && un < n && side != 0) {
         // leaving: an exit on the right carries on from our road's right lanes, one on the left from its left lanes
         st.jKind = J_LEAVE
-        st.jCi = if (side > 0) (un - 1 - (n - 1 - ci)).coerceIn(0, un - 1) else min(ci, un - 1)
+        sh = if (side > 0) un - n else 0
+        st.jCi = (ci + sh).coerceIn(0, un - 1)
         var len = 0.0
         for (k in 1 until u.px.size) len += hypot(u.px[k] - u.px[k - 1], u.py[k] - u.py[k - 1])
-        st.jSkip = min(40.0, len * 0.5)
+        st.jSkip = min(40.0, len * 0.5); st.jSide = side
       } else {
         // the same road going on: our lane by its number from the left - from the right when what changes is a
         // left-turn lane coming or going
         st.jKind = J_SAME
         val leftTurn = { l: List<Pair<LaneMap.MLane, LaneAnchor.Proj>> -> l.isNotEmpty() && "left" in l[0].first.turn }
-        st.jCi = (if (un != n && leftTurn(if (un > n) ul else ls) && !leftTurn(if (un > n) ls else ul)) ci + (un - n) else ci).coerceIn(0, un - 1)
+        sh = if (un != n && leftTurn(if (un > n) ul else ls) && !leftTurn(if (un > n) ls else ul)) un - n else 0
+        st.jCi = (ci + sh).coerceIn(0, un - 1)
       }
+      st.jBase = if (sh == NONE) NONE else base - sh
+      st.pCi = ci; st.pBase = base
       st.jOpenN = 0
       if (fork && st.jKind != J_TURN && st.jCi >= 0) {
         // where our road narrows away from the lanes it left (they carry on as the branch): no edge line on that side
@@ -453,7 +534,7 @@ object LaneRibbon {
         st.jOpen = (if (st.jCi < ci) 1 else 0) or (if (un - 1 - st.jCi < n - 1 - ci) 2 else 0)
         if (st.jOpen != 0) st.jOpenN = KN + 2
       }
-      if (fork && st.forks.none { it.key == key }) st.forks.add(Fork(to - 1, key, u.id, opts, w.id, st.endDir, st.endX, st.endY, st.endH, st.rem, st.prevWay, st.prevV, st.prevD, kind, ci))
+      if (fork && st.forks.none { it.key == key }) st.forks.add(Fork(to - 1, key, u.id, opts, w.id, st.endDir, st.endX, st.endY, st.endH, st.rem, st.prevWay, st.prevV, st.prevD, kind, ci, base))
       st.prevWay = w.id; st.prevV = endV; st.prevD = -st.endDir
       st.endWay = u.id; st.endDir = bestD
     }
@@ -519,7 +600,7 @@ object LaneRibbon {
     st.arms.removeAll { it.idx > fk.idx - 12 }
     st.jOpenN = 0
     st.endWay = fk.wayId; st.endDir = fk.dir; st.endX = fk.x; st.endY = fk.y; st.endH = fk.h; st.rem = fk.rem
-    st.jKind = fk.jKind; st.jCi = fk.jCi; st.jSkip = 0.0
+    st.jKind = fk.jKind; st.jCi = fk.jCi; st.jSkip = 0.0; st.jSide = 0; st.jBase = fk.base
     st.prevWay = fk.prevWay; st.prevV = fk.prevV; st.prevD = fk.prevD
     st.dead = false
     st.forks.removeAll { it.idx >= fk.idx }
@@ -614,7 +695,10 @@ object LaneRibbon {
     fun mine(at: Double): Smp? {
       if (!at.isFinite()) return null
       val i = (at - st.first).toInt()
-      for (j in 0..10) (st.smp.getOrNull(i + j)?.takeIf { it.wayId == wayId } ?: st.smp.getOrNull(i - j)?.takeIf { it.wayId == wayId })?.let { return it }
+      fun on(q: Smp?) = q?.takeIf { it.wayId == wayId || it.via == wayId }
+      for (j in 0..10) (on(st.smp.getOrNull(i + j)) ?: on(st.smp.getOrNull(i - j)))?.let { return it }
+      // on a long straight run (a ramp's end taken out over 400 ft) every piece it stands for is the road we're on
+      if (st.smp.getOrNull(i)?.let { it.via != Long.MIN_VALUE } == true) for (j in 11..50) st.smp.getOrNull(i - j)?.takeIf { it.wayId == wayId }?.let { return it }
       return null
     }
     var same = mine(s)
@@ -673,7 +757,8 @@ object LaneRibbon {
     val a = st.smp[i]; val z = st.smp[i + 1]
     if (!a.done || !z.done) return null
     val t = s - st.first - i
-    val laneD = if (held) st.laneD else (an.lane - same.ci) * LW
+    // (by the lanes' numbers along the thread: on a straight run onto the next piece the map still has us on the last)
+    val laneD = if (held) st.laneD else (an.lane + (if (same.wayId == wayId || same.via != wayId) same.gb else same.viaGb) - (if (a.via != Long.MIN_VALUE) a.g else same.g)) * LW
     st.laneD = laneD
     var d = laneD + an.off * (LW / an.wMap)
     // LaneAnchor changing its mind about our lane moves us a whole lane at once (driving across a line does not: there
@@ -688,11 +773,20 @@ object LaneRibbon {
     // LaneAnchor is told which roads we can be on: the thread's around us and the branches of the forks near us. A
     // road that only runs beside ours is taken by it only when nothing else is left.
     val vi = (s - st.first).toInt()
+    val reach = if (a.via != Long.MIN_VALUE) 50 else 12      // (on a straight run: back to the pieces it stands for)
     val can = HashSet<Long>()
-    for (k in max(0, vi - 12)..min(st.smp.size - 1, vi + 70)) can.add(st.smp[k].wayId)
+    for (k in max(0, vi - reach)..min(st.smp.size - 1, vi + 70)) { can.add(st.smp[k].wayId); if (st.smp[k].via != Long.MIN_VALUE) can.add(st.smp[k].via) }
     for (f in st.forks) if (f.idx > s - 40 && f.idx < s + 70) for (o in f.opts) can.add(o[0])
     for (a in st.arms) if (a.idx > s - 20 && a.idx < s + 40) can.add(a.wayId)
     an.expect = can
+    // ... and how the lanes of those roads carry on into one another. It took a lane over from the lanes that were
+    // beside it on the map, and the map ends a ramp at the middle of the road it joins: on the recorded drive we came
+    // down a ramp in its left lane and were put in the middle lane of the road it joined (and slid over there).
+    val nums = HashMap<Long, Int>()
+    fun num(q: Smp) { if (q.wayId !in nums) nums[q.wayId] = q.gb; if (q.via != Long.MIN_VALUE && q.via !in nums) nums[q.via] = q.viaGb }
+    for (k in vi.coerceIn(0, st.smp.size - 1)..min(st.smp.size - 1, vi + 70)) num(st.smp[k])
+    for (k in min(st.smp.size - 1, vi - 1) downTo max(0, vi - reach)) num(st.smp[k])
+    an.laneNums = nums
     val (out, geo) = build(b, st, now, i + t, d, laneD) ?: return null
     val cx = a.sx + (z.sx - a.sx) * t; val cy = a.sy + (z.sy - a.sy) * t
     val f = st.smp[min(st.smp.size - 1, i + 2)].let { if (it.done) it else z }
@@ -701,10 +795,15 @@ object LaneRibbon {
     return LaneFit.Fit(out, pose, odo, now, 0.0, false, 0.0, an.yaw, null, null, 0, 0).also { it.ribbon = geo }
   }
 
-  private fun build(b: LaneMap.Built, st: State, now: Long, van: Double, vanD: Double, laneD: Double): Pair<LaneMap.Built, Geo>? {
+  private fun build(b: LaneMap.Built, st: State, now: Long, vanAt: Double, vanD: Double, laneD: Double): Pair<LaneMap.Built, Geo>? {
     var n = st.smp.indexOfFirst { !it.done }.let { if (it < 0) st.smp.size else it }
+    // drawn from 230 ft behind us on (the scene shows less than that). The thread itself reaches 1000 ft back, for the
+    // forks there - and on a ramp that comes around, that part lay across the road ahead like a street crossing it.
+    val o = max(0, vanAt.toInt() - (BEHIND / STEP).toInt())
+    n -= o
     if (n < 4) return null
-    val sm = st.smp
+    val sm = st.smp.subList(o, o + n)
+    val van = vanAt - o
     // a road that comes back around (a loop ramp crossing over where we are now) is drawn up to where it has turned
     // 100 degrees from our direction: its far part would lie across our own road
     val vi = van.toInt().coerceIn(0, n - 1)
@@ -722,7 +821,7 @@ object LaneRibbon {
       var a = -1
       for (i in 0..n) {
         val ok = i < n && on(sm[i]) && !sm[i].gap
-        if (ok && a < 0) { if (!dash || (st.first + i) % 4 == 0L) a = i }
+        if (ok && a < 0) { if (!dash || (st.first + o + i) % 4 == 0L) a = i }
         if (!ok && a >= 0) {
           if (i - a >= 2) { val xs = FloatArray(i - a); val ys = FloatArray(i - a); for (k in a until i) pt(k, d(sm[k]), xs, ys, k - a); lines.add(LaneMap.MLine(style, xs, ys)) }
           a = -1
@@ -759,7 +858,7 @@ object LaneRibbon {
     // ---------------------------------------------------------------- the roads that leave or cross it
     val vanI = van.toInt()
     for (arm in st.arms) {
-      val at = (arm.idx - st.first).toInt()
+      val at = (arm.idx - st.first).toInt() - o
       if (at !in 0 until n || at < vanI - 12 || at > vanI + 110) continue
       var wi = idx[arm.wayId] ?: continue
       var v = arm.v; var d = arm.d
