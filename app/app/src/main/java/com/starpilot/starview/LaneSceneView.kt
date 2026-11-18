@@ -1071,6 +1071,9 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       }
       n = k
       if (n < 2) return
+      // it starts under the van (drawn a moment behind where the road has us) and is on the lane within 60 ft
+      val r0 = rs[0]
+      for (j in 0 until n) rs[j] -= r0 * exp(-max(0.0, fs[j]) / 6.0)
       to = fs[n - 1]
     } else
     for (k in 0 until n) { val f = k * 2.0; fs[k] = f; rs[k] = LaneFit.interp(xs, ys, f) }
