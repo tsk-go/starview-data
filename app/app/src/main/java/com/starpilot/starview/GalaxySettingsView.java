@@ -1326,6 +1326,7 @@ public final class GalaxySettingsView extends FrameLayout {
         textView.setPadding(this.ui.dp(12), 0, this.ui.dp(4), 0);
         defaultButton(linearLayout2, r);
         linearLayout2.addView(textView);
+        GalaxyMirror.learned(linearLayout2, r);   // Galaxy's learned value beside the slider's (hybrid patch)
         linearLayout.addView(linearLayout2);
         final int round = (int) Math.round((bounds.getMax() - bounds.getMin()) / bounds.getStep());
         final int i = round + (bounds.getAuto() ? 1 : 0);

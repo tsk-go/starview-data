@@ -1,5 +1,24 @@
 {
 "digest": {
+"a|com/starpilot/starview/GalaxySettingsView|<init>(Landroid/content/Context;Lcom/starpilot/starview/CarUi;Lcom/starpilot/starview/GalaxySettingsView$Root;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V": "2e009f2d4ff1",
+"a|com/starpilot/starview/GalaxySettingsView|actionRow(Lcom/starpilot/starview/GalaxyRow;)V": "16b7418e0520",
+"a|com/starpilot/starview/GalaxySettingsView|backBar()V": "82bbdc291165",
+"a|com/starpilot/starview/GalaxySettingsView|confirm(Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V": "490b7cd9f9ff",
+"a|com/starpilot/starview/GalaxySettingsView|defaultButton(Landroid/widget/LinearLayout;Lcom/starpilot/starview/GalaxyRow;)V": "0974aaad2455",
+"a|com/starpilot/starview/GalaxySettingsView|drawRoot(Ljava/lang/String;)V": "880d63f5b48d",
+"a|com/starpilot/starview/GalaxySettingsView|linkCard(Ljava/lang/String;Ljava/lang/String;ZZLcom/starpilot/starview/SettingIcons$Icon;Lkotlin/jvm/functions/Function0;)V": "ed55983da953",
+"a|com/starpilot/starview/GalaxySettingsView|load(Z)V": "e53b831a7555",
+"a|com/starpilot/starview/GalaxySettingsView|previewSound(Lcom/starpilot/starview/GalaxyRow;)V": "f5f15b5de067",
+"a|com/starpilot/starview/GalaxySettingsView|resetDefault(Lcom/starpilot/starview/GalaxyRow;)V": "8cc4f408fdec",
+"a|com/starpilot/starview/GalaxySettingsView|review$lambda$79(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;": "5f7dcc18172b",
+"a|com/starpilot/starview/GalaxySettingsView|review(Lcom/starpilot/starview/GalaxyRow;)V": "b7156fa9844f",
+"a|com/starpilot/starview/GalaxySettingsView|reviewDraft$lambda$74(Lcom/starpilot/starview/GalaxySettingsView;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;": "907fe2ddd641",
+"a|com/starpilot/starview/GalaxySettingsView|reviewDraft(ILorg/json/JSONObject;)V": "713a10ac853f",
+"a|com/starpilot/starview/GalaxySettingsView|saveValue$lambda$66(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;": "63d97ac39fdf",
+"a|com/starpilot/starview/GalaxySettingsView|saveValue(Lcom/starpilot/starview/GalaxyRow;Ljava/lang/String;)V": "3fed4ced98cf",
+"a|com/starpilot/starview/GalaxySettingsView|selectRow$lambda$48(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;)Lkotlin/Unit;": "588eba7dca8d",
+"a|com/starpilot/starview/GalaxySettingsView|sliderRow(Lcom/starpilot/starview/GalaxyRow;)V": "25d1a39c20bb",
+"a|com/starpilot/starview/GalaxySettingsView|switchRow(Lcom/starpilot/starview/GalaxyRow;)V": "580d7e39b8b9",
 "a|com/starpilot/starview/HudEditor|editTab()V": "fbba4a432f97",
 "a|com/starpilot/starview/HudEditor|listRow(Lcom/starpilot/starview/HudLayout$Item;Z)Landroid/view/View;": "f549022effb0",
 "a|com/starpilot/starview/HudEditor|panel$lambda$17(Landroid/content/Context;Lcom/starpilot/starview/HudEditor;)Lkotlin/Unit;": "78b6ab34b068",
@@ -169,6 +188,159 @@
 "a|com/starpilot/starview/VoiceNote|start$lambda$2$lambda$1(Lcom/starpilot/starview/VoiceNote;)V": "7416cc634588",
 "a|com/starpilot/starview/VoiceNote|start$lambda$2(Ljava/io/File;Lcom/starpilot/starview/VoiceNote;Landroid/media/AudioRecord;I)V": "a02e28b31b2a",
 "a|com/starpilot/starview/VoiceNote|start(Ljava/io/File;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": "6bfa924c8711",
+"m|com/starpilot/starview/GalaxyRow$Bounds|<init>(DDDZ)V": "7308170610c3",
+"m|com/starpilot/starview/GalaxyRow$Bounds|getAuto()Z": "44dcc0576881",
+"m|com/starpilot/starview/GalaxyRow$Bounds|getMax()D": "a9676752a496",
+"m|com/starpilot/starview/GalaxyRow$Bounds|getMin()D": "4378fe39411a",
+"m|com/starpilot/starview/GalaxyRow$Bounds|getStep()D": "798ccc9d6e48",
+"m|com/starpilot/starview/GalaxyRow$Companion|<init>()V": "7bc70f2043bb",
+"m|com/starpilot/starview/GalaxyRow$Companion|<init>(Lkotlin/jvm/internal/DefaultConstructorMarker;)V": "a1746c06b593",
+"m|com/starpilot/starview/GalaxyRow$Companion|fmt(D)Ljava/lang/String;": "3c3c04145eb6",
+"m|com/starpilot/starview/GalaxyRow$Companion|isPipCrop(Lcom/starpilot/starview/GalaxyRow;)Z": "c630892f7b77",
+"m|com/starpilot/starview/GalaxyRow$Companion|num(Lorg/json/JSONObject;Ljava/lang/String;)D": "282ba47219f9",
+"m|com/starpilot/starview/GalaxyRow$Companion|parse(Lorg/json/JSONObject;)Ljava/util/List;": "246411555664",
+"m|com/starpilot/starview/GalaxyRow$Companion|snap(DLcom/starpilot/starview/GalaxyRow$Bounds;)D": "1b0193cb2f9b",
+"m|com/starpilot/starview/GalaxyRow$Companion|str(Lorg/json/JSONObject;Ljava/lang/String;)Ljava/lang/String;": "5b586af803e8",
+"m|com/starpilot/starview/GalaxyRow$Companion|visible(Ljava/lang/String;Ljava/util/List;)Ljava/util/List;": "1e1bd15b8836",
+"m|com/starpilot/starview/GalaxyRow$Control|$values()[Lcom/starpilot/starview/GalaxyRow$Control;": "acda6ce49d24",
+"m|com/starpilot/starview/GalaxyRow$Control|<clinit>()V": "9dc55b76e41c",
+"m|com/starpilot/starview/GalaxyRow$Control|<init>(Ljava/lang/String;I)V": "9a1ff94a6977",
+"m|com/starpilot/starview/GalaxyRow$Control|getEntries()Lkotlin/enums/EnumEntries;": "8088eac63c66",
+"m|com/starpilot/starview/GalaxyRow$Control|valueOf(Ljava/lang/String;)Lcom/starpilot/starview/GalaxyRow$Control;": "498dd52c192f",
+"m|com/starpilot/starview/GalaxyRow$Control|values()[Lcom/starpilot/starview/GalaxyRow$Control;": "4ae47ce848c0",
+"m|com/starpilot/starview/GalaxyRow|<clinit>()V": "d8aaade182de",
+"m|com/starpilot/starview/GalaxyRow|<init>(ILorg/json/JSONObject;)V": "5fe647dce9b4",
+"m|com/starpilot/starview/GalaxyRow|bounds()Lcom/starpilot/starview/GalaxyRow$Bounds;": "ca8ce7c8dd24",
+"m|com/starpilot/starview/GalaxyRow|getAction()Z": "5e63f810f720",
+"m|com/starpilot/starview/GalaxyRow|getAvailable()Z": "c6ee399eebce",
+"m|com/starpilot/starview/GalaxyRow|getChoices()Ljava/util/List;": "9946c1061830",
+"m|com/starpilot/starview/GalaxyRow|getConfirm()Z": "8e643c91c2af",
+"m|com/starpilot/starview/GalaxyRow|getControl()Lcom/starpilot/starview/GalaxyRow$Control;": "89dce5d3931d",
+"m|com/starpilot/starview/GalaxyRow|getCoordinate()Ljava/lang/String;": "b11b82daf014",
+"m|com/starpilot/starview/GalaxyRow|getDefaultValue()Ljava/lang/String;": "c1569e81a6fe",
+"m|com/starpilot/starview/GalaxyRow|getEditable()Z": "18a1a566713f",
+"m|com/starpilot/starview/GalaxyRow|getHeading()Z": "32845a090d24",
+"m|com/starpilot/starview/GalaxyRow|getIndex()I": "6366a84e4d5c",
+"m|com/starpilot/starview/GalaxyRow|getLabel()Ljava/lang/String;": "f8295a09d2fb",
+"m|com/starpilot/starview/GalaxyRow|getLaneStrength()Z": "dbd50df4d643",
+"m|com/starpilot/starview/GalaxyRow|getMaximum()D": "55d03a59a127",
+"m|com/starpilot/starview/GalaxyRow|getMinimum()D": "204817ff2350",
+"m|com/starpilot/starview/GalaxyRow|getPage()Ljava/lang/String;": "74080f9b6da0",
+"m|com/starpilot/starview/GalaxyRow|getPreviewSound()Ljava/lang/String;": "f7d45fac2732",
+"m|com/starpilot/starview/GalaxyRow|getReason()Ljava/lang/String;": "83853917a0e1",
+"m|com/starpilot/starview/GalaxyRow|getRepairValue()Ljava/lang/String;": "bab143694e5e",
+"m|com/starpilot/starview/GalaxyRow|getResetAvailable()Z": "974757a23f19",
+"m|com/starpilot/starview/GalaxyRow|getShowDefault()Z": "d8ab4bfc1591",
+"m|com/starpilot/starview/GalaxyRow|getShownReason()Ljava/lang/String;": "728d1d81b475",
+"m|com/starpilot/starview/GalaxyRow|getStep()D": "b9e9c05a36a2",
+"m|com/starpilot/starview/GalaxyRow|getUnit()Ljava/lang/String;": "7aea0120d3d1",
+"m|com/starpilot/starview/GalaxyRow|getValue()Ljava/lang/String;": "e3202786aaca",
+"m|com/starpilot/starview/GalaxyRow|saved(D)Ljava/lang/String;": "825de98a07d7",
+"m|com/starpilot/starview/GalaxyRow|shown$default(Lcom/starpilot/starview/GalaxyRow;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;": "3ba9d8269edb",
+"m|com/starpilot/starview/GalaxyRow|shown(Ljava/lang/String;)Ljava/lang/String;": "df97167f749f",
+"m|com/starpilot/starview/GalaxyRow|withUnit(Ljava/lang/String;)Ljava/lang/String;": "92395d9b30be",
+"m|com/starpilot/starview/GalaxySettingsView$Companion|<init>()V": "7bc70f2043bb",
+"m|com/starpilot/starview/GalaxySettingsView$Companion|<init>(Lkotlin/jvm/internal/DefaultConstructorMarker;)V": "a4dea21d53bb",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Hub|<init>(Ljava/util/List;)V": "377c340b29af",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Hub|getPages()Ljava/util/List;": "95cc02604880",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Page|<init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V": "f311dac5e0aa",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Page|getDesc()Ljava/lang/String;": "58c6cc5d7570",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Page|getLabel()Ljava/lang/String;": "844ee5bad857",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Page|getPage()Ljava/lang/String;": "35f6086b92e3",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Unplaced|<init>(Ljava/util/Set;)V": "286197a54b5f",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Unplaced|getPlaced()Ljava/util/Set;": "40074716965b",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Web|<init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V": "0ab44ecdc4aa",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Web|getDesc()Ljava/lang/String;": "fdc970acbdbf",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Web|getLabel()Ljava/lang/String;": "94349e4210d3",
+"m|com/starpilot/starview/GalaxySettingsView$Entry$Web|getPath()Ljava/lang/String;": "830d8bc961a4",
+"m|com/starpilot/starview/GalaxySettingsView$Entry|<init>()V": "7bc70f2043bb",
+"m|com/starpilot/starview/GalaxySettingsView$Entry|<init>(Lkotlin/jvm/internal/DefaultConstructorMarker;)V": "faf9d8c3e5f5",
+"m|com/starpilot/starview/GalaxySettingsView$Root|<init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)V": "402e7039f567",
+"m|com/starpilot/starview/GalaxySettingsView$Root|<init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V": "6c76ed56cd48",
+"m|com/starpilot/starview/GalaxySettingsView$Root|getEntries()Ljava/util/List;": "0b594897d0cb",
+"m|com/starpilot/starview/GalaxySettingsView$Root|getNote()Ljava/lang/String;": "2d75ad80bdbf",
+"m|com/starpilot/starview/GalaxySettingsView$Root|getPage()Ljava/lang/String;": "ce60f6c129e7",
+"m|com/starpilot/starview/GalaxySettingsView$Root|getTitle()Ljava/lang/String;": "c6853c79c7b2",
+"m|com/starpilot/starview/GalaxySettingsView$WhenMappings|<clinit>()V": "f86e590f238e",
+"m|com/starpilot/starview/GalaxySettingsView$WhenMappings|<init>(Lcom/starpilot/starview/GalaxySettingsView;)V": "dc226a555774",
+"m|com/starpilot/starview/GalaxySettingsView|<clinit>()V": "84ed92aba4ce",
+"m|com/starpilot/starview/GalaxySettingsView|<init>(Landroid/content/Context;Lcom/starpilot/starview/CarUi;Lcom/starpilot/starview/GalaxySettingsView$Root;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V": "4fd4994a2b4f",
+"m|com/starpilot/starview/GalaxySettingsView|<init>(Landroid/content/Context;Lcom/starpilot/starview/CarUi;Lcom/starpilot/starview/GalaxySettingsView$Root;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V": "e3e457c800dc",
+"m|com/starpilot/starview/GalaxySettingsView|actionRow$lambda$61(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;)Lkotlin/Unit;": "3ee055464520",
+"m|com/starpilot/starview/GalaxySettingsView|actionRow(Lcom/starpilot/starview/GalaxyRow;)V": "46bc96e8922e",
+"m|com/starpilot/starview/GalaxySettingsView|back()Z": "9149e05549ef",
+"m|com/starpilot/starview/GalaxySettingsView|backBar()V": "03af5a345b74",
+"m|com/starpilot/starview/GalaxySettingsView|confirm$default(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V": "3cec4fc25292",
+"m|com/starpilot/starview/GalaxySettingsView|confirm$lambda$80()Lkotlin/Unit;": "d3d5e2e3e37d",
+"m|com/starpilot/starview/GalaxySettingsView|confirm$lambda$81(Lcom/starpilot/starview/GalaxySettingsView;Lkotlin/jvm/functions/Function0;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;": "65483ebef37a",
+"m|com/starpilot/starview/GalaxySettingsView|confirm(Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V": "07c1b42ba1c4",
+"m|com/starpilot/starview/GalaxySettingsView|defaultButton$lambda$40(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;)Lkotlin/Unit;": "8fd11ec36c36",
+"m|com/starpilot/starview/GalaxySettingsView|defaultButton(Landroid/widget/LinearLayout;Lcom/starpilot/starview/GalaxyRow;)V": "fcd20c150c45",
+"m|com/starpilot/starview/GalaxySettingsView|desc(Lcom/starpilot/starview/GalaxyRow;)Ljava/lang/String;": "706e37abbbdb",
+"m|com/starpilot/starview/GalaxySettingsView|dim(Landroid/view/View;Lcom/starpilot/starview/GalaxyRow;)V": "a0fdc7bf397e",
+"m|com/starpilot/starview/GalaxySettingsView|draw$lambda$24(Lcom/starpilot/starview/GalaxySettingsView;ILorg/json/JSONObject;)Lkotlin/Unit;": "b986523d2f91",
+"m|com/starpilot/starview/GalaxySettingsView|draw$lambda$26(Lcom/starpilot/starview/GalaxyRow;)Ljava/lang/CharSequence;": "6140202d2965",
+"m|com/starpilot/starview/GalaxySettingsView|draw$lambda$33(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;Ljava/lang/String;)Lkotlin/Unit;": "2f9c609165c1",
+"m|com/starpilot/starview/GalaxySettingsView|draw$lambda$34(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)Lkotlin/Unit;": "b5bebb485a8f",
+"m|com/starpilot/starview/GalaxySettingsView|draw$lambda$35(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)Lkotlin/Unit;": "ce3cebb4e65e",
+"m|com/starpilot/starview/GalaxySettingsView|draw$lambda$36(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)Lkotlin/Unit;": "28d798320f5a",
+"m|com/starpilot/starview/GalaxySettingsView|draw$lambda$37(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)Lkotlin/Unit;": "94cf97c203c6",
+"m|com/starpilot/starview/GalaxySettingsView|draw$lambda$38(Lcom/starpilot/starview/GalaxySettingsView;I)V": "a664ad4c2f1a",
+"m|com/starpilot/starview/GalaxySettingsView|draw(Lorg/json/JSONObject;)V": "39e723f26176",
+"m|com/starpilot/starview/GalaxySettingsView|drawRoot$lambda$11(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;)Lkotlin/Unit;": "9dc50001091e",
+"m|com/starpilot/starview/GalaxySettingsView|drawRoot$lambda$15$lambda$14(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;)Lkotlin/Unit;": "a1552b6fac16",
+"m|com/starpilot/starview/GalaxySettingsView|drawRoot$lambda$16(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)Lkotlin/Unit;": "fe7d306e7e08",
+"m|com/starpilot/starview/GalaxySettingsView|drawRoot$lambda$17(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)Lkotlin/Unit;": "e114fdbab9d6",
+"m|com/starpilot/starview/GalaxySettingsView|drawRoot$lambda$19(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)Lkotlin/Unit;": "61eb3f5ba8fc",
+"m|com/starpilot/starview/GalaxySettingsView|drawRoot(Ljava/lang/String;)V": "1c0b1348064e",
+"m|com/starpilot/starview/GalaxySettingsView|failed(Ljava/lang/String;)V": "4795f25a86ca",
+"m|com/starpilot/starview/GalaxySettingsView|getCurrent()Ljava/lang/String;": "8ba6bc04101c",
+"m|com/starpilot/starview/GalaxySettingsView|getNeedsParked()Z": "2342bd2ddb2c",
+"m|com/starpilot/starview/GalaxySettingsView|hide()V": "4bb377aa5414",
+"m|com/starpilot/starview/GalaxySettingsView|icon(Lcom/starpilot/starview/GalaxyRow;)Landroid/view/View;": "c3fe8d56670e",
+"m|com/starpilot/starview/GalaxySettingsView|jsonValue(Lcom/starpilot/starview/GalaxyRow;Ljava/lang/String;)Ljava/lang/Object;": "499dd96923f9",
+"m|com/starpilot/starview/GalaxySettingsView|linkCard$default(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;Ljava/lang/String;ZZLcom/starpilot/starview/SettingIcons$Icon;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V": "cbfbf567c413",
+"m|com/starpilot/starview/GalaxySettingsView|linkCard$lambda$23(ZLkotlin/jvm/functions/Function0;Landroid/view/View;)V": "4102d4542c47",
+"m|com/starpilot/starview/GalaxySettingsView|linkCard(Ljava/lang/String;Ljava/lang/String;ZZLcom/starpilot/starview/SettingIcons$Icon;Lkotlin/jvm/functions/Function0;)V": "baf427ed51da",
+"m|com/starpilot/starview/GalaxySettingsView|load$lambda$5(Lcom/starpilot/starview/GalaxySettingsView;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;": "177c7810a3ba",
+"m|com/starpilot/starview/GalaxySettingsView|load$lambda$6(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;ZLorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;": "7a71ad2afc9b",
+"m|com/starpilot/starview/GalaxySettingsView|load(Z)V": "a69c394e02d8",
+"m|com/starpilot/starview/GalaxySettingsView|message(Ljava/lang/String;)V": "d4a92e2ca5d7",
+"m|com/starpilot/starview/GalaxySettingsView|open(Ljava/lang/String;)V": "e1ecce6cbd8e",
+"m|com/starpilot/starview/GalaxySettingsView|previewSound$lambda$67(Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;": "2963f0c31a50",
+"m|com/starpilot/starview/GalaxySettingsView|previewSound(Lcom/starpilot/starview/GalaxyRow;)V": "c28b5cd859d1",
+"m|com/starpilot/starview/GalaxySettingsView|readoutRow(Lcom/starpilot/starview/GalaxyRow;)V": "e3900b05f5e1",
+"m|com/starpilot/starview/GalaxySettingsView|resetDefault$lambda$69(Lcom/starpilot/starview/GalaxySettingsView;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;": "23b85e55c51d",
+"m|com/starpilot/starview/GalaxySettingsView|resetDefault(Lcom/starpilot/starview/GalaxyRow;)V": "d466e82b773b",
+"m|com/starpilot/starview/GalaxySettingsView|review$lambda$79$lambda$77(Lcom/starpilot/starview/GalaxySettingsView;Landroid/content/DialogInterface;I)V": "0fc863dfaec4",
+"m|com/starpilot/starview/GalaxySettingsView|review$lambda$79$lambda$78(Lcom/starpilot/starview/GalaxySettingsView;Landroid/content/DialogInterface;)V": "4a234c67a7f0",
+"m|com/starpilot/starview/GalaxySettingsView|review$lambda$79(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;": "0c43c5723705",
+"m|com/starpilot/starview/GalaxySettingsView|review(Lcom/starpilot/starview/GalaxyRow;)V": "d8f50b870be7",
+"m|com/starpilot/starview/GalaxySettingsView|reviewDraft$lambda$74$lambda$72(Lcom/starpilot/starview/GalaxySettingsView;Landroid/content/DialogInterface;I)V": "6b330fd439ad",
+"m|com/starpilot/starview/GalaxySettingsView|reviewDraft$lambda$74$lambda$73(Lcom/starpilot/starview/GalaxySettingsView;Landroid/content/DialogInterface;)V": "ba7ffc70b87e",
+"m|com/starpilot/starview/GalaxySettingsView|reviewDraft$lambda$74(Lcom/starpilot/starview/GalaxySettingsView;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;": "604497410195",
+"m|com/starpilot/starview/GalaxySettingsView|reviewDraft(ILorg/json/JSONObject;)V": "ae48ce8c21b5",
+"m|com/starpilot/starview/GalaxySettingsView|saveValue$lambda$66$lambda$65(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)Lkotlin/Unit;": "b7865aa6cca3",
+"m|com/starpilot/starview/GalaxySettingsView|saveValue$lambda$66(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;": "c10a2e353c28",
+"m|com/starpilot/starview/GalaxySettingsView|saveValue(Lcom/starpilot/starview/GalaxyRow;Ljava/lang/String;)V": "6f3074b63997",
+"m|com/starpilot/starview/GalaxySettingsView|selectRow$lambda$46(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Lkotlin/jvm/internal/Ref$ObjectRef;I)Lkotlin/Unit;": "af1044eb8aaa",
+"m|com/starpilot/starview/GalaxySettingsView|selectRow$lambda$48$lambda$47(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Landroid/content/DialogInterface;I)V": "b9a7b85efd82",
+"m|com/starpilot/starview/GalaxySettingsView|selectRow$lambda$48(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;)Lkotlin/Unit;": "9747a4d49ffd",
+"m|com/starpilot/starview/GalaxySettingsView|selectRow(Lcom/starpilot/starview/GalaxyRow;)V": "07905c2c93e5",
+"m|com/starpilot/starview/GalaxySettingsView|show()V": "e3362e258222",
+"m|com/starpilot/starview/GalaxySettingsView|sliderRow$commit(Ljava/lang/String;Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow$Bounds;II)V": "bd08c02bdc16",
+"m|com/starpilot/starview/GalaxySettingsView|sliderRow$lambda$55(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Landroid/widget/SeekBar;Ljava/lang/String;Lcom/starpilot/starview/GalaxyRow$Bounds;I)Lkotlin/Unit;": "467cbf273272",
+"m|com/starpilot/starview/GalaxySettingsView|sliderRow$lambda$57(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Landroid/widget/SeekBar;ILjava/lang/String;Lcom/starpilot/starview/GalaxyRow$Bounds;I)Lkotlin/Unit;": "b46c1f6a3cbf",
+"m|com/starpilot/starview/GalaxySettingsView|sliderRow$posOf(ILcom/starpilot/starview/GalaxyRow$Bounds;ILjava/lang/String;)I": "fd076a577acb",
+"m|com/starpilot/starview/GalaxySettingsView|sliderRow$valueAt(Lcom/starpilot/starview/GalaxyRow$Bounds;II)Ljava/lang/String;": "749f9fc8a292",
+"m|com/starpilot/starview/GalaxySettingsView|sliderRow(Lcom/starpilot/starview/GalaxyRow;)V": "8db972a76e6b",
+"m|com/starpilot/starview/GalaxySettingsView|switchRow$lambda$43(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Landroid/widget/CompoundButton;Z)V": "6b277633348f",
+"m|com/starpilot/starview/GalaxySettingsView|switchRow(Lcom/starpilot/starview/GalaxyRow;)V": "e4c780a328fc",
+"m|com/starpilot/starview/GalaxySettingsView|tag(Lcom/starpilot/starview/GalaxyRow;)Ljava/lang/String;": "424d20a9a61e",
+"m|com/starpilot/starview/GalaxySettingsView|titleOf(Ljava/lang/String;)Ljava/lang/String;": "302cda472d64",
+"m|com/starpilot/starview/GalaxySettingsView|vasmEditorRow(Lorg/json/JSONObject;)I": "a7354bb1498d",
+"m|com/starpilot/starview/GalaxySettingsView|viewId()Ljava/lang/String;": "50014ab11b5a",
+"m|com/starpilot/starview/GalaxySettingsView|webIcon(Ljava/lang/String;)Lcom/starpilot/starview/SettingIcons$Icon;": "151745ce3128",
 "m|com/starpilot/starview/HudEditor$Preview|<init>(Lcom/starpilot/starview/HudEditor;Landroid/content/Context;)V": "e7a46d645680",
 "m|com/starpilot/starview/HudEditor$Preview|box(Lcom/starpilot/starview/HudLayout$Item;)Landroid/graphics/RectF;": "b0950a661594",
 "m|com/starpilot/starview/HudEditor$Preview|hit(FF)Lcom/starpilot/starview/HudLayout$Item;": "0ec4ca4975b3",
@@ -1278,6 +1450,719 @@
 "m|com/starpilot/starview/WheelButton|setT(Lcom/starpilot/starview/Telemetry;)V": "0b807113c0e6"
 },
 "members": {
+"com/starpilot/starview/GalaxyRow": {
+"f": [
+"Companion:Lcom/starpilot/starview/GalaxyRow$Companion;",
+"action:Z",
+"available:Z",
+"choices:Ljava/util/List;",
+"confirm:Z",
+"control:Lcom/starpilot/starview/GalaxyRow$Control;",
+"coordinate:Ljava/lang/String;",
+"defaultValue:Ljava/lang/String;",
+"heading:Z",
+"index:I",
+"label:Ljava/lang/String;",
+"laneStrength:Z",
+"maximum:D",
+"minimum:D",
+"page:Ljava/lang/String;",
+"previewSound:Ljava/lang/String;",
+"reason:Ljava/lang/String;",
+"repairValue:Ljava/lang/String;",
+"resetAvailable:Z",
+"step:D",
+"unit:Ljava/lang/String;",
+"value:Ljava/lang/String;"
+],
+"m": [
+"<clinit>()V",
+"<init>(ILorg/json/JSONObject;)V",
+"bounds()Lcom/starpilot/starview/GalaxyRow$Bounds;",
+"getAction()Z",
+"getAvailable()Z",
+"getChoices()Ljava/util/List;",
+"getConfirm()Z",
+"getControl()Lcom/starpilot/starview/GalaxyRow$Control;",
+"getCoordinate()Ljava/lang/String;",
+"getDefaultValue()Ljava/lang/String;",
+"getEditable()Z",
+"getHeading()Z",
+"getIndex()I",
+"getLabel()Ljava/lang/String;",
+"getLaneStrength()Z",
+"getMaximum()D",
+"getMinimum()D",
+"getPage()Ljava/lang/String;",
+"getPreviewSound()Ljava/lang/String;",
+"getReason()Ljava/lang/String;",
+"getRepairValue()Ljava/lang/String;",
+"getResetAvailable()Z",
+"getShowDefault()Z",
+"getShownReason()Ljava/lang/String;",
+"getStep()D",
+"getUnit()Ljava/lang/String;",
+"getValue()Ljava/lang/String;",
+"saved(D)Ljava/lang/String;",
+"shown$default(Lcom/starpilot/starview/GalaxyRow;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;",
+"shown(Ljava/lang/String;)Ljava/lang/String;",
+"withUnit(Ljava/lang/String;)Ljava/lang/String;"
+]
+},
+"com/starpilot/starview/GalaxyRow$Bounds": {
+"f": [
+"auto:Z",
+"max:D",
+"min:D",
+"step:D"
+],
+"m": [
+"<init>(DDDZ)V",
+"getAuto()Z",
+"getMax()D",
+"getMin()D",
+"getStep()D"
+]
+},
+"com/starpilot/starview/GalaxyRow$Companion": {
+"f": [],
+"m": [
+"<init>()V",
+"<init>(Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+"fmt(D)Ljava/lang/String;",
+"isPipCrop(Lcom/starpilot/starview/GalaxyRow;)Z",
+"num(Lorg/json/JSONObject;Ljava/lang/String;)D",
+"parse(Lorg/json/JSONObject;)Ljava/util/List;",
+"snap(DLcom/starpilot/starview/GalaxyRow$Bounds;)D",
+"str(Lorg/json/JSONObject;Ljava/lang/String;)Ljava/lang/String;",
+"visible(Ljava/lang/String;Ljava/util/List;)Ljava/util/List;"
+]
+},
+"com/starpilot/starview/GalaxyRow$Control": {
+"f": [
+"$ENTRIES:Lkotlin/enums/EnumEntries;",
+"$VALUES:[Lcom/starpilot/starview/GalaxyRow$Control;",
+"ACTION:Lcom/starpilot/starview/GalaxyRow$Control;",
+"GROUP:Lcom/starpilot/starview/GalaxyRow$Control;",
+"READOUT:Lcom/starpilot/starview/GalaxyRow$Control;",
+"SELECT:Lcom/starpilot/starview/GalaxyRow$Control;",
+"SLIDER:Lcom/starpilot/starview/GalaxyRow$Control;",
+"SWITCH:Lcom/starpilot/starview/GalaxyRow$Control;"
+],
+"m": [
+"$values()[Lcom/starpilot/starview/GalaxyRow$Control;",
+"<clinit>()V",
+"<init>(Ljava/lang/String;I)V",
+"getEntries()Lkotlin/enums/EnumEntries;",
+"valueOf(Ljava/lang/String;)Lcom/starpilot/starview/GalaxyRow$Control;",
+"values()[Lcom/starpilot/starview/GalaxyRow$Control;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView": {
+"f": [
+"Companion:Lcom/starpilot/starview/GalaxySettingsView$Companion;",
+"REFRESH_MS:J",
+"busy:Z",
+"col:Landroid/widget/LinearLayout;",
+"data:Lorg/json/JSONObject;",
+"footer:Lkotlin/jvm/functions/Function1;",
+"g:Lcom/starpilot/starview/Galaxy7;",
+"hub:Lorg/json/JSONObject;",
+"lastShown:Ljava/lang/String;",
+"main:Landroid/os/Handler;",
+"openWeb:Lkotlin/jvm/functions/Function2;",
+"pageExtras:Lkotlin/jvm/functions/Function2;",
+"poll:Ljava/lang/Runnable;",
+"root:Lcom/starpilot/starview/GalaxySettingsView$Root;",
+"scroll:Landroid/widget/ScrollView;",
+"stack:Ljava/util/ArrayList;",
+"titles:Ljava/util/HashMap;",
+"touching:Z",
+"ui:Lcom/starpilot/starview/CarUi;",
+"vasmCard:Lcom/starpilot/starview/VasmEditorCard;",
+"visible:Z"
+],
+"m": [
+"-$$Nest$fgetbusy(Lcom/starpilot/starview/GalaxySettingsView;)Z",
+"-$$Nest$fgetmain(Lcom/starpilot/starview/GalaxySettingsView;)Landroid/os/Handler;",
+"-$$Nest$fgettouching(Lcom/starpilot/starview/GalaxySettingsView;)Z",
+"-$$Nest$fgetvisible(Lcom/starpilot/starview/GalaxySettingsView;)Z",
+"-$$Nest$fputtouching(Lcom/starpilot/starview/GalaxySettingsView;Z)V",
+"<clinit>()V",
+"<init>(Landroid/content/Context;Lcom/starpilot/starview/CarUi;Lcom/starpilot/starview/GalaxySettingsView$Root;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V",
+"<init>(Landroid/content/Context;Lcom/starpilot/starview/CarUi;Lcom/starpilot/starview/GalaxySettingsView$Root;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V",
+"actionRow$lambda$61(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;)Lkotlin/Unit;",
+"actionRow(Lcom/starpilot/starview/GalaxyRow;)V",
+"back()Z",
+"backBar()V",
+"confirm$default(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V",
+"confirm$lambda$80()Lkotlin/Unit;",
+"confirm$lambda$81(Lcom/starpilot/starview/GalaxySettingsView;Lkotlin/jvm/functions/Function0;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;",
+"confirm(Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V",
+"defaultButton$lambda$40(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;)Lkotlin/Unit;",
+"defaultButton(Landroid/widget/LinearLayout;Lcom/starpilot/starview/GalaxyRow;)V",
+"desc(Lcom/starpilot/starview/GalaxyRow;)Ljava/lang/String;",
+"dim(Landroid/view/View;Lcom/starpilot/starview/GalaxyRow;)V",
+"draw$lambda$24(Lcom/starpilot/starview/GalaxySettingsView;ILorg/json/JSONObject;)Lkotlin/Unit;",
+"draw$lambda$26(Lcom/starpilot/starview/GalaxyRow;)Ljava/lang/CharSequence;",
+"draw$lambda$33(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;Ljava/lang/String;)Lkotlin/Unit;",
+"draw$lambda$34(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)Lkotlin/Unit;",
+"draw$lambda$35(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)Lkotlin/Unit;",
+"draw$lambda$36(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)Lkotlin/Unit;",
+"draw$lambda$37(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)Lkotlin/Unit;",
+"draw$lambda$38(Lcom/starpilot/starview/GalaxySettingsView;I)V",
+"draw(Lorg/json/JSONObject;)V",
+"drawRoot$lambda$11(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;)Lkotlin/Unit;",
+"drawRoot$lambda$15$lambda$14(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;)Lkotlin/Unit;",
+"drawRoot$lambda$16(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)Lkotlin/Unit;",
+"drawRoot$lambda$17(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)Lkotlin/Unit;",
+"drawRoot$lambda$19(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)Lkotlin/Unit;",
+"drawRoot(Ljava/lang/String;)V",
+"failed(Ljava/lang/String;)V",
+"getCurrent()Ljava/lang/String;",
+"getNeedsParked()Z",
+"hide()V",
+"icon(Lcom/starpilot/starview/GalaxyRow;)Landroid/view/View;",
+"jsonValue(Lcom/starpilot/starview/GalaxyRow;Ljava/lang/String;)Ljava/lang/Object;",
+"linkCard$default(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;Ljava/lang/String;ZZLcom/starpilot/starview/SettingIcons$Icon;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V",
+"linkCard$lambda$23(ZLkotlin/jvm/functions/Function0;Landroid/view/View;)V",
+"linkCard(Ljava/lang/String;Ljava/lang/String;ZZLcom/starpilot/starview/SettingIcons$Icon;Lkotlin/jvm/functions/Function0;)V",
+"load$lambda$5(Lcom/starpilot/starview/GalaxySettingsView;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;",
+"load$lambda$6(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;ZLorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;",
+"load(Z)V",
+"message(Ljava/lang/String;)V",
+"open(Ljava/lang/String;)V",
+"previewSound$lambda$67(Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;",
+"previewSound(Lcom/starpilot/starview/GalaxyRow;)V",
+"readoutRow(Lcom/starpilot/starview/GalaxyRow;)V",
+"resetDefault$lambda$69(Lcom/starpilot/starview/GalaxySettingsView;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;",
+"resetDefault(Lcom/starpilot/starview/GalaxyRow;)V",
+"review$lambda$79$lambda$77(Lcom/starpilot/starview/GalaxySettingsView;Landroid/content/DialogInterface;I)V",
+"review$lambda$79$lambda$78(Lcom/starpilot/starview/GalaxySettingsView;Landroid/content/DialogInterface;)V",
+"review$lambda$79(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;",
+"review(Lcom/starpilot/starview/GalaxyRow;)V",
+"reviewDraft$lambda$74$lambda$72(Lcom/starpilot/starview/GalaxySettingsView;Landroid/content/DialogInterface;I)V",
+"reviewDraft$lambda$74$lambda$73(Lcom/starpilot/starview/GalaxySettingsView;Landroid/content/DialogInterface;)V",
+"reviewDraft$lambda$74(Lcom/starpilot/starview/GalaxySettingsView;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;",
+"reviewDraft(ILorg/json/JSONObject;)V",
+"saveValue$lambda$66$lambda$65(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)Lkotlin/Unit;",
+"saveValue$lambda$66(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;Lorg/json/JSONObject;Ljava/lang/String;)Lkotlin/Unit;",
+"saveValue(Lcom/starpilot/starview/GalaxyRow;Ljava/lang/String;)V",
+"selectRow$lambda$46(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Lkotlin/jvm/internal/Ref$ObjectRef;I)Lkotlin/Unit;",
+"selectRow$lambda$48$lambda$47(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Landroid/content/DialogInterface;I)V",
+"selectRow$lambda$48(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;)Lkotlin/Unit;",
+"selectRow(Lcom/starpilot/starview/GalaxyRow;)V",
+"show()V",
+"sliderRow$commit(Ljava/lang/String;Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow$Bounds;II)V",
+"sliderRow$lambda$55(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Landroid/widget/SeekBar;Ljava/lang/String;Lcom/starpilot/starview/GalaxyRow$Bounds;I)Lkotlin/Unit;",
+"sliderRow$lambda$57(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Landroid/widget/SeekBar;ILjava/lang/String;Lcom/starpilot/starview/GalaxyRow$Bounds;I)Lkotlin/Unit;",
+"sliderRow$posOf(ILcom/starpilot/starview/GalaxyRow$Bounds;ILjava/lang/String;)I",
+"sliderRow$valueAt(Lcom/starpilot/starview/GalaxyRow$Bounds;II)Ljava/lang/String;",
+"sliderRow(Lcom/starpilot/starview/GalaxyRow;)V",
+"switchRow$lambda$43(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Landroid/widget/CompoundButton;Z)V",
+"switchRow(Lcom/starpilot/starview/GalaxyRow;)V",
+"tag(Lcom/starpilot/starview/GalaxyRow;)Ljava/lang/String;",
+"titleOf(Ljava/lang/String;)Ljava/lang/String;",
+"vasmEditorRow(Lorg/json/JSONObject;)I",
+"viewId()Ljava/lang/String;",
+"webIcon(Ljava/lang/String;)Lcom/starpilot/starview/SettingIcons$Icon;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$$ExternalSyntheticLambda10": {
+"f": [],
+"m": [
+"<init>()V",
+"invoke(Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$$ExternalSyntheticLambda12": {
+"f": [
+"f$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$$ExternalSyntheticLambda13": {
+"f": [
+"f$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"invoke(Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$$ExternalSyntheticLambda14": {
+"f": [
+"f$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"f$1:Lcom/starpilot/starview/GalaxyRow;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$$ExternalSyntheticLambda15": {
+"f": [
+"f$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"f$1:Lcom/starpilot/starview/GalaxySettingsView$Entry;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$$ExternalSyntheticLambda16": {
+"f": [
+"f$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"f$1:Lcom/starpilot/starview/GalaxySettingsView$Entry;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$$ExternalSyntheticLambda17": {
+"f": [
+"f$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"f$1:I"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;I)V",
+"run()V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$$ExternalSyntheticLambda20": {
+"f": [
+"f$0:Lcom/starpilot/starview/GalaxyRow;",
+"f$1:Lcom/starpilot/starview/GalaxySettingsView;",
+"f$2:Lkotlin/jvm/internal/Ref$ObjectRef;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;Lkotlin/jvm/internal/Ref$ObjectRef;)V",
+"invoke(Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$$ExternalSyntheticLambda21": {
+"f": [
+"f$0:Lcom/starpilot/starview/GalaxyRow;",
+"f$1:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$$ExternalSyntheticLambda26": {
+"f": [],
+"m": [
+"<init>()V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$$ExternalSyntheticLambda9": {
+"f": [
+"f$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"f$1:I"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;I)V",
+"invoke(Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$1": {
+"f": [
+"this$0$:Lcom/starpilot/starview/GalaxySettingsView;",
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"run()V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$10": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$enabled:Z",
+"val$onClick:Lkotlin/jvm/functions/Function0;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;ZLkotlin/jvm/functions/Function0;)V",
+"onClick(Landroid/view/View;)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$11": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$r:Lcom/starpilot/starview/GalaxyRow;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$12": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$r:Lcom/starpilot/starview/GalaxyRow;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)V",
+"onCheckedChanged(Landroid/widget/CompoundButton;Z)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$13": {
+"f": [
+"val$$r:Lcom/starpilot/starview/GalaxyRow;",
+"val$this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxySettingsView;)V",
+"onClick(Landroid/content/DialogInterface;I)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$14": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$bounds:Lcom/starpilot/starview/GalaxyRow$Bounds;",
+"val$r:Lcom/starpilot/starview/GalaxyRow;",
+"val$round:I",
+"val$seekBar:Landroid/widget/SeekBar;",
+"val$shown$default:Ljava/lang/String;",
+"val$textView:Landroid/widget/TextView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Landroid/widget/TextView;Lcom/starpilot/starview/GalaxyRow;Lcom/starpilot/starview/GalaxyRow$Bounds;ILjava/lang/String;Landroid/widget/SeekBar;)V",
+"onProgressChanged(Landroid/widget/SeekBar;IZ)V",
+"onStartTrackingTouch(Landroid/widget/SeekBar;)V",
+"onStopTrackingTouch(Landroid/widget/SeekBar;)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$15": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$bounds:Lcom/starpilot/starview/GalaxyRow$Bounds;",
+"val$r:Lcom/starpilot/starview/GalaxyRow;",
+"val$round:I",
+"val$seekBar:Landroid/widget/SeekBar;",
+"val$shown$default:Ljava/lang/String;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;Landroid/widget/SeekBar;Ljava/lang/String;Lcom/starpilot/starview/GalaxyRow$Bounds;I)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$16": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$bounds:Lcom/starpilot/starview/GalaxyRow$Bounds;",
+"val$i:I",
+"val$r:Lcom/starpilot/starview/GalaxyRow;",
+"val$round:I",
+"val$seekBar:Landroid/widget/SeekBar;",
+"val$shown$default:Ljava/lang/String;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;Landroid/widget/SeekBar;ILjava/lang/String;Lcom/starpilot/starview/GalaxyRow$Bounds;I)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$17": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$r:Lcom/starpilot/starview/GalaxyRow;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$18": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$r:Lcom/starpilot/starview/GalaxyRow;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)V",
+"invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$19": {
+"f": [
+"val$$r:Lcom/starpilot/starview/GalaxyRow;",
+"val$this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$2": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$20": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$21": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$22": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$23": {
+"f": [
+"val$this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"onCancel(Landroid/content/DialogInterface;)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$24": {
+"f": [
+"val$this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"onClick(Landroid/content/DialogInterface;I)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$25": {
+"f": [
+"val$intent$f1:Ljava/lang/String;",
+"val$this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;)V",
+"onClick(Landroid/content/DialogInterface;I)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$26": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$r:Lcom/starpilot/starview/GalaxyRow;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)V",
+"invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$27": {
+"f": [
+"val$this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"onCancel(Landroid/content/DialogInterface;)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$28": {
+"f": [
+"val$this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"onClick(Landroid/content/DialogInterface;I)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$29": {
+"f": [
+"val$intent$f:Ljava/lang/String;",
+"val$this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;)V",
+"onClick(Landroid/content/DialogInterface;I)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$3": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$page:Ljava/lang/String;",
+"val$quiet:Z"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;Z)V",
+"invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$30": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$saved:Lkotlin/jvm/functions/Function0;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lkotlin/jvm/functions/Function0;)V",
+"invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$4": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"onClick(Landroid/view/View;)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$5": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V",
+"invoke(Ljava/lang/Object;)Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$6": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$p:Ljava/lang/String;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Ljava/lang/String;)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$7": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$e$f1:Lcom/starpilot/starview/GalaxySettingsView$Entry;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$8": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$e$f:Lcom/starpilot/starview/GalaxySettingsView$Entry;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxySettingsView$Entry;)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$9": {
+"f": [
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;",
+"val$r3:Lcom/starpilot/starview/GalaxyRow;"
+],
+"m": [
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;Lcom/starpilot/starview/GalaxyRow;)V",
+"invoke()Ljava/lang/Object;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$Companion": {
+"f": [],
+"m": [
+"<init>()V",
+"<init>(Lkotlin/jvm/internal/DefaultConstructorMarker;)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$Entry": {
+"f": [],
+"m": [
+"<init>()V",
+"<init>(Lkotlin/jvm/internal/DefaultConstructorMarker;)V"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$Entry$Hub": {
+"f": [
+"pages:Ljava/util/List;"
+],
+"m": [
+"<init>(Ljava/util/List;)V",
+"getPages()Ljava/util/List;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$Entry$Page": {
+"f": [
+"desc:Ljava/lang/String;",
+"label:Ljava/lang/String;",
+"page:Ljava/lang/String;"
+],
+"m": [
+"<init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+"getDesc()Ljava/lang/String;",
+"getLabel()Ljava/lang/String;",
+"getPage()Ljava/lang/String;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$Entry$Unplaced": {
+"f": [
+"placed:Ljava/util/Set;"
+],
+"m": [
+"<init>(Ljava/util/Set;)V",
+"getPlaced()Ljava/util/Set;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$Entry$Web": {
+"f": [
+"desc:Ljava/lang/String;",
+"label:Ljava/lang/String;",
+"path:Ljava/lang/String;"
+],
+"m": [
+"<init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+"getDesc()Ljava/lang/String;",
+"getLabel()Ljava/lang/String;",
+"getPath()Ljava/lang/String;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$Root": {
+"f": [
+"entries:Ljava/util/List;",
+"note:Ljava/lang/String;",
+"page:Ljava/lang/String;",
+"title:Ljava/lang/String;"
+],
+"m": [
+"<init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)V",
+"<init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V",
+"getEntries()Ljava/util/List;",
+"getNote()Ljava/lang/String;",
+"getPage()Ljava/lang/String;",
+"getTitle()Ljava/lang/String;"
+]
+},
+"com/starpilot/starview/GalaxySettingsView$WhenMappings": {
+"f": [
+"$EnumSwitchMapping$0:[I",
+"this$0:Lcom/starpilot/starview/GalaxySettingsView;"
+],
+"m": [
+"<clinit>()V",
+"<init>(Lcom/starpilot/starview/GalaxySettingsView;)V"
+]
+},
 "com/starpilot/starview/HudEditor": {
 "f": [
 "content:Landroid/widget/LinearLayout;",

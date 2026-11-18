@@ -82,6 +82,14 @@ ahead was laid N times" (once, plus once per fork really taken the other way) an
 A film for the owner: `ffmpeg -framerate 10 -i OUT/<name>_before/%04d.png -framerate 10 -i OUT/<name>_anchor/%04d.png
 -filter_complex "[0]scale=960:600[a];[1]scale=960:600[b];[a][b]vstack" -pix_fmt yuv420p film.mp4`.
 
+## `render/GalaxyRowsTest.kt`: Galaxy's settings rows (2.90.1)
+
+GalaxyMirror on rows built the way Galaxy's `settings.py` `_projection` sends them: the global acceleration / deceleration
+profile selectors (`displayScale` "selected-profile": "StarPilot Default" shown as "Normal", not offered, the Default
+button by the saved values) and a Developer Parameters slider's `learnedValue`; `page()` draws a page with them through
+GalaxySettingsView's own `draw` into `OUT/galaxy_rows.png`. Set up like PicTest, then `PIC_OUT=OUT ./gradlew
+:app:testDebugUnitTest --offline --rerun --tests com.starpilot.starview.GalaxyRowsTest`.
+
 ## `unit/`: plain JVM tests of single pieces
 
 `SceneSteadyTest.kt`, `LaneAnchorTest.kt`, `LaneRibbonTest.kt` (2.90.0, the Scene view; Robolectric as for PicTest, no

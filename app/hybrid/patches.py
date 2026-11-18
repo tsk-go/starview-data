@@ -181,4 +181,12 @@ PATCHES = {
     ('    :cond_4\n',
      '    :cond_4\n    iget-object v1, v4, Lkotlin/jvm/internal/Ref$ObjectRef;->element:Ljava/lang/Object;\n    check-cast v1, Lcom/starpilot/starview/SharedPlace$Place;\n    invoke-static {p0, v1}, Lcom/starpilot/starview/GoogleMaps;->shared(Ljava/lang/String;Lcom/starpilot/starview/SharedPlace$Place;)Lcom/starpilot/starview/SharedPlace$Place;\n    move-result-object v1\n    iput-object v1, v4, Lkotlin/jvm/internal/Ref$ObjectRef;->element:Ljava/lang/Object;\n'),
   ],
+  ('GalaxyRow', '<init>(ILorg/json/JSONObject;)V'): [
+    ('    iput p1, p0, Lcom/starpilot/starview/GalaxyRow;->index:I\n',
+     '    iput p1, p0, Lcom/starpilot/starview/GalaxyRow;->index:I\n    invoke-static {p0, p2}, Lcom/starpilot/starview/GalaxyMirror;->row(Lcom/starpilot/starview/GalaxyRow;Lorg/json/JSONObject;)Lorg/json/JSONObject;\n    move-result-object p2\n'),
+  ],
+  ('GalaxySettingsView', 'sliderRow(Lcom/starpilot/starview/GalaxyRow;)V'): [
+    ('    invoke-virtual {v13, v0}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V\n',
+     '    invoke-virtual {v13, v0}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V\n\n    invoke-static {v13, v9}, Lcom/starpilot/starview/GalaxyMirror;->learned(Landroid/widget/LinearLayout;Lcom/starpilot/starview/GalaxyRow;)V\n'),
+  ],
 }
