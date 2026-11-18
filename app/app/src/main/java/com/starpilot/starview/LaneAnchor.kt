@@ -101,18 +101,27 @@ object LaneAnchor {
     internal var odo: DoubleArray? = null
     internal var built: LaneMap.Built? = null
     internal var reach: Set<Long>? = null
+    // for LaneRibbon: the road piece and lane we're on, the point of that lane's middle beside us, its width on the map
+    internal var wayIdx = -1
+    internal var mlane: LaneMap.MLane? = null
+    internal var px = 0.0; internal var py = 0.0
+    internal var wMap = 3.6
     /** the lane drawn and how sure (for the tests and the developer's line) */
     val lane: Int get() = shown
     val sure: Double get() = p.getOrElse(shown) { 0.0 }
   }
 
   private val live = State()
+  private val ribbon = LaneRibbon.State()
 
   /** LaneFit's worker thread, after its own fit. */
   internal fun tick(b: LaneMap.Built, gps: LaneFit.Pose, acc: Double, cam: LaneFit.Cam, odo: DoubleArray, now: Long, hint: LaneSceneView.Lanes?) {
     val shift = pendingShift
     pendingShift = 0
-    fit = try { run(b, gps, acc, cam, odo, now, live, hint, marks, shift) } catch (e: Throwable) { android.util.Log.w("StarView/LaneAnchor", "run", e); null }
+    fit = try {
+      // where we are (which road, which lane), then the road drawn around it (LaneRibbon)
+      if (run(b, gps, acc, cam, odo, now, live, hint, marks, shift) == null) null else LaneRibbon.update(b, live, ribbon, cam, odo, now)
+    } catch (e: Throwable) { android.util.Log.w("StarView/LaneAnchor", "run", e); null }
   }
 
   private class Cand(val wi: Int, val lane: LaneMap.MLane, val pr: Proj)
@@ -267,12 +276,13 @@ object LaneAnchor {
     val f = LaneFit.Fit(b, pose, odo, now, 0.0, false, 0.0, st.yaw, match, rc, nl, ne)
     st.wayId = w.id; st.p = p; st.lat = lat; st.shown = shown; st.lastMs = now; st.pose = pose; st.odo = odo; st.built = b
     st.reach = f.reachIds
+    st.wayIdx = bestWay; st.mlane = c.lane; st.px = c.pr.cx; st.py = c.pr.cy; st.wMap = wMap
     status = String.format(java.util.Locale.US, "lane %d of %d (%.0f %%) on %s, %+.1f m in it%s", shown + 1, n, p[shown] * 100,
       w.name.ifEmpty { w.hw }, st.off, if (same.size != n) " ?" else "")
     return f
   }
 
-  private fun reset(st: State) { st.farMs = 0L; st.pose = null; st.p = DoubleArray(0); st.shown = -1; st.cand = -1; st.wayId = Long.MIN_VALUE; st.reach = null }
+  private fun reset(st: State) { st.mlane = null; st.wayIdx = -1; st.farMs = 0L; st.pose = null; st.p = DoubleArray(0); st.shown = -1; st.cand = -1; st.wayId = Long.MIN_VALUE; st.reach = null }
 
   private fun norm(p: DoubleArray) {
     var s = 0.0

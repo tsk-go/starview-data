@@ -279,22 +279,33 @@ object SceneSteady {
 
     companion object { const val TAU = 0.45; const val RATE = 1.3 }
 
+    /** a fit's place now. On LaneRibbon's road: as far further along that road as the car has driven since, in the
+     *  same place across it - the van stays in its lane round a bend between two fits. Else by the car's own motion. */
+    private fun carried(f: LaneFit.Fit, odoNow: DoubleArray): LaneFit.Pose {
+      val g = f.ribbon
+      if (g != null && odoNow.size > 3 && f.odo.size > 3) g.poseAt(odoNow[3] - f.odo[3], f.dh)?.let { return it }
+      return LaneFit.carry(f.pose, f.odo, odoNow)
+    }
+
     fun pose(f: LaneFit.Fit, odoNow: DoubleArray, nowNs: Long): LaneFit.Pose {
-      val p = LaneFit.carry(f.pose, f.odo, odoNow)
+      val p = carried(f, odoNow)
       val dt = if (lastNs == 0L) 0.0 else ((nowNs - lastNs) / 1e9).coerceIn(0.0, 0.5)
       lastNs = nowNs
       // let the remaining difference out
       val d = hypot(ox, oy)
       if (d > 1e-9 || oh != 0.0) {
-        val k = exp(-dt / TAU)
-        val left = max(d * k, d - RATE * dt)        // whichever is slower
+        // on LaneRibbon's road our place is steady by the way it is worked out (a lane, and the camera's place in it):
+        // it is followed closely - sliding it in slowly left the van trailing beside its lane round every bend
+        val tight = f.ribbon != null
+        val k = exp(-dt / (if (tight) 0.12 else TAU))
+        val left = if (tight) d * k else max(d * k, d - RATE * dt)        // whichever is slower
         val s = if (d > 1e-9) left / d else 0.0
         ox *= s; oy *= s; oh *= k
       }
       val l = last
       if (l !== f) {
         if (l != null && !l.hidden && LaneFit.sameFrame(l.built, f.built)) {
-          val q = LaneFit.carry(l.pose, l.odo, odoNow)
+          val q = carried(l, odoNow)
           val dx = q.x - p.x + ox; val dy = q.y - p.y + oy
           val dh = Math.IEEEremainder(q.h - p.h, 2 * Math.PI) + oh
           if (hypot(dx, dy) < 6.0 && abs(dh) < 0.2) { ox = dx; oy = dy; oh = dh } else { ox = 0.0; oy = 0.0; oh = 0.0 }

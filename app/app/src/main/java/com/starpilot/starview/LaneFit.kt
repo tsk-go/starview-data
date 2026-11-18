@@ -45,12 +45,14 @@ object LaneFit {
 
   /** openpilot's lane lines (0..3, left to right) and road edges (0 left, 1 right): metres ahead / right */
   class Cam(val lx: Array<FloatArray>, val ly: Array<FloatArray>, val lp: FloatArray, val ex: Array<FloatArray>,
-            val ey: Array<FloatArray>, val estd: FloatArray) {
+            val ey: Array<FloatArray>, val estd: FloatArray,
+            /** 2.90.0: the path openpilot means to drive (m ahead / right), for LaneRibbon's forks */
+            val pathX: FloatArray? = null, val pathY: FloatArray? = null) {
     companion object {
       fun of(m: ModelSnapshot): Cam? {
         val lx = m.laneX; val ly = m.laneY
         if (lx.size < 4 || ly.size < 4 || lx[0].size < 2) return null
-        return Cam(lx, ly, m.laneProb, m.edgeX, m.edgeY, m.edgeStd)
+        return Cam(lx, ly, m.laneProb, m.edgeX, m.edgeY, m.edgeStd, m.posX, m.posY)
       }
     }
   }
@@ -69,6 +71,8 @@ object LaneFit {
      *  like the bridge's other level, looks the same to the camera) */
     /** 2.90.0: on a fit that didn't line up (hidden): the last one that did, to come back to the same place */
     @JvmField var anchor: Fit? = null
+    /** 2.90.0: on a fit of LaneRibbon's: the generated road as numbers (for the path and the cars placed along it) */
+    @JvmField var ribbon: LaneRibbon.Geo? = null
     val reachIds: Set<Long>? = reach?.let { r -> HashSet<Long>().also { s -> for (i in r.indices) if (r[i]) s.add(built.ways[i].id) } }
   }
 

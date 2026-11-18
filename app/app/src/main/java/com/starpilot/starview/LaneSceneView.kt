@@ -533,7 +533,8 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     c.drawPath(path, pFill)
     // lines, fading in where the camera's own lines fade out (25 - 40 m)
     val ya = yAt(25.0); val yb = yAt(40.0)
-    for ((style, color) in listOf(LaneMap.EDGE_WHITE to pal.white, LaneMap.DASH_WHITE to pal.white, LaneMap.SOLID_WHITE to pal.white,
+    val dim = if (night) 0xFF78808C.toInt() else 0xFF98A1AC.toInt()      // the other direction's lines (LaneRibbon)
+    for ((style, color) in listOf(LaneMap.DASH_DIM to dim, LaneMap.SOLID_DIM to dim, LaneMap.EDGE_WHITE to pal.white, LaneMap.DASH_WHITE to pal.white, LaneMap.SOLID_WHITE to pal.white,
         LaneMap.EDGE_YELLOW to pal.yellow, LaneMap.DOUBLE_YELLOW to pal.yellow, LaneMap.CURB to pal.curb)) {
       for (covered in listOf(true, false)) {
         path.rewind()
@@ -646,7 +647,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     }
     val w = if (ln.style == LaneMap.CURB) 0.12 else 0.15
     when (ln.style) {
-      LaneMap.DASH_WHITE -> dashed(n, ln.s, w)
+      LaneMap.DASH_WHITE, LaneMap.DASH_DIM -> dashed(n, ln.s, w)
       LaneMap.DOUBLE_YELLOW -> { runs(n, -0.1, 0.11); runs(n, 0.1, 0.11) }
       else -> runs(n, 0.0, w)
     }
@@ -1053,9 +1054,25 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   private fun drawPath(c: Canvas, m: ModelSnapshot, fr: Frame, pal: Pal) {
     val xs = m.posX; val ys = m.posY
     if (xs.size < 3) return
-    val to = min(70.0, xs.last().toDouble())
-    val n = (to / 2.0).toInt() + 1
+    var to = min(70.0, xs.last().toDouble())
+    var n = (to / 2.0).toInt() + 1
     ensure(n)
+    val geo = if (steady && anchor) fr.fit?.ribbon else null
+    val pose = fr.pose
+    if (geo != null && pose != null && fr.mapAlpha > 0.5f && !m.laneChanging) {
+      // 2.90.0: on the generated road the path runs along our lane (from where we are in it to its middle within 100 ft);
+      // openpilot's own path follows the real road's bends, which the drawn road only has roughly
+      val adv = fr.travelled - (fr.fit?.odo?.getOrNull(3) ?: fr.travelled)       // driven since the fit
+      var k = 0
+      while (k < n) {
+        val f = k * 2.0
+        val p = geo.place(adv + f, geo.laneD + (geo.d - geo.laneD) * exp(-f / 12.0)) ?: break
+        fs[k] = pose.fwd(p[0], p[1]); rs[k] = pose.right(p[0], p[1]); k++
+      }
+      n = k
+      if (n < 2) return
+      to = fs[n - 1]
+    } else
     for (k in 0 until n) { val f = k * 2.0; fs[k] = f; rs[k] = LaneFit.interp(xs, ys, f) }
     path.rewind()
     ribbon(0, n, 0.0, 1.7)
@@ -1070,7 +1087,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   private fun drawThings(c: Canvas, fr: Frame, pal: Pal) {
     class D(val z: Double, val th: Thing?)
     val list = ArrayList<D>()
-    for (th in fr.things) { if (!th.ok() || th.f < FMIN || th.f > 200 || abs(th.r) > 40) continue; if (proj(th.r, th.f)) list.add(D(pz, th)) }
+    for (t0 in fr.things) { val th = onRibbon(t0, fr); if (!th.ok() || th.f < FMIN || th.f > 200 || abs(th.r) > 40) continue; if (proj(th.r, th.f)) list.add(D(pz, th)) }
     if (proj(0.0, -EGO_BACK)) list.add(D(pz, null))
     list.sortByDescending { it.z }
     for (d in list) {
@@ -1088,6 +1105,40 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     }
   }
   private var thingFailAt = 0L
+
+  /**
+   * 2.90.0: a road user on the generated road (LaneRibbon). The camera and the radar say where it is against us and
+   * against the path we'll drive; the drawn road bends only roughly like the real one, so it is put the same distance
+   * along the drawn road and the same distance beside our drawn path - a car in the next lane stays in the next lane
+   * round a bend. A vehicle is drawn in the middle of its lane, facing along it (toward us in the other way's lanes),
+   * unless it is seen driving across.
+   */
+  private fun onRibbon(th: Thing, fr: Frame): Thing {
+    val geo = (if (steady && anchor) fr.fit?.ribbon else null) ?: return th
+    val pose = fr.pose ?: return th
+    if (fr.mapAlpha < 0.5f || !th.ok() || th.f < -8 || th.f > 190) return th
+    val m = fr.model
+    val vehicle = th.model.startsWith("car") || th.model == "truck" || th.model == "bus" || th.model == "motorcycle"
+    val beside = th.r - (if (m != null && m.posX.size >= 3 && th.f > 0) LaneFit.interp(m.posX, m.posY, th.f) else 0.0)
+    var d = geo.d + beside
+    val adv = fr.travelled - (fr.fit?.odo?.getOrNull(3) ?: fr.travelled)
+    val e = geo.edges(adv + th.f)
+    val across = th.road.isFinite() && abs(abs(Math.IEEEremainder(th.psi - th.road, 2 * Math.PI)) - Math.PI / 2) < Math.PI / 4
+    val onRoad = d > e[2] - 1.2 && d < e[1] + 1.2
+    if (vehicle && onRoad && !across) {
+      val mid = Math.round(d / LaneRibbon.LW) * LaneRibbon.LW
+      d += (mid - d) * 0.75
+    }
+    val p = geo.place(adv + th.f, d) ?: return th
+    var psi = th.psi
+    if (vehicle && !across) {
+      val away = if (th.road.isFinite()) abs(Math.IEEEremainder(th.psi - th.road, 2 * Math.PI)) > Math.PI / 2 else false
+      val otherSide = onRoad && d < e[0] - 0.3 && e[2] < e[0] - 1.0
+      psi = p[2] - pose.h + (if (otherSide || (away && !onRoad)) Math.PI else 0.0)
+    }
+    return Thing(th.id, th.model, pose.right(p[0], p[1]), pose.fwd(p[0], p[1]), psi, th.lead, th.remembered,
+      if (th.pole.isFinite()) th.pole + (pose.right(p[0], p[1]) - th.r) else th.pole).also { it.alpha = th.alpha }
+  }
 
   /** a soft dark oval on the road under a car (its footprint, blurred at the edges) */
   private fun shadow(c: Canvas, r: Double, f: Double, psi: Double, L: Double, Wd: Double, pal: Pal, alpha: Int) {

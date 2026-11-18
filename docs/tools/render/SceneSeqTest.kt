@@ -86,6 +86,7 @@ class SceneSeqTest {
         val steady = mode != "before"
         val anchored = mode == "anchor"
         val ast = LaneAnchor.State()
+        val rst = LaneRibbon.State()
         var afit: LaneFit.Fit? = null
         var lastLaneShown = -1; var laneChanges = 0
         val od = File(out, "${name}_$mode").apply { mkdirs() }
@@ -128,6 +129,9 @@ class SceneSeqTest {
             if (anchored) {
               val sh = v.crossed; v.crossed = 0
               afit = LaneAnchor.run(b, gps, r.f.getDouble("acc"), cam, odo, (r.t * 1000).toLong(), ast, cardNow, null, sh)
+              val seen = afit
+              afit = if (seen == null) null else LaneRibbon.update(b, ast, rst, cam, odo, (r.t * 1000).toLong())
+              if (seen != null && afit == null && r.t >= t0) log.append(String.format("anchor %6.2f s: no ribbon (%d steps)\n", r.t - t0, rst.steps))
               if (r.t >= t0) {
                 if (lastLaneShown >= 0 && ast.lane != lastLaneShown) { laneChanges++; log.append(String.format("anchor %6.2f s: drawn in lane %d (was %d), crossed %d, %s\n", r.t - t0, ast.lane + 1, lastLaneShown + 1, sh, LaneAnchor.status)) }
                 if (afit == null) log.append(String.format("anchor %6.2f s: %s\n", r.t - t0, LaneAnchor.status))
@@ -201,7 +205,7 @@ class SceneSeqTest {
           t += 0.1
         }
         log.append("$mode: $n frames, fits hidden $hidden, map shown/hidden changes $toggles, sideways jumps of the fit $jumps\n")
-        if (anchored) log.append("anchor: the lane we're drawn in changed $laneChanges times\n")
+        if (anchored) log.append("anchor: the lane we're drawn in changed $laneChanges times; the road ahead was laid ${rst.relaid} times\n")
       }
       File(out, "$name.txt").writeText(log.toString())
     }
