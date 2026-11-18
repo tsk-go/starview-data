@@ -42,7 +42,7 @@ object LaneMap {
   private const val TILE_R = 700.0
   private const val REFRESH_MS = 60L * 24 * 3600 * 1000
   private const val TAPER = 150.0
-  private const val PARK_W = 2.4
+  const val PARK_W = 2.4
   private const val WIDEN = 80.0
 
   // line styles
@@ -92,6 +92,10 @@ object LaneMap {
     /** which way traffic may go along the points: 1 = first to last, -1 = last to first, 0 = both */
     val flow: Int,
     val minX: Double, val minY: Double, val maxX: Double, val maxY: Double,
+    /** 2.90.2: parking lanes (m wide) on the left / right of the points' direction (OSM parking:*), 0 = none */
+    val parkL: Double = 0.0, val parkR: Double = 0.0,
+    /** 2.90.2: the painted median this map puts between the two directions (m; a stretch between turn bays) */
+    val median: Double = 0.0,
   ) {
     /** 2.89.2: the lines as built, before trim cut them at junctions: what LaneFit lines the camera's lines up with
      *  (the camera's lane lines carry on through a junction, so lines cut there made the fit worse just before one) */
@@ -697,6 +701,6 @@ object LaneMap {
     val pad = W / 2 + 6
     val flow = if (!w.lay.oneway) 0 else if (t["oneway"] == "-1") -1 else 1
     return BWay(w.w.id, w.hw, w.key, w.lay.oneway, layer, W, w.px, w.py, w.keys, lines, lx, ly, rx, ry, mlanes, arrows, flow,
-      minX - pad, minY - pad, maxX + pad, maxY + pad)
+      minX - pad, minY - pad, maxX + pad, maxY + pad, w.lay.parkL, w.lay.parkR, med)
   }
 }

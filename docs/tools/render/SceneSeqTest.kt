@@ -28,11 +28,12 @@ import kotlin.math.sin
  * still with the map still laid on the camera's lines (SceneSteady over LaneFit), "anchor" = 2.90.0 as released
  * (LaneAnchor places us, LaneRibbon generates the road). Same data as LaneSceneTest (laneData/drive_*.json at 4 a
  * second, osm_all.json); laneData/seq.txt lists the stretches, one per line:
- * "window,YYYY-MM-DD HH:MM:SS (Eastern),seconds,name[,day][,flip][,spin]" (flip: the lane card changes its mind like in
- * the owner's Nov 17 video; spin: three made-up detected cars whose guessed heading flickers). The 30 s before a stretch
- * are replayed without drawing. Writes picOut/<name>_<mode>/NNNN.png (10 a second) and picOut/<name>.txt: what changed
- * from one frame to the next, when the lane we're drawn in changed, how often the road ahead was laid again (with
- * ANCHOR_LOG set, LaneAnchor's line at every step). Drive data never goes in git.
+ * "window,YYYY-MM-DD HH:MM:SS (Eastern),seconds,name[,day][,flip][,spin][,rtk][,city][,lights=F[:G]][,zoom=D][,tilt=E]"
+ * (flip: the lane card changes its mind like in the owner's Nov 17 video; spin: three made-up detected cars whose
+ * guessed heading flickers; the others are explained where they're used). The 30 s before a stretch are replayed
+ * without drawing. Writes picOut/<name>_<mode>/NNNN.png (10 a second) and picOut/<name>.txt: what changed from one
+ * frame to the next, when the lane we're drawn in changed, how often the road ahead was laid again (with ANCHOR_LOG
+ * set, LaneAnchor's line at every step). Drive data never goes in git.
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -76,11 +77,27 @@ class SceneSeqTest {
           fa(f.getJSONArray("lp")), Array(2) { fa(ed.getJSONArray(it)) }, fa(f.getJSONArray("estd")), fa(f.getJSONArray("lstd"))))
       }
       if (recs.size < 8) continue
+      // "rtk": the tablet's RTK receiver instead of the comma's GPS (the recording only has the comma's): standing
+      // still, the place averaged over the stop (up to a minute: a receiver standing still stays put) with its
+      // accuracy then (0.9 m: what it showed parked on Nov 18, before its corrections came in); moving, the comma's
+      // own fix and accuracy
+      val still = recs.map { it.f.getDouble("speed") < 1.0 }
+      val rtk = recs.indices.map { i ->
+        val r = recs[i]
+        if (!still[i]) doubleArrayOf(r.f.getDouble("lat"), r.f.getDouble("lon"), r.f.getDouble("acc")) else {
+          var a = i; while (a > 0 && still[a - 1] && r.t - recs[a - 1].t <= 30.0) a--
+          var b = i; while (b < recs.size - 1 && still[b + 1] && recs[b + 1].t - r.t <= 30.0) b++
+          val k = recs.subList(a, b + 1)
+          doubleArrayOf(k.map { it.f.getDouble("lat") }.average(), k.map { it.f.getDouble("lon") }.average(), 0.9)
+        }
+      }
       // the car's own motion, like the tablet's Odometry: speed and heading added up (smooth), not GPS positions
       for (i in 1 until recs.size) {
         val a = recs[i - 1]; val b = recs[i]
-        val yaw = PI / 2 - Math.toRadians(b.f.getDouble("bearing"))
-        val d = (a.f.getDouble("speed") + b.f.getDouble("speed")) / 2 * (b.t - a.t)
+        // (standing still the wheels don't turn and the GPS heading is noise: the tablet's Odometry stays put)
+        val still = b.f.getDouble("speed") < 0.5
+        val yaw = if (still && i > 1) a.yaw else PI / 2 - Math.toRadians(b.f.getDouble("bearing"))
+        val d = if (still) 0.0 else (a.f.getDouble("speed") + b.f.getDouble("speed")) / 2 * (b.t - a.t)
         b.yaw = yaw; b.ox = a.ox + d * cos(yaw); b.oy = a.oy + d * sin(yaw); b.dist = a.dist + d
       }
       recs[0].yaw = recs[1].yaw
@@ -100,6 +117,9 @@ class SceneSeqTest {
         v.steady = steady
         v.anchor = anchored
         v.night = "day" !in p
+        // "zoom=D" / "tilt=E": the camera farther back / higher, as the owner can pinch and tilt it
+        p.firstOrNull { it.startsWith("zoom=") }?.let { v.dist = it.substring(5).toFloat() }
+        p.firstOrNull { it.startsWith("tilt=") }?.let { v.elev = it.substring(5).toFloat() }
         val w = 1472; val h = 920
         v.measure(View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.EXACTLY))
         v.layout(0, 0, w, h)
@@ -117,23 +137,26 @@ class SceneSeqTest {
         var hintAt = -1.0
         var lastLane: IntArray? = null
         var cardNow: LaneSceneView.Lanes? = null
+        var lightsAt: List<DoubleArray>? = null
         var t = t0 - 29.0
         while (t <= t0 + secs) {
           // every recorded moment up to now: a fit (the tablet fits 5 times a second; the recording has 4)
           while (ri < recs.size - 1 && recs[ri + 1].t <= t) {
             ri++
             val r = recs[ri]
-            val lat = r.f.getDouble("lat"); val lon = r.f.getDouble("lon")
+            val useRtk = "rtk" in p
+            val lat = if (useRtk) rtk[ri][0] else r.f.getDouble("lat"); val lon = if (useRtk) rtk[ri][1] else r.f.getDouble("lon")
+            val acc = if (useRtk) rtk[ri][2] else r.f.getDouble("acc")
             if (built == null || hypot((lon - bLon) * 84000, (lat - bLat) * 110540) > 400) { LaneMap.buildNow(lat, lon); built = LaneMap.built; bLat = lat; bLon = lon }
             val b = built!!
             val xy = b.xy(lat, lon)
             val odo = doubleArrayOf(r.ox, r.oy, r.yaw, r.dist)
             val cam = LaneFit.Cam.of(snap(r, r, 0f))!!
             val gps = LaneFit.Pose(xy[0], xy[1], Math.toRadians(r.f.getDouble("bearing")))
-            fit = LaneFit.run(b, gps, r.f.getDouble("acc"), cam, odo, (r.t * 1000).toLong(), fit)
+            fit = LaneFit.run(b, gps, acc, cam, odo, (r.t * 1000).toLong(), fit)
             if (anchored) {
               val sh = v.crossed; v.crossed = 0
-              afit = LaneAnchor.run(b, gps, r.f.getDouble("acc"), cam, odo, (r.t * 1000).toLong(), ast, cardNow, null, sh, r.f.getDouble("speed"))
+              afit = LaneAnchor.run(b, gps, acc, cam, odo, (r.t * 1000).toLong(), ast, cardNow, null, sh, r.f.getDouble("speed"))
               val seen = afit
               afit = if (seen == null) null else LaneRibbon.update(b, ast, rst, cam, odo, (r.t * 1000).toLong())
               for (ln in trace) log.append(String.format("ribbon %6.2f s: %s\n", r.t - t0, ln))
@@ -177,6 +200,31 @@ class SceneSeqTest {
             val ln = if (anchored && ast.lane >= 0) intArrayOf(ast.lane + 1, afit?.match?.of ?: 1) else fit?.match?.let { intArrayOf(it.lane, it.of) }
             val side = if (ln == null) 0.0 else if (ln[0] > 1) -3.6 else if (ln[0] < ln[1]) 3.6 else 0.0
             if (side != 0.0) car(-5_000_001, "car_suv", side, 20.0 + 2 * sin(ts / 3), hint[0])
+          }
+          // "city": what the detector saw parked on an avenue on Nov 18 (camera frame: m right, m ahead, heading
+          // guess): a white SUV in the travel lane beside us, the bus in the other way's lane facing us - the detector
+          // guessed it went our way - and a car parked across the street
+          if ("city" in p && ts >= 0) {
+            for ((id, spec) in listOf(-6_000_001L to doubleArrayOf(-2.9, 9.5, 0.0), -6_000_002L to doubleArrayOf(-6.4, 15.0, 0.0),
+                                      -6_000_003L to doubleArrayOf(-9.6, 11.0, PI))) {
+              val model = if (id == -6_000_002L) "bus" else "car_suv"
+              things.add(LaneSceneView.Thing(id, model, spec[0], spec[1], if (steady) 0.0 else spec[2], false, false).also { if (steady) { it.hint = spec[2]; it.road = 0.0 } })
+            }
+          }
+          // "lights=F[:G]": two traffic lights when the stretch starts, F m ahead 5 m right and G (= F) m ahead 9 m
+          // left (the detector isn't in the recording), kept where they are in the world as we move
+          val lf = p.firstOrNull { it.startsWith("lights=") }?.substring(7)?.split(':')?.map { it.toDouble() }
+          if (lf != null && ts >= 0) {
+            if (lightsAt == null) {
+              val c = cos(odo[2]); val s = sin(odo[2])
+              lightsAt = listOf(5.0 to lf[0], -9.0 to lf.getOrElse(1) { lf[0] }).map { (r, f) -> doubleArrayOf(odo[0] + f * c + r * s, odo[1] + f * s - r * c) }
+            }
+            val c = cos(odo[2]); val s = sin(odo[2])
+            lightsAt!!.forEachIndexed { i, q ->
+              val dx = q[0] - odo[0]; val dy = q[1] - odo[1]
+              val f = dx * c + dy * s; val r = dx * s - dy * c
+              if (f > 2) things.add(LaneSceneView.Thing(-7_000_001L - i, "traffic_light", r, f, 0.0, false, false))
+            }
           }
           // the lane card: from the lane the map puts us in; "flip": changing its mind as in the owner's video
           val mt = fit?.match

@@ -111,6 +111,15 @@ object LaneAnchor {
     internal var mlane: LaneMap.MLane? = null
     internal var px = 0.0; internal var py = 0.0
     internal var wMap = 3.6
+    // 2.90.2: parked at the curb. How likely we're in the parking lane beside our edge lane (only on a road the map
+    // has one, and only with a precise fix: it lies a lane's width from the lane), whether we're drawn there, and so
+    // how far right of our lane's middle that is (0 = in the lane; LaneRibbon slides us there and back)
+    internal var park = 0.02
+    internal var parkMs = 0L
+    internal var parked = false
+    internal var parkedD = 0.0
+    /** since when the GPS heading (moving) has been half a turn from ours: we were set down the wrong way round */
+    internal var flipMs = 0L
     /** the lane drawn and how sure (for the tests and the developer's line) */
     val lane: Int get() = shown
     val sure: Double get() = p.getOrElse(shown) { 0.0 }
@@ -144,7 +153,17 @@ object LaneAnchor {
     val gpsOk = gps.x.isFinite() && gps.y.isFinite() && acc <= 10.0
     val qx = if (gpsOk) gps.x else ref?.x ?: Double.NaN
     val qy = if (gpsOk) gps.y else ref?.y ?: Double.NaN
-    val href = ref?.h ?: gps.h
+    // 2.90.2: the GPS heading comes from moving. Standing still it is noise (parked at the curb on Nov 18 it swung
+    // round the whole compass in 5 minutes), and a road chosen by it was the wrong one or the wrong way round: then
+    // only the heading we carried on from moving counts, and starting while standing, the side of the road we're on
+    var gh = if (!speed.isFinite() || speed >= 2.0) gps.h else Double.NaN
+    if (ref != null && gh.isFinite() && cos(gh - ref.h) < -0.3 && speed >= 3.0) {
+      // moving, and the GPS says the other way round from the heading we carry (set down while standing): start over
+      if (st.flipMs == 0L) st.flipMs = now
+      if (now - st.flipMs > 1500) { st.flipMs = 0L; reset(st); status = "turned round"; return null }
+    } else st.flipMs = 0L
+    var href = ref?.h ?: gh
+    if (!href.isFinite() && qx.isFinite() && qy.isFinite()) href = standingHeading(b, qx, qy)
     if (!qx.isFinite() || !qy.isFinite() || !href.isFinite()) { status = "no place yet"; if (fresh) reset(st); return null }
     val dt = if (fresh) 0.25 else ((now - st.lastMs) / 1000.0).coerceIn(0.02, 1.0)
 
@@ -263,8 +282,37 @@ object LaneAnchor {
       if (now - st.candMs >= 3000) { shown = top; st.cand = -1 }
     } else st.cand = -1
 
-    // ---------------------------------------------------------------- where in the lane, which way we point
+    // ---------------------------------------------------------------- parked at the curb (2.90.2)
     val wMap = laneWidth(lat, shown)
+    run {
+      // the parking lane beside our edge lane: on the right; on a one-way road on the left too
+      val pr = if (dir > 0) w.parkR else w.parkL
+      val pl = if (w.oneway) (if (dir > 0) w.parkL else w.parkR) else 0.0
+      val side = when { pr > 0 && shown == n - 1 -> 1; pl > 0 && shown == 0 -> -1; else -> 0 }
+      val dPark = if (side == 0) 0.0 else side * (wMap / 2 + (if (side > 0) pr else pl) / 2)
+      val precise = gpsOk && acc <= 1.5
+      if (side == 0 || (speed.isFinite() && speed > 3.0) || atCrossing(b, bestWay, qx, qy)) {
+        // driving (or no parking lane here, or waiting at a crossing - where the fix being a few feet off to the side
+        // looked like pulling over): not parked, and soon not thought so either
+        st.park = max(0.02, st.park * exp(-dt * 2.0))
+      } else if (precise) {
+        // where the fix lies: our lane's middle or the parking lane's (the map's lines are a foot or so off too)
+        val sig = hypot(max(acc, 0.2), 1.0)
+        val off = LaneRibbon.fromLane(w, dir, lanes[shown].lane, qx, qy).takeIf { it.isFinite() } ?: -lat[shown]
+        val inLane = exp(-0.5 * (off / sig).pow(2))
+        val inPark = exp(-0.5 * ((off - dPark) / sig).pow(2))
+        var odds = st.park / (1 - st.park)
+        odds *= ((inPark + 1e-6) / (inLane + 1e-6)).pow(min(1.0, dt / 1.5))
+        st.park = (odds / (1 + odds)).coerceIn(0.02, 0.98)
+      }
+      val slow = !speed.isFinite() || speed < 1.5
+      if (!st.parked && side != 0 && slow && st.park > 0.8) { if (st.parkMs == 0L) st.parkMs = now; if (now - st.parkMs >= 2000 || fresh) st.parked = true }
+      else if (st.parked && (side == 0 || st.park < 0.4 || !slow && speed > 3.0)) st.parked = false
+      if (!(st.park > 0.8 && slow)) st.parkMs = 0L
+      st.parkedD = if (st.parked) dPark else 0.0
+    }
+
+    // ---------------------------------------------------------------- where in the lane, which way we point
     fun ok(i: Int) = cam.lp.size > i && cam.lp[i] >= 0.5f && cam.lx[i].size >= 2
     val yL = if (ok(1)) LaneFit.interp(cam.lx[1], cam.ly[1], 5.0) else Double.NaN
     val yR = if (ok(2)) LaneFit.interp(cam.lx[2], cam.ly[2], 5.0) else Double.NaN
@@ -275,7 +323,8 @@ object LaneAnchor {
       else -> Double.NaN
     }
     val lim = wMap / 2 + 0.4
-    if (meas.isFinite()) st.off = if (fresh) meas.coerceIn(-lim, lim) else st.off + (meas.coerceIn(-lim, lim) - st.off) * (1 - exp(-dt / 0.25))
+    if (st.parked) st.off *= exp(-dt / 1.0)             // at the curb there are no lines of our own to go by
+    else if (meas.isFinite()) st.off = if (fresh) meas.coerceIn(-lim, lim) else st.off + (meas.coerceIn(-lim, lim) - st.off) * (1 - exp(-dt / 0.25))
     else st.off *= exp(-dt / 3.0)
     var slope = 0.0; var ns = 0
     for (i in 1..2) if (ok(i) && cam.lx[i].last() >= 10f) { slope += (LaneFit.interp(cam.lx[i], cam.ly[i], 10.0) - LaneFit.interp(cam.lx[i], cam.ly[i], 2.0)) / 8.0; ns++ }
@@ -284,7 +333,7 @@ object LaneAnchor {
 
     val c = lanes[shown]
     val h = bearingAhead(c.lane.x, c.lane.y, c.pr, 6.0) - st.yaw
-    val pose = LaneFit.Pose(c.pr.cx + cos(c.pr.bearing) * st.off, c.pr.cy - sin(c.pr.bearing) * st.off, h)
+    val pose = LaneFit.Pose(c.pr.cx + cos(c.pr.bearing) * (st.off + st.parkedD), c.pr.cy - sin(c.pr.bearing) * (st.off + st.parkedD), h)
     val same = w.lanes.filter { l -> lanes.any { it.lane === l } }
     val match = LaneFit.Match(bestWay, shown + 1, n, lanes.map { it.lane.turn }, w.name, w.hw, abs(st.off), if (c.lane.dir < 0) -1 else 1)
     val rc = LaneFit.reachFrom(b, match, pose, now)
@@ -294,12 +343,49 @@ object LaneAnchor {
     st.wayId = w.id; st.p = p; st.lat = lat; st.shown = shown; st.lastMs = now; st.pose = pose; st.odo = odo; st.built = b
     st.reach = f.reachIds
     st.wayIdx = bestWay; st.mlane = c.lane; st.px = c.pr.cx; st.py = c.pr.cy; st.wMap = wMap
-    status = String.format(java.util.Locale.US, "lane %d of %d (%.0f %%) on %s, %+.1f m in it%s", shown + 1, n, p[shown] * 100,
-      w.name.ifEmpty { w.hw }, st.off, if (same.size != n) " ?" else "")
+    status = String.format(java.util.Locale.US, "lane %d of %d (%.0f %%) on %s, %+.1f m in it%s%s", shown + 1, n, p[shown] * 100,
+      w.name.ifEmpty { w.hw }, st.off, if (same.size != n) " ?" else "",
+      if (st.parked) String.format(java.util.Locale.US, ", parked (%.0f %%)", st.park * 100) else if (st.park > 0.1) String.format(java.util.Locale.US, ", parking %.0f %%", st.park * 100) else "")
     return f
   }
 
-  private fun reset(st: State) { st.expect = null; st.laneNums = null; st.mlane = null; st.wayIdx = -1; st.farMs = 0L; st.pose = null; st.p = DoubleArray(0); st.shown = -1; st.cand = -1; st.wayId = Long.MIN_VALUE; st.reach = null }
+  /** Standing still with no heading yet: the direction of the lane nearest to us - we stand on our side of the road
+   *  (right-hand traffic: next to our lanes, or in the parking lane beside them). NaN = no road near. */
+  private fun standingHeading(b: LaneMap.Built, x: Double, y: Double): Double {
+    var best = 6.0; var h = Double.NaN
+    for (w in b.ways) {
+      if (!w.near(x, y, 15.0)) continue
+      for (ln in w.lanes) { val pr = project(ln.x, ln.y, x, y) ?: continue; if (pr.over < 3.0 && pr.dist < best) { best = pr.dist; h = pr.bearing } }
+    }
+    return h
+  }
+
+  /** whether (x, y) is where a street crosses or meets road [wi]: within that street's half width + 20 ft of where
+   *  the two meet (its stop line and crosswalk; nobody parks there) */
+  private fun atCrossing(b: LaneMap.Built, wi: Int, x: Double, y: Double): Boolean {
+    if (!x.isFinite() || !y.isFinite()) return false
+    val w = b.ways[wi]
+    for (k in w.keys.indices) {
+      val d = hypot(w.px[k] - x, w.py[k] - y)
+      if (d > 30.0) continue
+      val a = max(0, k - 1); val z = min(w.px.size - 1, k + 1)
+      if (a == z) continue
+      val hx = w.px[z] - w.px[a]; val hy = w.py[z] - w.py[a]; val hl = hypot(hx, hy).coerceAtLeast(1e-6)
+      for (code in b.at[w.keys[k]] ?: continue) {
+        val o = code ushr 20; val ov = code and 0xfffff
+        if (o == wi || o !in b.ways.indices) continue
+        val u = b.ways[o]
+        val un = if (ov + 1 < u.px.size) ov + 1 else ov - 1
+        if (un < 0) continue
+        val ux = u.px[un] - u.px[ov]; val uy = u.py[un] - u.py[ov]; val ul = hypot(ux, uy).coerceAtLeast(1e-6)
+        if (abs(hx * uy - hy * ux) / (hl * ul) < 0.5) continue          // the same road going on, or a slip road
+        if (d < u.width / 2 + 6.0) return true
+      }
+    }
+    return false
+  }
+
+  private fun reset(st: State) { st.park = 0.02; st.parked = false; st.parkedD = 0.0; st.parkMs = 0L; st.expect = null; st.laneNums = null; st.mlane = null; st.wayIdx = -1; st.farMs = 0L; st.pose = null; st.p = DoubleArray(0); st.shown = -1; st.cand = -1; st.wayId = Long.MIN_VALUE; st.reach = null }
 
   private fun norm(p: DoubleArray) {
     var s = 0.0

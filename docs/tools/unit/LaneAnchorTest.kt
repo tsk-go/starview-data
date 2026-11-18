@@ -14,7 +14,8 @@ import kotlin.math.sin
 
 /**
  * 2.90.0: LaneAnchor (the map is the road, the camera places us on it) on a made-up straight one-way road of three
- * lanes going north, driven at 34 mph in the middle lane with a GPS that wanders 10 ft to either side.
+ * lanes going north, driven at 34 mph in the middle lane with a GPS that wanders 10 ft to either side. 2.90.2: parked at
+ * the curb of a two-way avenue and pulling out; and the way round when we start standing still.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
@@ -108,5 +109,89 @@ class LaneAnchorTest {
         assertTrue("where we are at $t s: ${pose.y} for ${-300 + 15 * t}", abs(pose.y - (-300 + 15 * t)) < 4.0)
       }
     }
+  }
+
+  /** 2.90.2: a two-way avenue going north with a parking lane on each side; our northbound lane's middle and the
+   *  parking lane's beside it (m east) */
+  private fun avenue(): Triple<LaneMap.Built, Double, Double> {
+    // (and a wide street crossing it 440 m north)
+    LaneMap.parse("""{"elements":[{"type":"way","id":2,"tags":{"highway":"tertiary","name":"Avenue","oneway":"no","lanes":"2","parking:both":"lane"},
+      "geometry":[{"lat":${lat0 - 0.004},"lon":${lon0 + 0.006}},{"lat":${lat0 + 0.004},"lon":${lon0 + 0.006}},{"lat":${lat0 + 0.012},"lon":${lon0 + 0.006}}]},
+      {"type":"way","id":3,"tags":{"highway":"secondary","name":"Street","oneway":"no","lanes":"4"},
+      "geometry":[{"lat":${lat0 + 0.004},"lon":${lon0 + 0.004}},{"lat":${lat0 + 0.004},"lon":${lon0 + 0.006}},{"lat":${lat0 + 0.004},"lon":${lon0 + 0.008}}]}]}""")
+    LaneMap.buildNow(lat0, lon0 + 0.006)             // (half a km east of the test road)
+    val av = LaneMap.built!!
+    val nb = av.ways.single { it.id == 2L }.lanes.first { it.y.last() > it.y.first() }
+    val lane = nb.x[0].toDouble()
+    return Triple(av, lane, lane + 3.1 / 2 + LaneMap.PARK_W / 2)
+  }
+
+  /** the camera parked behind a car: no lines, no edges it is sure of */
+  private fun blind() = LaneFit.Cam(Array(4) { grid }, Array(4) { FloatArray(33) { 9f } }, floatArrayOf(0.1f, 0.2f, 0.1f, 0.05f),
+    Array(2) { grid }, arrayOf(FloatArray(33) { -6f }, FloatArray(33) { 3.5f }), floatArrayOf(2.5f, 1.3f))
+
+  @Test fun parkedAtTheCurbAndPullingOut() {
+    // Nov 18: parked at the curb behind a parked car for 5 minutes, the GPS heading swinging round the compass. The
+    // Scene put us in the travel lane (and the car beside us across the yellow line); with a precise fix we are in the
+    // parking lane, until we pull out into the lane.
+    val (av, lane, park) = avenue()
+    val y0 = av.xy(lat0, lon0 + 0.006)[1] - 100.0
+    val st = LaneAnchor.State()
+    var t = 0.0
+    while (t <= 20.0) {
+      val junk = Math.toRadians(listOf(257.0, 17.0, 208.0, 115.0, 128.0, 82.0)[(t / 3).toInt() % 6])
+      val f = LaneAnchor.run(av, LaneFit.Pose(park + 0.3 * sin(t), y0, junk), 0.5, blind(), doubleArrayOf(0.0, 0.0, PI / 2, 0.0),
+        (t * 1000).toLong() + 1000, st, null, null, 0, 0.1)
+      assertNotNull("a fit standing at $t s: ${LaneAnchor.status}", f)
+      if (t > 5) {
+        assertTrue("parked at $t s: ${LaneAnchor.status}", st.parked)
+        assertTrue("at the curb at $t s: ${f!!.pose.x} (lane $lane, parking lane $park)", abs(f.pose.x - park) < 0.6)
+        assertTrue("facing north at $t s: ${f.pose.h}", abs(f.pose.h) < 0.1)
+      }
+      t += 0.25
+    }
+    // pulling out: 3 s into the lane, then on at 15 mph
+    var y = y0; var x = park
+    while (t <= 30.0) {
+      x += (lane - x) * 0.15; y += 6.7 * 0.25
+      LaneAnchor.run(av, LaneFit.Pose(x, y, 0.0), 0.5, blind(), doubleArrayOf(0.0, y - y0, PI / 2, y - y0), (t * 1000).toLong() + 1000, st, null, null, 0, 6.7)
+      t += 0.25
+    }
+    assertTrue("out of the parking lane: ${LaneAnchor.status}", !st.parked && st.parkedD == 0.0)
+  }
+
+  @Test fun waitingAtACrossingIsNotParking() {
+    // Nov 18: stopped at the corner, waiting to turn; the fix a few feet toward the curb read as pulling over. Where a
+    // street crosses (its stop line, the crosswalk) nobody parks.
+    val (av, lane, park) = avenue()
+    val yX = av.xy(lat0 + 0.004, lon0 + 0.006)[1] - 9.0
+    val st = LaneAnchor.State()
+    var t = 0.0
+    while (t <= 20.0) {
+      val f = LaneAnchor.run(av, LaneFit.Pose((lane + park) / 2 + 0.6, yX, 0.0), 0.5, blind(), doubleArrayOf(0.0, 0.0, PI / 2, 0.0),
+        (t * 1000).toLong() + 1000, st, null, null, 0, 0.1)
+      assertNotNull("a fit at $t s: ${LaneAnchor.status}", f)
+      assertTrue("not parked at $t s: ${LaneAnchor.status}", !st.parked && st.parkedD == 0.0)
+      t += 0.25
+    }
+    // the same, halfway down the block: parked
+    val y1 = av.xy(lat0 + 0.004, lon0 + 0.006)[1] - 60.0
+    val s2 = LaneAnchor.State()
+    t = 0.0
+    while (t <= 20.0) {
+      LaneAnchor.run(av, LaneFit.Pose((lane + park) / 2 + 0.6, y1, 0.0), 0.5, blind(), doubleArrayOf(0.0, 0.0, PI / 2, 0.0),
+        (t * 1000).toLong() + 1000, s2, null, null, 0, 0.1)
+      t += 0.25
+    }
+    assertTrue("mid-block: parked: ${LaneAnchor.status}", s2.parked)
+  }
+
+  @Test fun standingStillTheWayRoundIsTheSideOfTheStreetWeAreOn() {
+    // started while standing, the GPS heading pointing south (noise): we are on the east side, so we face north
+    val (av, lane, _) = avenue()
+    val st = LaneAnchor.State()
+    val f = LaneAnchor.run(av, LaneFit.Pose(lane + 0.4, av.xy(lat0, lon0 + 0.006)[1], PI), 0.5, blind(), doubleArrayOf(0.0, 0.0, PI / 2, 0.0), 1000, st, null, null, 0, 0.0)
+    assertNotNull(LaneAnchor.status, f)
+    assertTrue("facing north: ${f!!.pose.h}", abs(f.pose.h) < 0.1)
   }
 }

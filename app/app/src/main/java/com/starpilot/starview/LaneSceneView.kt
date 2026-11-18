@@ -79,6 +79,8 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     private const val FOLLOWED_ID = -100L
     /** 2.89.2: a traffic light hangs this high over the road (the bottom of its head, m), from a mast arm */
     private const val HANG = 4.6
+    /** a signal head's height (m) */
+    private const val LIGHT_H = 1.1
   }
 
   /** [pole]: 2.89.2, a traffic light's mast pole sideways (m right of us; NaN = 4 m right of the light) */
@@ -1126,9 +1128,22 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     var d = geo.d + beside
     val adv = fr.travelled - (fr.fit?.odo?.getOrNull(3) ?: fr.travelled)
     val e = geo.edges(adv + th.f)
+    val pk = geo.parking(adv + th.f)
     val across = th.road.isFinite() && abs(abs(Math.IEEEremainder(th.psi - th.road, 2 * Math.PI)) - Math.PI / 2) < Math.PI / 4
+    // 2.90.2: a vehicle the camera puts past the kerb is on the street all the same - its side-to-side guess is off by
+    // that much (the bus beside us on Nov 18 stood on bare ground left of the road); then in the parking lane there
+    // (up to 13 ft past it: farther out it is off the street - a lot, a driveway)
+    if (vehicle && !across && e[4] - e[3] > 3.0) {
+      if (d > e[4] - 1.0 && d < e[4] + 4.0) d = e[4] - 1.0
+      if (d < e[3] + 1.0 && d > e[3] - 4.0) d = e[3] + 1.0
+    }
+    // parked: in a parking lane, facing the way its side of the street goes
+    val parkR = vehicle && !across && pk[1] > 1.2 && d > e[1] + 0.4
+    val parkL = vehicle && !across && pk[0] > 1.2 && d < e[2] - 0.4
+    if (parkR) d += (e[1] + pk[1] / 2 - d) * 0.75
+    if (parkL) d += (e[2] - pk[0] / 2 - d) * 0.75
     val onRoad = d > e[2] - 1.2 && d < e[1] + 1.2
-    if (vehicle && onRoad && !across) {
+    if (vehicle && onRoad && !across && !parkR && !parkL) {
       val mid = Math.round(d / LaneRibbon.LW) * LaneRibbon.LW
       d += (mid - d) * 0.75
     }
@@ -1136,11 +1151,18 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     var psi = th.psi
     if (vehicle && !across) {
       val away = if (th.road.isFinite()) abs(Math.IEEEremainder(th.psi - th.road, 2 * Math.PI)) > Math.PI / 2 else false
-      val otherSide = onRoad && d < e[0] - 0.3 && e[2] < e[0] - 1.0
-      psi = p[2] - pose.h + (if (otherSide || (away && !onRoad)) Math.PI else 0.0)
+      val twoWay = e[2] < e[0] - 1.0
+      val otherSide = twoWay && (parkL || onRoad && d < e[0] - 0.3)
+      psi = p[2] - pose.h + (if (otherSide || (away && !onRoad && !parkR && !parkL)) Math.PI else 0.0)
     }
-    return Thing(th.id, th.model, pose.right(p[0], p[1]), pose.fwd(p[0], p[1]), psi, th.lead, th.remembered,
-      if (th.pole.isFinite()) th.pole + (pose.right(p[0], p[1]) - th.r) else th.pole).also { it.alpha = th.alpha }
+    // a traffic light's pole stands on the corner nearest to it, not always on the right (the arm of a light over the
+    // far side reached across the whole street)
+    var pole = if (th.pole.isFinite()) th.pole + (pose.right(p[0], p[1]) - th.r) else th.pole
+    if (th.model == "traffic_light") {
+      val pd = if (d - e[3] < e[4] - d) e[3] - 0.5 else e[4] + 0.5
+      geo.place(adv + th.f, pd)?.let { pole = pose.right(it[0], it[1]) }
+    }
+    return Thing(th.id, th.model, pose.right(p[0], p[1]), pose.fwd(p[0], p[1]), psi, th.lead, th.remembered, pole).also { it.alpha = th.alpha }
   }
 
   /** a soft dark oval on the road under a car (its footprint, blurred at the edges) */
@@ -1171,9 +1193,11 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     val vehicle = th.model.startsWith("car") || th.model == "truck" || th.model == "bus" || th.model == "motorcycle"
     val fade = ((200 - th.f) / 60).coerceIn(0.0, 1.0) * th.alpha.coerceIn(0.0, 1.0)
     if (vehicle) shadow(c, th.r, th.f, th.psi, mdl.L + 1.0, mdl.W + 0.7, pal, (0x80 * fade).toInt())
-    // 2.89.2: a traffic light hangs over the road from a mast arm (it stood in the lane like a post before)
-    val lift = if (th.model == "traffic_light") HANG else 0.0
-    if (lift > 0) mast(c, th, lift + mdl.H, fade)
+    // 2.89.2: a traffic light hangs over the road from a mast arm (it stood in the lane like a post before). 2.90.2
+    // (owner, Nov 18: "the traffic lights don't look right"): drawn as a signal head - a dark housing with its three
+    // lenses, facing us - under the arm, instead of a picture of two heads side by side
+    if (th.model == "traffic_light") { mast(c, th, HANG + LIGHT_H + 0.15, fade); signal(c, th, fade, pal); return }
+    val lift = 0.0
     if (!proj(th.r, th.f, lift)) return
     val ax = px; val ay = py; val z = pz
     // which picture: the height we look from, and the turn of the car against our line of sight
@@ -1205,6 +1229,37 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   }
 
   private val pMast = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
+  private val rLight = RectF()
+
+  /** a signal head hanging at [HANG] m: housing 0.4 x 1.1 m with a hood over each of its red / amber / green lenses
+   *  (which one is lit isn't known: all three are drawn as unlit glass, a touch of their colour) */
+  private fun signal(c: Canvas, th: Thing, fade: Double, pal: Pal) {
+    if (!proj(th.r, th.f, HANG + LIGHT_H)) return
+    val x = px; val top = py; val z = pz
+    if (!proj(th.r, th.f, HANG)) return
+    val bottom = py
+    if (!(x.isFinite() && top.isFinite() && bottom.isFinite())) return
+    val k = (F / z).toFloat()                       // pixels per metre there
+    val w = 0.42f * k; val h = bottom - top
+    if (h < 2f) return
+    val a = (255 * fade).toInt().coerceIn(0, 255)
+    pFill.shader = null
+    pFill.color = (a shl 24) or (if (night) 0x1C1F23 else 0x2B2F35)
+    rLight.set(x - w / 2, top, x + w / 2, bottom)
+    c.drawRoundRect(rLight, 0.08f * k, 0.08f * k, pFill)
+    val lens = intArrayOf(0x7A2626, 0x7A5C1E, 0x1F6A43)
+    val glow = intArrayOf(0xC23B32, 0xC9902A, 0x2E9B63)
+    for (i in 0 until 3) {
+      val cy = top + h * (0.18f + 0.32f * i)
+      val rr = 0.13f * k
+      pFill.color = (a shl 24) or 0x101215
+      c.drawCircle(x, cy, rr * 1.18f, pFill)                 // the hood's shadow round the lens
+      pFill.color = (a shl 24) or lens[i]
+      c.drawCircle(x, cy, rr, pFill)
+      pFill.color = ((a * 0.55f).toInt() shl 24) or glow[i]
+      c.drawCircle(x - rr * 0.25f, cy - rr * 0.25f, rr * 0.45f, pFill)   // a glint on the glass
+    }
+  }
 
   /** a traffic light's mast: the arm at [top] m from the light out to its pole at the roadside, and the pole */
   private fun mast(c: Canvas, th: Thing, top: Double, fade: Double) {

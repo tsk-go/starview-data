@@ -15,7 +15,7 @@ import kotlin.math.hypot
  * 2.90.0: LaneRibbon (the road is generated, not traced) on made-up maps of the three places where the map's own lines
  * went wrong (owner, Nov 17: "fix the S-bends and the after-exit moment"): a road that gains and loses a lane, an exit
  * the map starts at the middle of the road, and a ramp it ends at the middle of the road it joins - and on what is drawn
- * of the road behind us. Each is driven at
+ * of the road behind us. 2.90.2: a left-turn bay on a city street, and the rounded corners of a cross street. Each is driven at
  * 34 mph with LaneAnchor placing us, and the thread the road is drawn around is checked for bends that aren't there.
  */
 @RunWith(RobolectricTestRunner::class)
@@ -195,5 +195,76 @@ class LaneRibbonTest {
     }
     assertTrue("we are in the road's first lane from the moment we are on it: $seen", seen.size > 20 && seen.all { it == 0 })
     assertTrue("laid once: ${st.trace}", st.relaid == 1)
+  }
+
+  /** a two-way street of [lanes] lanes (or "f|b" lanes forward / backward with [turnF] the forward turn lanes) with
+   *  parking both sides, through the points */
+  private fun street(id: Int, hw: String, lanes: String, turnF: String = "", vararg xy: Double): String {
+    val pts = (0 until xy.size / 2).joinToString(",") { """{"lat":${lat0 + xy[2 * it + 1] / ky},"lon":${lon0 + xy[2 * it] / kx}}""" }
+    val l = if ('|' in lanes) lanes.split('|').let { """"lanes":"${it[0].toInt() + it[1].toInt()}","lanes:forward":"${it[0]}","lanes:backward":"${it[1]}"""" } else """"lanes":"$lanes""""
+    val t = if (turnF.isEmpty()) "" else ""","turn:lanes:forward":"$turnF""""
+    return """{"type":"way","id":$id,"tags":{"highway":"$hw","name":"S$id","oneway":"no",$l$t,"parking:both":"lane"},"geometry":[$pts]}"""
+  }
+
+  @Test fun aLeftTurnBayDoesNotSwingTheRoad() {
+    // 2.90.2, Nov 18: a block of two-way street, a 100 ft piece with a left-turn lane added our way
+    // (the map makes it a lane wider, and gives the blocks beside it a painted median to match), then the street again.
+    // The road ahead swung sideways and back there; our lane goes straight on and the turn lane opens on its left.
+    val b = build(street(1, "tertiary", "2", "", 0.0, -500.0, 0.0, 0.0), street(2, "tertiary", "2|1", "left|", 0.0, 0.0, 0.0, 30.0),
+      street(3, "tertiary", "2", "", 0.0, 30.0, 0.0, 500.0))
+    val x0 = 1.6
+    val st = drive(b, listOf(doubleArrayOf(x0, -480.0), doubleArrayOf(x0, -150.0)))
+    val p = thread(st).filter { it[1] > -200 && it[1] < 300 }
+    assertTrue("the thread around the bay: ${p.size} steps", p.size > 100)
+    for (q in p) assertTrue("our lane runs straight on at y ${q[1].toInt()}: x ${q[0]}\n${st.trace}", abs(q[0] - p[0][0]) < 0.3)
+    assertTrue("our lane, not the middle of the street: ${p[0][0]}", abs(p[0][0] - x0) < 0.6)
+  }
+
+  @Test fun aStreetGoingOffOnOneSideStaysOnThatSide() {
+    // 2.90.2: a one-way street starting at ours and going off to the left only (a T): the start of its asphalt, laid
+    // under our road, stuck out 20 ft past our right kerb
+    val b = build(street(1, "tertiary", "2", "", 0.0, -400.0, 0.0, 0.0, 0.0, 400.0), street(2, "residential", "1", "", 0.0, 0.0, -300.0, 0.0))
+    drive(b, listOf(doubleArrayOf(1.6, -380.0), doubleArrayOf(1.6, -60.0)))
+    val ways = last!!.built.ways
+    val road = ways.single { it.id == 1L }
+    val kerb = road.right.indices.filter { abs(road.rightY[it]) < 30 }.maxOf { road.right[it] }
+    val arm = ways.filter { it.id != 1L && it.id < 1_000_000_000_000L }
+    assertTrue("the street is drawn: ${arm.size}", arm.isNotEmpty())
+    for (w in arm) for (x in w.left + w.right) assertTrue("no asphalt past our right kerb ($kerb): $x", x <= kerb + 0.1)
+  }
+
+  /** the signed area of a way's asphalt outline (its left side out, its right side back) */
+  private fun turn(w: LaneMap.BWay): Double {
+    val xs = w.left.toList() + w.right.reversed(); val ys = w.leftY.toList() + w.rightY.reversed()
+    var a = 0.0
+    for (i in xs.indices) { val j = (i + 1) % xs.size; a += xs[i].toDouble() * ys[j] - xs[j].toDouble() * ys[i] }
+    return a
+  }
+
+  @Test fun aCrossStreetsCornersAreRounded() {
+    // 2.90.2 (owner, Nov 18: "the corners are not sharp edges, it's a little bit rounded"): a street crossing ours
+    val b = build(street(1, "tertiary", "2", "", 0.0, -400.0, 0.0, 0.0, 0.0, 400.0), street(2, "residential", "2", "", -300.0, 0.0, 0.0, 0.0, 300.0, 0.0))
+    drive(b, listOf(doubleArrayOf(1.6, -380.0), doubleArrayOf(1.6, -60.0)))
+    val ways = last!!.built.ways
+    val corners = ways.filter { it.id >= 1_000_000_000_000L }
+    assertTrue("four rounded corners: ${corners.size}", corners.size == 4)
+    for (c in corners) {
+      val k = c.lines.single { it.style == LaneMap.CURB }
+      val dx = abs(k.x.last() - k.x.first()); val dy = abs(k.y.last() - k.y.first())
+      assertTrue("each bends from along our street to along the cross street: $dx x $dy", dx > 3 && dy > 3 && dx < 7 && dy < 7)
+      // the bend lies inside the square corner (its middle is nearer the crossing than the square's corner would be)
+      val m = k.x.size / 2
+      val sq = c.left.all { it == c.left[0] } && c.leftY.all { it == c.leftY[0] }
+      val cx = if (sq) c.left[0] else c.right[0]; val cy = if (sq) c.leftY[0] else c.rightY[0]
+      val corner = hypot((cx - 0.0).toDouble(), (cy - 0.0).toDouble())
+      assertTrue("rounded off, not square", hypot(k.x[m].toDouble(), k.y[m].toDouble()) > corner + 0.5)
+      // its asphalt goes round the same way as the roads' (the Scene fills all the asphalt as one shape: a piece going
+      // round the other way left a light seam where it met the street)
+      assertTrue("the same way round as our road", Math.signum(turn(c)) == Math.signum(turn(ways.single { it.id == 1L })))
+    }
+    // and our kerbs stop where the bends start
+    val road = ways.single { it.id == 1L }
+    for (k in road.lines.filter { it.style == LaneMap.CURB }) for (j in k.y.indices)
+      assertTrue("no kerb across the crossing: ${k.x[j]}, ${k.y[j]}", abs(k.y[j]) > 4.0)
   }
 }

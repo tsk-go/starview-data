@@ -60,6 +60,11 @@ object LaneRibbon {
     var via = Long.MIN_VALUE; var viaGb = 0
     /** the thread's own lane here, by that numbering ([ci] + [gb]; on a straight run that crosses lanes, in between) */
     var g = 0.0
+    /** 2.90.2: parking lanes (m wide) on our right and on our left (on a two-way road: across the street, beyond the
+     *  other way's lanes), as on the map here, and eased like the lane counts */
+    var pr = 0.0; var pl = 0.0
+    var spr = 0.0; var spl = 0.0
+    fun park(w: LaneMap.BWay, dir: Int): Smp { pr = if (dir > 0) w.parkR else w.parkL; pl = if (dir > 0) w.parkL else w.parkR; spr = pr; spl = pl; return this }
   }
 
   /** a road meeting ours near step [idx] of the thread: along way [wayId] from its point [v] going [d] */
@@ -89,6 +94,9 @@ object LaneRibbon {
     // lane numbers along the thread (Smp.gb): the next piece's, when the joint says how its lanes carry on ([NONE]: by
     // the thread's own lane, which was lane [pCi] with [pBase] on the piece before)
     internal var jBase = 0; internal var pCi = -1; internal var pBase = 0
+    // the lane offset (m right of the middle line) the thread takes on the piece it's on, that piece's lane count, our
+    // lane on it, and whether it's two-way (see extend: a left-turn bay)
+    internal var offNow = Double.NaN; internal var offN = 0; internal var offCi = 0; internal var offTwo = false
     // the next steps are where our road narrows away from the lanes it left: no edge line on that side (1 left, 2 right)
     internal var jOpen = 0; internal var jOpenN = 0
     /** tests: what the thread did at each joint, when set */
@@ -113,7 +121,8 @@ object LaneRibbon {
   class Geo(private val sx: DoubleArray, private val sy: DoubleArray, private val tx: DoubleArray, private val ty: DoubleArray,
             private val nl: DoubleArray, private val nr: DoubleArray, private val no: DoubleArray, private val two: BooleanArray,
             /** our step (index into these, with a fraction) and how far right of the thread we are, the middle of our lane */
-            val van: Double, val d: Double, val laneD: Double) {
+            val van: Double, val d: Double, val laneD: Double,
+            private val pl: DoubleArray = DoubleArray(sx.size), private val pr: DoubleArray = DoubleArray(sx.size)) {
     val size get() = sx.size
     /** (x, y, bearing) at [ahead] m along the road from us, [d] m right of the thread; null past its ends */
     fun place(ahead: Double, d: Double): DoubleArray? {
@@ -131,12 +140,19 @@ object LaneRibbon {
       val q = place(ahead + 2 * STEP, d) ?: p
       return LaneFit.Pose(p[0], p[1], q[2] - yaw)
     }
-    /** our way's lanes at [ahead]: (left edge, right edge) in m right of the thread, and the far edge of the other way's
-     *  lanes (= the left edge on a one-way road) */
+    /** our way's lanes at [ahead]: (left edge, right edge) in m right of the thread, the far edge of the other way's
+     *  lanes (= the left edge on a one-way road), and the street's kerbs left and right (past the parking lanes) */
     fun edges(ahead: Double): DoubleArray {
       val i = (van + ahead / STEP).toInt().coerceIn(0, sx.size - 1)
       val l = -(nl[i] + 0.5) * LW
-      return doubleArrayOf(l, (nr[i] + 0.5) * LW, if (two[i]) l - no[i] * LW else l)
+      val far = if (two[i]) l - no[i] * LW else l
+      val r = (nr[i] + 0.5) * LW
+      return doubleArrayOf(l, r, far, far - max(SHOULDER, pl[i]), r + max(SHOULDER, pr[i]))
+    }
+    /** the parking lane (m wide) on the left / right at [ahead], 0 = none */
+    fun parking(ahead: Double): DoubleArray {
+      val i = (van + ahead / STEP).toInt().coerceIn(0, sx.size - 1)
+      return doubleArrayOf(pl[i], pr[i])
     }
   }
 
@@ -166,6 +182,31 @@ object LaneRibbon {
     return out
   }
 
+  /** 2.90.2: how far right of [lane]'s middle ([x], [y]) is, going [dir] on way [w] - measured from the road's middle
+   *  line, like the thread (the map's own lane lines bend in and out near the piece's ends; on the Nov 18 recording
+   *  one lay 5 ft off where we were parked) */
+  internal fun fromLane(w: LaneMap.BWay, dir: Int, lane: LaneMap.MLane, x: Double, y: Double): Double {
+    val n = w.px.size
+    val cx = FloatArray(n) { w.px[if (dir > 0) it else n - 1 - it].toFloat() }
+    val cy = FloatArray(n) { w.py[if (dir > 0) it else n - 1 - it].toFloat() }
+    val pr = LaneAnchor.project(cx, cy, x, y) ?: return Double.NaN
+    return pr.side - laneOffset(w, cx, cy, lane)
+  }
+
+  /** [lane]'s distance right of the road's middle line ([cx], [cy], in its direction), without the painted median the
+   *  map puts between the two directions of a stretch between turn bays (on Nov 18 a whole city block got one: 10 ft
+   *  of road that isn't there, our lane drawn where the parked cars are) */
+  private fun laneOffset(w: LaneMap.BWay, cx: FloatArray, cy: FloatArray, lane: LaneMap.MLane): Double {
+    val o = laneOff(cx, cy, lane)
+    return if (w.oneway || w.median <= 0 || abs(o) < w.median / 2) o else o - Math.signum(o) * w.median / 2
+  }
+
+  /** the offset of [lane] going [dir] on [w] from its middle line (as [laneOffset]) */
+  private fun laneOffset(w: LaneMap.BWay, dir: Int, lane: LaneMap.MLane): Double {
+    val n = w.px.size
+    return laneOffset(w, FloatArray(n) { w.px[if (dir > 0) it else n - 1 - it].toFloat() }, FloatArray(n) { w.py[if (dir > 0) it else n - 1 - it].toFloat() }, lane)
+  }
+
   /** how far right of the road's middle line ([cx], [cy], in our direction) lane [lane] runs, at the middle of the piece */
   private fun laneOff(cx: FloatArray, cy: FloatArray, lane: LaneMap.MLane): Double {
     var len = 0.0
@@ -187,11 +228,11 @@ object LaneRibbon {
    * (owner, Nov 17: "fix the S-bends"). The distance is taken at the middle of the piece, away from those ends. In
    * the direction we drive.
    */
-  private fun laneLine(w: LaneMap.BWay, dir: Int, lane: LaneMap.MLane): Pair<FloatArray, FloatArray> {
+  private fun laneLine(w: LaneMap.BWay, dir: Int, lane: LaneMap.MLane, offset: Double = Double.NaN): Pair<FloatArray, FloatArray> {
     val n = w.px.size
     val cx = FloatArray(n) { w.px[if (dir > 0) it else n - 1 - it].toFloat() }
     val cy = FloatArray(n) { w.py[if (dir > 0) it else n - 1 - it].toFloat() }
-    val off = laneOff(cx, cy, lane)
+    val off = if (offset.isFinite()) offset else laneOffset(w, cx, cy, lane)
     val ox = FloatArray(n); val oy = FloatArray(n)
     for (i in 0 until n) {
       val a = max(0, i - 1); val z = min(n - 1, i + 1)
@@ -208,6 +249,7 @@ object LaneRibbon {
     st.first = 0L; st.dead = false; st.rem = 0.0; st.prevWay = Long.MIN_VALUE
     st.jKind = J_TURN; st.jCi = -1; st.jSkip = 0.0; st.jSide = 0; st.jOpenN = 0
     st.jBase = 0; st.pCi = -1; st.pBase = 0
+    st.offNow = Double.NaN
     st.strayMs = 0L; st.laneD = Double.NaN
     st.relaid++
     st.trace?.add("laid from scratch")
@@ -234,7 +276,7 @@ object LaneRibbon {
         val l = hypot(qx - ax, qy - ay)
         if (l > 1e-6) h = atan2(qx - ax, qy - ay)
         var at = need
-        while (l > 1e-6 && at <= l && done < BEHIND) { back.add(Smp(qx + (ax - qx) * at / l, qy + (ay - qy) * at / l, bw.id, bci, bn, bopp, bw.oneway, bw.hw).also { it.gb = bgb; it.g = (bci + bgb).toDouble() }); at += STEP; done += STEP }
+        while (l > 1e-6 && at <= l && done < BEHIND) { back.add(Smp(qx + (ax - qx) * at / l, qy + (ay - qy) * at / l, bw.id, bci, bn, bopp, bw.oneway, bw.hw).also { it.gb = bgb; it.g = (bci + bgb).toDouble(); it.park(bw, bdir) }); at += STEP; done += STEP }
         need = at - l
         qx = ax; qy = ay; k--
       }
@@ -301,7 +343,16 @@ object LaneRibbon {
       val ci = if (st.jCi in ls.indices) st.jCi else ls.indices.minByOrNull { abs(ls[it].second.side) } ?: 0
       st.jKind = J_TURN; st.jCi = -1
       val base = if (st.jBase != NONE) st.jBase else if (st.pCi >= 0) st.pBase + st.pCi - ci else 0
-      val (lx, ly) = laneLine(w, st.endDir, ls[ci].first)
+      // 2.90.2: a two-way road going on with a lane more or fewer on our left (a left-turn bay: the map draws that
+      // block a lane wider): our lane goes straight on and the new lane opens on its left - the map's middle line
+      // stays where it was, and each piece's own lane offset made the road swing a lane's width sideways and back at
+      // every bay (the wobble a block ahead on Nov 18)
+      val natural = laneOffset(w, st.endDir, ls[ci].first)
+      val hold = kind == J_SAME && !w.oneway && st.offTwo && st.offNow.isFinite() && ls.size - ci == st.offN - st.offCi &&
+        abs(natural - st.offNow) < 3.5
+      val off = if (hold) st.offNow else natural
+      st.offNow = off; st.offN = ls.size; st.offCi = ci; st.offTwo = !w.oneway
+      val (lx, ly) = laneLine(w, st.endDir, ls[ci].first, off)
       var p = LaneAnchor.project(lx, ly, st.endX, st.endY) ?: run { st.dead = true; return }
       val opp = w.lanes.size - ls.size
       val from = st.first + st.smp.size
@@ -358,7 +409,7 @@ object LaneRibbon {
       }
       fun put(x: Double, y: Double) {
         val q = Smp(x, y, w.id, ci, ls.size, opp, w.oneway, w.hw)
-        q.gb = base; q.g = (ci + base).toDouble()
+        q.gb = base; q.g = (ci + base).toDouble(); q.park(w, st.endDir)
         if (st.jOpenN > 0) { if (st.jOpen and 1 != 0) q.openL = true; if (st.jOpen and 2 != 0) q.openR = true; st.jOpenN-- }
         st.smp.add(q)
       }
@@ -562,6 +613,15 @@ object LaneRibbon {
         return max(if (wa > 0) a / wa else 0.0, if (wz > 0) z / wz else 0.0)
       }
       s.nl = ease { it.ci }; s.nr = ease { it.n - 1 - it.ci }; s.no = ease { it.opp }
+      fun easeD(of: (Smp) -> Double): Double {
+        var a = 0.0; var wa = 0.0; var z = 0.0; var wz = 0.0
+        for (m in 0..KN) {
+          st.smp.getOrNull(i + m)?.let { a += of(it) * WT[m]; wa += WT[m] }
+          st.smp.getOrNull(i - m)?.let { z += of(it) * WT[m]; wz += WT[m] }
+        }
+        return max(if (wa > 0) a / wa else 0.0, if (wz > 0) z / wz else 0.0)
+      }
+      s.spr = easeD { it.pr }; s.spl = easeD { it.pl }
       s.done = true
     }
     // directions, from the smoothed neighbours (settled ones only)
@@ -601,6 +661,7 @@ object LaneRibbon {
     st.jOpenN = 0
     st.endWay = fk.wayId; st.endDir = fk.dir; st.endX = fk.x; st.endY = fk.y; st.endH = fk.h; st.rem = fk.rem
     st.jKind = fk.jKind; st.jCi = fk.jCi; st.jSkip = 0.0; st.jSide = 0; st.jBase = fk.base
+    st.offNow = Double.NaN
     st.prevWay = fk.prevWay; st.prevV = fk.prevV; st.prevD = fk.prevD
     st.dead = false
     st.forks.removeAll { it.idx >= fk.idx }
@@ -760,7 +821,10 @@ object LaneRibbon {
     // (by the lanes' numbers along the thread: on a straight run onto the next piece the map still has us on the last)
     val laneD = if (held) st.laneD else (an.lane + (if (same.wayId == wayId || same.via != wayId) same.gb else same.viaGb) - (if (a.via != Long.MIN_VALUE) a.g else same.g)) * LW
     st.laneD = laneD
-    var d = laneD + an.off * (LW / an.wMap)
+    // (parked at the curb: in the middle of the parking lane beside our lane - a lane here is LW wide, the parking lane
+    // as wide as the map has it)
+    val parkD = if (an.parkedD == 0.0) 0.0 else Math.signum(an.parkedD) * (LW / 2 + (abs(an.parkedD) - an.wMap / 2))
+    var d = laneD + an.off * (LW / an.wMap) + parkD
     // LaneAnchor changing its mind about our lane moves us a whole lane at once (driving across a line does not: there
     // the lane and our place in it change together). That is slid over at 4 ft a second, not jumped.
     val dt = if (st.dMs == 0L) 0.0 else ((now - st.dMs) / 1000.0).coerceIn(0.0, 1.0)
@@ -831,19 +895,20 @@ object LaneRibbon {
     fun twoWay(s: Smp) = !s.oneway
     fun plain(s: Smp) = twoWay(s) && s.hw in MINOR && s.n <= 1          // a small street: no line down its middle
     val left = { s: Smp -> -(s.nl + 0.5) * LW }
-    line(LaneMap.SOLID_WHITE, false, { !it.openR }) { (it.nr + 0.5) * LW }
-    line(LaneMap.EDGE_YELLOW, false, { !twoWay(it) && !it.openL }, left)
+    // (no edge line beside a parking lane: the street's own paint has none there either)
+    line(LaneMap.SOLID_WHITE, false, { !it.openR && it.spr < 1.2 }) { (it.nr + 0.5) * LW }
+    line(LaneMap.EDGE_YELLOW, false, { !twoWay(it) && !it.openL && it.spl < 1.2 }, left)
     line(LaneMap.DOUBLE_YELLOW, false, { twoWay(it) && !plain(it) }, left)
     for (j in 1..6) {
       line(LaneMap.DASH_WHITE, true, { it.nr >= j - 0.4 }) { (j - 0.5) * LW }
       line(LaneMap.DASH_WHITE, true, { it.nl >= j - 0.4 }) { -(j - 0.5) * LW }
       line(LaneMap.DASH_DIM, true, { twoWay(it) && it.no >= j + 0.6 }) { left(it) - j * LW }
     }
-    line(LaneMap.SOLID_DIM, false, { twoWay(it) && !plain(it) && it.no > 0.4 }) { left(it) - it.no * LW }
-    val farL = { s: Smp -> left(s) - (if (twoWay(s)) s.no * LW else 0.0) - SHOULDER }
-    val farR = { s: Smp -> (s.nr + 0.5) * LW + SHOULDER }
-    line(LaneMap.CURB, false, { !it.openL }) { farL(it) + 0.1 }
-    line(LaneMap.CURB, false, { !it.openR }) { farR(it) - 0.1 }
+    line(LaneMap.SOLID_DIM, false, { twoWay(it) && !plain(it) && it.no > 0.4 && it.spl < 1.2 }) { left(it) - it.no * LW }
+    // the street's edge: past the lanes, a parking lane where the map has one, else a narrow shoulder
+    val farL = { s: Smp -> left(s) - (if (twoWay(s)) s.no * LW else 0.0) - max(SHOULDER, s.spl) }
+    val farR = { s: Smp -> (s.nr + 0.5) * LW + max(SHOULDER, s.spr) }
+    // (the kerbs come at the end: they bend round into the streets that cross ours)
     val lx = FloatArray(n); val ly = FloatArray(n); val rx = FloatArray(n); val ry = FloatArray(n)
     val px = DoubleArray(n); val py = DoubleArray(n)
     var minX = Double.MAX_VALUE; var minY = Double.MAX_VALUE; var maxX = -Double.MAX_VALUE; var maxY = -Double.MAX_VALUE
@@ -856,6 +921,32 @@ object LaneRibbon {
       minX - 40, minY - 40, maxX + 40, maxY + 40)
 
     // ---------------------------------------------------------------- the roads that leave or cross it
+    /** where (x, y) lies against our kerbs: [sample, m along from it, m past the kerb on that side (> 0 outside), side
+     *  (1 right, -1 left)]; null when beside none of the samples near [near] */
+    fun kerbAt(x: Double, y: Double, near: Int): DoubleArray? {
+      var best: DoubleArray? = null
+      for (k in max(0, near - 40)..min(n - 1, near + 40)) {
+        val s = sm[k]
+        val f = (x - s.sx) * s.tx + (y - s.sy) * s.ty
+        if (abs(f) > STEP * 0.75) continue
+        val dd = (x - s.sx) * s.ty - (y - s.sy) * s.tx
+        if (best != null && abs(f) >= abs(best[1])) continue
+        best = doubleArrayOf(k.toDouble(), f, if (dd >= 0) dd - farR(s) else farL(s) - dd, if (dd >= 0) 1.0 else -1.0)
+      }
+      return best
+    }
+    /** our kerb on [side] at station [sta] (sample number with a fraction) */
+    fun kerbPt(sta: Double, side: Int): DoubleArray {
+      val i = sta.toInt().coerceIn(0, n - 2); val t = (sta - i).coerceIn(0.0, 1.0)
+      fun at(k: Int): DoubleArray { val q = sm[k]; val dd = if (side > 0) farR(q) else farL(q); return doubleArrayOf(q.sx + q.ty * dd, q.sy - q.tx * dd) }
+      val a = at(i); val z = at(i + 1)
+      return doubleArrayOf(a[0] + (z[0] - a[0]) * t, a[1] + (z[1] - a[1]) * t)
+    }
+    // 2.90.2 (owner, Nov 18: "the corners are not sharp edges, it's a little bit rounded"): where a street's kerb meets
+    // ours the corner is rounded off - 15 ft - and the asphalt fills it. Per side, the stretches of our kerb left out:
+    // the street's mouth and the parts that bend round into it [from station, to station]
+    val cut = arrayOf(ArrayList<DoubleArray>(), ArrayList<DoubleArray>())        // left, right
+    val city = sm[min(van.toInt().coerceAtLeast(0), n - 1)].hw !in LaneMap.FAST
     val vanI = van.toInt()
     for (arm in st.arms) {
       val at = (arm.idx - st.first).toInt() - o
@@ -899,10 +990,18 @@ object LaneRibbon {
         wi = nu; v = nv; d = nd; hops++
       }
       if (cx.size < 3 || len < 12.0) continue
-      // it starts 40 ft back under our own road, so its square end never shows beside it
+      // it starts up to 40 ft back under our own road, so its square end never shows beside it - but no farther than our
+      // far kerb (2.90.2: a street going off on one side only stuck out 20 ft on the other)
       run {
         val l = hypot(cx[1] - cx[0], cy[1] - cy[0]).coerceAtLeast(1e-6)
-        cx.add(0, cx[0] - (cx[1] - cx[0]) / l * 12.0); cy.add(0, cy[0] - (cy[1] - cy[0]) / l * 12.0); hw.add(0, hw[0])
+        val ux = (cx[1] - cx[0]) / l; val uy = (cy[1] - cy[0]) / l
+        var back = 12.0
+        while (back > 1.0) {
+          val bx = cx[0] - ux * back; val by = cy[0] - uy * back
+          if (listOf(-1.0, 1.0).all { sg -> val q = kerbAt(bx + uy * hw[0] * sg, by - ux * hw[0] * sg, at); q == null || q[2] < -0.3 }) break
+          back -= 0.5
+        }
+        cx.add(0, cx[0] - ux * back); cy.add(0, cy[0] - uy * back); hw.add(0, hw[0])
       }
       val m = cx.size
       // a branch that ends in sight narrows to a point over its last 100 ft (never a road sawn off square)
@@ -928,21 +1027,131 @@ object LaneRibbon {
         }
         return false
       }
-      val alines = ArrayList<LaneMap.MLine>()
-      for ((ex, ey) in listOf(alx to aly, arx to ary)) {
-        var a = -1
-        for (i in 0..m) {
-          val ok = i < m && !onRoad(ex[i].toDouble(), ey[i].toDouble())
-          if (ok && a < 0) a = i
-          if (!ok && a >= 0) { if (i - a >= 2) alines.add(LaneMap.MLine(LaneMap.CURB, ex.copyOfRange(a, i), ey.copyOfRange(a, i))); a = -1 }
+      // where each of its edges comes out past our kerb (a corner): [x, y, station, side, edge point, part of the way]
+      fun corner(ex: FloatArray, ey: FloatArray): DoubleArray? {
+        var prev: DoubleArray? = null
+        for (i in 0 until m) {
+          val q = kerbAt(ex[i].toDouble(), ey[i].toDouble(), at)
+          if (q != null && prev != null && prev[2] <= 0 && q[2] > 0 && prev[3] == q[3] && abs(q[0] - prev[0]) <= 2) {
+            val t = prev[2] / (prev[2] - q[2])
+            val x = ex[i - 1] + (ex[i] - ex[i - 1]) * t; val y = ey[i - 1] + (ey[i] - ey[i - 1]) * t
+            // only a street meeting ours at a good angle (not a ramp leaving at a slant)
+            val dx = (ex[i] - ex[i - 1]).toDouble(); val dy = (ey[i] - ey[i - 1]).toDouble()
+            val s = sm[q[0].toInt()]
+            if (abs(dx * s.ty - dy * s.tx) / hypot(dx, dy).coerceAtLeast(1e-6) < 0.5) return null
+            return doubleArrayOf(x, y, (prev[0] + prev[1] / STEP) * (1 - t) + (q[0] + q[1] / STEP) * t, q[3], i.toDouble(), t)
+          }
+          prev = q
         }
+        return null
       }
+      val edges = listOf(alx to aly, arx to ary)
+      val cs = if (city) edges.map { (ex, ey) -> corner(ex, ey) } else listOf(null, null)
+      val alines = ArrayList<LaneMap.MLine>()
+      for ((e, c) in edges.zip(cs)) {
+        val (ex, ey) = e
+        if (c == null) {
+          var a = -1
+          for (i in 0..m) {
+            val ok = i < m && !onRoad(ex[i].toDouble(), ey[i].toDouble())
+            if (ok && a < 0) a = i
+            if (!ok && a >= 0) { if (i - a >= 2) alines.add(LaneMap.MLine(LaneMap.CURB, ex.copyOfRange(a, i), ey.copyOfRange(a, i))); a = -1 }
+          }
+          continue
+        }
+        // the rounded corner: from our kerb R before it, round to the street's kerb R past it
+        val other = cs.firstOrNull { it != null && it !== c && it[3] == c[3] }
+        val away = if (other != null) Math.signum(c[2] - other[2]) else run {
+          val mid = kerbAt(cx[min(m - 1, c[4].toInt())], cy[min(m - 1, c[4].toInt())], at)
+          if (mid != null) Math.signum(c[2] - (mid[0] + mid[1] / STEP)) else 1.0
+        }
+        val r = min(4.6, max(0.0, len - 12.0) / 3)
+        if (r < 1.5 || away == 0.0) continue
+        val s1 = c[2] + away * r / STEP
+        if (s1 < 0 || s1 > n - 1) continue
+        val p1 = kerbPt(s1, c[3].toInt())
+        // the point r m on along the street's edge from the corner, and the edge from there
+        var k = c[4].toInt(); var qx = c[0]; var qy = c[1]; var left = r
+        while (k < m) {
+          val l = hypot(ex[k] - qx, ey[k] - qy)
+          if (l >= left) { qx += (ex[k] - qx) * left / l; qy += (ey[k] - qy) * left / l; left = 0.0; break }
+          left -= l; qx = ex[k].toDouble(); qy = ey[k].toDouble(); k++
+        }
+        if (left > 0) continue
+        val arc = 10
+        val ax = FloatArray(arc + 1); val ay = FloatArray(arc + 1)
+        for (j in 0..arc) {
+          val t = j.toDouble() / arc; val u = 1 - t
+          ax[j] = (u * u * p1[0] + 2 * u * t * c[0] + t * t * qx).toFloat(); ay[j] = (u * u * p1[1] + 2 * u * t * c[1] + t * t * qy).toFloat()
+        }
+        // the street's own kerb carries on from there
+        if (m - k >= 1) {
+          val kx = FloatArray(m - k + 1); val ky = FloatArray(m - k + 1)
+          kx[0] = qx.toFloat(); ky[0] = qy.toFloat()
+          for (i in k until m) { kx[i - k + 1] = ex[i]; ky[i - k + 1] = ey[i] }
+          alines.add(LaneMap.MLine(LaneMap.CURB, kx, ky))
+        }
+        // the asphalt inside the bend, and the kerb along it. Its outline goes round the same way as the roads' (the
+        // corner on the right of the bend): all the asphalt is one shape, and a piece going round the other way cancels
+        // where it overlaps another - a light seam along the street's edge
+        val cxF = FloatArray(arc + 1) { c[0].toFloat() }; val cyF = FloatArray(arc + 1) { c[1].toFloat() }
+        val onRight = (c[0] - p1[0]) * (qy - p1[1]) - (c[1] - p1[1]) * (qx - p1[0]) > 0
+        // the kerb along the bend starts 4 in inside the asphalt like ours does and ends on the street's own kerb
+        val mx = c[0] - (p1[0] + qx) / 2; val my = c[1] - (p1[1] + qy) / 2
+        val kxs = FloatArray(arc + 1); val kys = FloatArray(arc + 1)
+        for (j in 0..arc) {
+          val a0 = max(0, j - 1); val a1 = min(arc, j + 1)
+          var nx = -(ay[a1] - ay[a0]).toDouble(); var ny = (ax[a1] - ax[a0]).toDouble()
+          val nl = hypot(nx, ny).coerceAtLeast(1e-6); nx /= nl; ny /= nl
+          if (nx * mx + ny * my < 0) { nx = -nx; ny = -ny }
+          val inset = 0.1 * (1 - j.toDouble() / arc)
+          kxs[j] = (ax[j] + nx * inset).toFloat(); kys[j] = (ay[j] + ny * inset).toFloat()
+        }
+        ways.add(LaneMap.BWay(arm.wayId * 4 + arm.d + 2 + (if (e.first === alx) 1_000_000_000_000L else 2_000_000_000_000L), "", "", true, 0, 0.0,
+          DoubleArray(arc + 1) { ax[it].toDouble() }, DoubleArray(arc + 1) { ay[it].toDouble() }, LongArray(arc + 1),
+          listOf(LaneMap.MLine(LaneMap.CURB, kxs, kys)), if (onRight) ax else cxF, if (onRight) ay else cyF, if (onRight) cxF else ax,
+          if (onRight) cyF else ay, emptyList(), emptyList(), 1,
+          min(p1[0], qx) - 20, min(p1[1], qy) - 20, max(p1[0], qx) + 20, max(p1[1], qy) + 20))
+        cut[if (c[3] > 0) 1 else 0].add(doubleArrayOf(min(s1, c[2]), max(s1, c[2])))
+      }
+      // our kerb also stops across the street's mouth, between its two corners
+      val c0 = cs[0]; val c1 = cs[1]
+      if (c0 != null && c1 != null && c0[3] == c1[3]) cut[if (c0[3] > 0) 1 else 0].add(doubleArrayOf(min(c0[2], c1[2]), max(c0[2], c1[2])))
       ways.add(LaneMap.BWay(arm.wayId * 4 + arm.d + 2, "", "", true, 0, 0.0, cx.toDoubleArray(), cy.toDoubleArray(), LongArray(m), alines,
         alx, aly, arx, ary, emptyList(), emptyList(), 1, bx0 - 20, by0 - 20, bx1 + 20, by1 + 20))
     }
+    // ---------------------------------------------------------------- our kerbs
+    for ((si, side) in listOf(0 to -1, 1 to 1)) {
+      val cuts = cut[si]
+      fun inCut(sta: Double) = cuts.firstOrNull { sta >= it[0] - 1e-6 && sta <= it[1] + 1e-6 }
+      // where a street crosses with no rounded corner found: left out as before (the crossing's samples)
+      fun gone(i: Int): Boolean {
+        val s = sm[i]
+        if (if (side > 0) s.openR else s.openL) return true
+        if (inCut(i.toDouble()) != null) return true
+        // (a street crossing on one side only, a T: the kerb across from it stays)
+        return s.gap && cut.all { c -> c.none { i >= it[0] - 6 && i <= it[1] + 6 } }
+      }
+      val xs = ArrayList<Float>(); val ys = ArrayList<Float>()
+      fun flush() { if (xs.size >= 2) lines.add(LaneMap.MLine(LaneMap.CURB, xs.toFloatArray(), ys.toFloatArray())); xs.clear(); ys.clear() }
+      fun put(sta: Double) { val p = kerbPt(sta, side); val inset = if (side > 0) -0.1 else 0.1
+        val i = sta.toInt().coerceIn(0, n - 1); xs.add((p[0] + sm[i].ty * inset).toFloat()); ys.add((p[1] - sm[i].tx * inset).toFloat()) }
+      for (i in 0 until n) {
+        if (gone(i)) {
+          // ends exactly where a cut begins
+          if (xs.isNotEmpty()) { cuts.filter { it[0] > i - 1 && it[0] <= i }.minByOrNull { it[0] }?.let { put(it[0]) }; flush() }
+          continue
+        }
+        // starts exactly where a cut ends
+        if (xs.isEmpty() && i > 0) cuts.filter { it[1] >= i - 1 && it[1] < i }.maxByOrNull { it[1] }?.let { put(it[1]) }
+        put(i.toDouble())
+      }
+      flush()
+    }
     ways.add(road)
     val geo = Geo(DoubleArray(n) { sm[it].sx }, DoubleArray(n) { sm[it].sy }, DoubleArray(n) { sm[it].tx }, DoubleArray(n) { sm[it].ty },
-      DoubleArray(n) { sm[it].nl }, DoubleArray(n) { sm[it].nr }, DoubleArray(n) { sm[it].no }, BooleanArray(n) { !sm[it].oneway }, van, vanD, laneD)
+      DoubleArray(n) { sm[it].nl }, DoubleArray(n) { sm[it].nr }, DoubleArray(n) { sm[it].no }, BooleanArray(n) { !sm[it].oneway }, van, vanD, laneD,
+      DoubleArray(n) { sm[it].spl }, DoubleArray(n) { sm[it].spr })
     return LaneMap.Built(b.lat0, b.lon0, b.kx, b.cx, b.cy, ways, emptyMap(), now) to geo
   }
 }
