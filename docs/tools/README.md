@@ -68,8 +68,12 @@ picks.txt change). Each moment replays LaneMap + LaneFit over the 90 s before it
 
 Pictures of single moments (LaneSceneTest) can't show a road that jumps; this replays whole stretches of a drive at 10
 frames a second. Same data folder as LaneSceneTest, plus `DIR/seq.txt`, one stretch per line:
-`window,YYYY-MM-DD HH:MM:SS (Eastern),seconds,name[,day][,flip][,spin]` (`flip`: the lane card changes its mind as in
-the owner's Nov 17 video, `spin`: three made-up detected cars whose guessed heading flickers). Set up like PicTest with
+`window,YYYY-MM-DD HH:MM:SS (Eastern),seconds,name[,day][,flip][,spin][,rtk][,city][,lights=F[:G]][,zoom=D][,tilt=E]`
+(`flip`: the lane card changes its mind as in the owner's Nov 17 video, `spin`: three made-up detected cars whose
+guessed heading flickers; 2.90.2: `rtk` stands in for the tablet's RTK receiver - standing still, the comma's fix
+averaged over the stop with 3 ft accuracy, moving, the comma's own - `city` the cars the detector saw parked on Nov 18,
+`lights=F[:G]` two traffic lights F m ahead 16 ft right and G m ahead 30 ft left when the stretch starts, fixed in the
+world, `zoom=` / `tilt=` the camera farther back / higher). Set up like PicTest with
 `it.systemProperty("picOut", System.getenv("PIC_OUT") ?: "/tmp")`, `it.systemProperty("laneData",
 System.getenv("LANE_DATA") ?: "/tmp")` and `it.maxHeapSize = "3g"`, then
 `SEQ_MODES=before,anchor PIC_OUT=OUT LANE_DATA=DIR ./gradlew :app:testDebugUnitTest --offline --rerun --tests
@@ -99,8 +103,11 @@ GPS under a bridge); LaneRibbon on made-up maps of the places where the map's ow
 lane fewer, an exit the map starts at the middle of the road, ramps it ends there (one lane, two lanes from either
 side, one brought in over 500 ft in short pieces), and how much of the road behind us is drawn. Each LaneRibbon test
 drives the map at 34 mph with LaneAnchor placing us and checks the thread for bends that aren't there and the lane
-we're put in. Run: `./gradlew :app:testDebugUnitTest --offline --rerun --tests com.starpilot.starview.LaneRibbonTest`
-(likewise the other two).
+we're put in. 2.90.2: LaneAnchor parked at the curb and pulling out, standing still with the GPS heading the wrong way
+round, waiting at a crossing (not parked); LaneRibbon through a left-turn bay (no swing), a cross street's rounded
+corners (and their asphalt going round the same way as the road's), a street going off on one side only. Run:
+`./gradlew :app:testDebugUnitTest --offline --rerun --tests com.starpilot.starview.LaneRibbonTest` (likewise the other
+two).
 
 `ExitGuardTest.kt` (2.87.1): when the route's exit may signal by itself, on a made-up lane tracker (the Nov 12 left
 fork: sure of no lane on the left, then "maybe one" right before the fork). Copy into
