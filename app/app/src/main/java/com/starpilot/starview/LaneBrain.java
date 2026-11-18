@@ -1053,7 +1053,7 @@ public final class LaneBrain {
      *  between lanes, and the road has 1 to 6 lanes our way. How hard it pulls goes with how well the map lines up. */
     final void hybAnswer() {
         try {
-            // 2.90.5: our lane by the RTK fix (under 1 ft) on a map the camera has shown to lie where it is here, or a
+            // 2.90.5: our lane by the RTK fix (under 2 ft) on a map the camera has shown to lie where it is here, or a
             // lane change the fix is following (counted half way over): it decides - the lanes on our left from it,
             // strongly; those on our right as the map counts them, a little (the card may count an exit lane the map
             // starts later). Owner, Nov 18: "you know already how many lanes there are ... instead of relying on the camera"

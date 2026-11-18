@@ -115,7 +115,7 @@ object LaneFit {
     // 2.90.0: the lane card's count for LaneAnchor, read here (this thread owns the lane tracker)
     val hint = try { LaneSceneView.Lanes.live() } catch (e: Throwable) { null }
     val speed = t.vEgo.toDouble()
-    // 2.90.5: the RTK fix's own accuracy (LaneAnchor follows a lane change by it when under 1 ft), and the signal for a
+    // 2.90.5: the RTK fix's own accuracy (LaneAnchor follows a lane change by it when under 2 ft), and the signal for a
     // lane change: openpilot changing lanes, else the blinker
     val rtkAcc = if (rtk.fast(now) && rtk.accM.isFinite()) rtk.accM else Double.NaN
     val signal = if (m.laneChanging && m.laneChangeDir != 0) m.laneChangeDir else if (t.leftBlinker && !t.rightBlinker) -1 else if (t.rightBlinker && !t.leftBlinker) 1 else 0

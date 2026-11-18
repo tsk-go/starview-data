@@ -248,12 +248,13 @@ object LaneAnchor {
       shown = if (hop != null) (shown + hop).coerceIn(0, n - 1) else (0 until n).minByOrNull { abs(lat[it] - was) } ?: -1
     }
     // ---------------------------------------------------------------- 2.90.5: a lane change by the RTK fix
-    // With a perfect fix (under 1 ft) and the blinker on (or openpilot changing lanes), we follow how far we move
+    // With a perfect fix (under 2 ft: owner, Nov 18 - 1 ft was too tight for a float fix) and the blinker on (or
+    // openpilot changing lanes), we follow how far we move
     // sideways against the road - which needs no map to be right - and are in the next lane when half way over. Between
     // fixes and for up to 4 s without one (a bridge, the elevated tracks) the car's own motion carries it: our heading
     // against the road, last from the RTK, turned by the gyro; a fix that jumps where the car didn't go is not taken.
     // Owner, Nov 18: the camera loses its lines while we cross, the Scene moved over 16 s after the change began.
-    val rtkGood = gpsOk && rtkAcc.isFinite() && rtkAcc <= 0.3
+    val rtkGood = gpsOk && rtkAcc.isFinite() && rtkAcc <= 0.6
     val sameRoad = !fresh && w.id == st.wayId && n == st.p.size && st.lat.size == n
     val refJ = if (shown in 0 until n) shown else -1
     val roadBrg = if (refJ >= 0) lanes[refJ].pr.bearing else Double.NaN
@@ -345,7 +346,8 @@ object LaneAnchor {
     // which lane we're in - strongly, at every step (a map 10 ft off, as on a street on Nov 18, never gets here)
     if (rtkGood && st.trust >= 0.6 && !standing) {
       val k = min(1.0, dt / 0.5)
-      for (j in 0 until n) p[j] *= exp(-0.5 * (lat[j] / 0.8).pow(2)).pow(k) + 1e-6
+      val sig = hypot(0.8, rtkAcc)
+      for (j in 0 until n) p[j] *= exp(-0.5 * (lat[j] / sig).pow(2)).pow(k) + 1e-6
     }
     norm(p)
     // the lane drawn: the likeliest at the start; later another one only once it has been clearly the likelier for 3 s

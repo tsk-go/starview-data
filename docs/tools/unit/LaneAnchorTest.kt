@@ -117,31 +117,37 @@ class LaneAnchorTest {
   @Test fun aLaneChangeIsFollowedByTheRtkFix() {
     // 2.90.5 (owner, Nov 18: the camera lost its lines while we crossed and the Scene moved over 16 s after the change
     // began). With a perfect fix and the blinker on we're in the next lane half way over, and drawn where we are all the
-    // way across. Here the camera sees nothing of our lines from the moment we start moving over.
+    // way across. Here the camera sees nothing of our lines from the moment we start moving over. A fixed fix (under an
+    // inch), and a float one (under 2 ft, its places 6 in apart from one to the next).
+    for ((acc, noise) in listOf(0.02 to 0.0, 0.55 to 0.15)) followed(acc, noise)
+  }
+
+  private fun followed(acc: Double, noise: Double) {
     val st = LaneAnchor.State()
     var t = 0.0; var lastX = Double.NaN; var switched = Double.NaN
     val half = (mid[0] + mid[1]) / 2
     var crossedAt = Double.NaN
     while (t <= 16.0) {
       val k = ((t - 6.0) / 3.0).coerceIn(0.0, 1.0)
-      val x = mid[1] + (mid[0] - mid[1]) * (1 - cos(PI * k)) / 2
+      val x0 = mid[1] + (mid[0] - mid[1]) * (1 - cos(PI * k)) / 2
+      val x = x0 + noise * sin(t * 7.3) * cos(t * 3.1)
       val vx = if (t in 6.0..9.0) (mid[0] - mid[1]) * PI / 6.0 * sin(PI * k) else 0.0
       val h = atan2(vx, 15.0)
       val y = -300.0 + 15.0 * t
-      if (crossedAt.isNaN() && x <= half) crossedAt = t
+      if (crossedAt.isNaN() && x0 <= half) crossedAt = t
       val signal = if (t in 5.5..9.5) -1 else 0
       val c = if (t < 6.0) cam(1, 0.0) else if (t < 9.5) blind() else cam(0, 0.0)
-      val f = LaneAnchor.run(b, LaneFit.Pose(x, y, h), 0.5, c, doubleArrayOf(x, y, PI / 2 - h, 15.0 * t), (t * 1000).toLong() + 1000,
-        st, null, null, 0, 15.0, 0.02, signal)
+      val f = LaneAnchor.run(b, LaneFit.Pose(x, y, h), 0.5, c, doubleArrayOf(x0, y, PI / 2 - h, 15.0 * t), (t * 1000).toLong() + 1000,
+        st, null, null, 0, 15.0, acc, signal)
       assertNotNull("a fit at $t s: ${LaneAnchor.status}", f)
       if (t > 3) {
-        if (lastX.isFinite()) assertTrue("drawn without a jump at $t s: ${f!!.pose.x} after $lastX", abs(f.pose.x - lastX) < 0.6)
+        if (lastX.isFinite()) assertTrue("fix $acc: drawn without a jump at $t s: ${f!!.pose.x} after $lastX", abs(f.pose.x - lastX) < 0.6)
         if (switched.isNaN() && st.lane == 0) switched = t
       }
       lastX = f!!.pose.x
       t += 0.2
     }
-    assertTrue("in the left lane within half a second of half way over ($crossedAt s): $switched", switched >= crossedAt - 0.01 && switched <= crossedAt + 0.5)
+    assertTrue("fix $acc: in the left lane within half a second of half way over ($crossedAt s): $switched", switched >= crossedAt - 0.21 && switched <= crossedAt + 0.5)
     assertEquals(0, st.lane)
   }
 
