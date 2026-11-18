@@ -164,7 +164,11 @@ class SceneSeqTest {
             fit = LaneFit.run(b, gps, acc, cam, odo, (r.t * 1000).toLong(), fit)
             if (anchored) {
               val sh = v.crossed; v.crossed = 0
-              afit = LaneAnchor.run(b, gps, acc, cam, odo, (r.t * 1000).toLong(), ast, cardNow, null, sh, r.f.getDouble("speed"))
+              // 2.90.5: the RTK fix's own accuracy (as recorded) and the lane change signal: openpilot's, else the blinker
+              val rtkAcc = if (useRtk) r.f.optJSONArray("rtk")?.optDouble(2) ?: Double.NaN else Double.NaN
+              val signal = if (r.lcDir != 0 && (r.lcState == "laneChangeStarting" || r.lcState == "laneChangeFinishing")) r.lcDir
+                else if (r.f.optBoolean("lb") && !r.f.optBoolean("rb")) -1 else if (r.f.optBoolean("rb") && !r.f.optBoolean("lb")) 1 else 0
+              afit = LaneAnchor.run(b, gps, acc, cam, odo, (r.t * 1000).toLong(), ast, cardNow, null, sh, r.f.getDouble("speed"), rtkAcc, signal)
               val seen = afit
               afit = if (seen == null) null else LaneRibbon.update(b, ast, rst, cam, odo, (r.t * 1000).toLong())
               for (ln in trace) log.append(String.format("ribbon %6.2f s: %s\n", r.t - t0, ln))

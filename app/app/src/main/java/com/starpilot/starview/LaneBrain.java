@@ -1053,6 +1053,31 @@ public final class LaneBrain {
      *  between lanes, and the road has 1 to 6 lanes our way. How hard it pulls goes with how well the map lines up. */
     final void hybAnswer() {
         try {
+            // 2.90.5: our lane by the RTK fix (under 1 ft) on a map the camera has shown to lie where it is here, or a
+            // lane change the fix is following (counted half way over): it decides - the lanes on our left from it,
+            // strongly; those on our right as the map counts them, a little (the card may count an exit lane the map
+            // starts later). Owner, Nov 18: "you know already how many lanes there are ... instead of relying on the camera"
+            int[] rl = LaneAnchor.INSTANCE.getRtkLane();
+            if (rl != null && System.currentTimeMillis() - LaneAnchor.INSTANCE.getRtkLaneMs() < 1500L) {
+                int wantL = rl[0] - 1;
+                int wantR = rl[1] - rl[0];
+                double s = 0.0d;
+                for (int l = 0; l < 6; l++) {
+                    for (int r = 0; r < 6; r++) {
+                        double v = this.q[l][r] * (Math.exp(-3.0d * Math.abs(l - wantL) - 0.7d * Math.abs(r - wantR)) + 1.0e-4d);
+                        this.q[l][r] = v;
+                        s += v;
+                    }
+                }
+                if (s > 0.0d) {
+                    for (double[] a : this.q) {
+                        for (int j = 0; j < a.length; j++) {
+                            a[j] = a[j] / s;
+                        }
+                    }
+                }
+                return;
+            }
             LaneFit.Fit f = LaneFit.INSTANCE.getFit();
             if (f == null || f.getHidden() || System.currentTimeMillis() - f.getAtMs() > 1500L) {
                 return;

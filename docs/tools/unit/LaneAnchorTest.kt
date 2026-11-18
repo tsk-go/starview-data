@@ -10,6 +10,8 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.atan2
+import kotlin.math.cos
 import kotlin.math.sin
 
 /**
@@ -109,6 +111,51 @@ class LaneAnchorTest {
         assertEquals("the lane drawn at $t s", 2, st.lane)
         assertTrue("where we are at $t s: ${pose.y} for ${-300 + 15 * t}", abs(pose.y - (-300 + 15 * t)) < 4.0)
       }
+    }
+  }
+
+  @Test fun aLaneChangeIsFollowedByTheRtkFix() {
+    // 2.90.5 (owner, Nov 18: the camera lost its lines while we crossed and the Scene moved over 16 s after the change
+    // began). With a perfect fix and the blinker on we're in the next lane half way over, and drawn where we are all the
+    // way across. Here the camera sees nothing of our lines from the moment we start moving over.
+    val st = LaneAnchor.State()
+    var t = 0.0; var lastX = Double.NaN; var switched = Double.NaN
+    val half = (mid[0] + mid[1]) / 2
+    var crossedAt = Double.NaN
+    while (t <= 16.0) {
+      val k = ((t - 6.0) / 3.0).coerceIn(0.0, 1.0)
+      val x = mid[1] + (mid[0] - mid[1]) * (1 - cos(PI * k)) / 2
+      val vx = if (t in 6.0..9.0) (mid[0] - mid[1]) * PI / 6.0 * sin(PI * k) else 0.0
+      val h = atan2(vx, 15.0)
+      val y = -300.0 + 15.0 * t
+      if (crossedAt.isNaN() && x <= half) crossedAt = t
+      val signal = if (t in 5.5..9.5) -1 else 0
+      val c = if (t < 6.0) cam(1, 0.0) else if (t < 9.5) blind() else cam(0, 0.0)
+      val f = LaneAnchor.run(b, LaneFit.Pose(x, y, h), 0.5, c, doubleArrayOf(x, y, PI / 2 - h, 15.0 * t), (t * 1000).toLong() + 1000,
+        st, null, null, 0, 15.0, 0.02, signal)
+      assertNotNull("a fit at $t s: ${LaneAnchor.status}", f)
+      if (t > 3) {
+        if (lastX.isFinite()) assertTrue("drawn without a jump at $t s: ${f!!.pose.x} after $lastX", abs(f.pose.x - lastX) < 0.6)
+        if (switched.isNaN() && st.lane == 0) switched = t
+      }
+      lastX = f!!.pose.x
+      t += 0.2
+    }
+    assertTrue("in the left lane within half a second of half way over ($crossedAt s): $switched", switched >= crossedAt - 0.01 && switched <= crossedAt + 0.5)
+    assertEquals(0, st.lane)
+  }
+
+  @Test fun aFixThatJumpsWhereTheCarDidntGoIsNotALaneChange() {
+    // the blinker on, no lane change; one fix 8 ft off to the left (a reflection off a building)
+    val st = LaneAnchor.State()
+    var t = 0.0
+    while (t <= 12.0) {
+      val y = -300.0 + 15.0 * t
+      val x = mid[1] + if (abs(t - 6.0) < 0.05) -2.5 else 0.0
+      LaneAnchor.run(b, LaneFit.Pose(x, y, 0.0), 0.5, cam(1, 0.0), doubleArrayOf(mid[1], y, PI / 2, 15.0 * t), (t * 1000).toLong() + 1000,
+        st, null, null, 0, 15.0, 0.02, if (t > 3.0) -1 else 0)
+      if (t > 3) assertEquals("the lane drawn at $t s: ${LaneAnchor.status}", 1, st.lane)
+      t += 0.2
     }
   }
 
