@@ -101,6 +101,8 @@ object LaneAnchor {
     internal var odo: DoubleArray? = null
     internal var built: LaneMap.Built? = null
     internal var reach: Set<Long>? = null
+    /** from LaneRibbon: the roads we can be on by driving (its thread around us, the branches of the forks near us) */
+    internal var expect: Set<Long>? = null
     // for LaneRibbon: the road piece and lane we're on, the point of that lane's middle beside us, its width on the map
     internal var wayIdx = -1
     internal var mlane: LaneMap.MLane? = null
@@ -148,7 +150,7 @@ object LaneAnchor {
     var bestWay = -1; var bestScore = 14.0 + min(acc, 15.0)
     // locked onto a road the GPS has been 30 ft and more away from for 5 s: start over
     val lost = !fresh && st.farMs != 0L && now - st.farMs > 5000
-    val reach = if (fresh || lost) null else st.reach
+    val reach = if (fresh || lost) null else st.expect ?: st.reach
     var own = Double.MAX_VALUE
     for ((wi, w) in b.ways.withIndex()) {
       if (!w.near(qx, qy, 40.0)) continue
@@ -282,7 +284,7 @@ object LaneAnchor {
     return f
   }
 
-  private fun reset(st: State) { st.mlane = null; st.wayIdx = -1; st.farMs = 0L; st.pose = null; st.p = DoubleArray(0); st.shown = -1; st.cand = -1; st.wayId = Long.MIN_VALUE; st.reach = null }
+  private fun reset(st: State) { st.expect = null; st.mlane = null; st.wayIdx = -1; st.farMs = 0L; st.pose = null; st.p = DoubleArray(0); st.shown = -1; st.cand = -1; st.wayId = Long.MIN_VALUE; st.reach = null }
 
   private fun norm(p: DoubleArray) {
     var s = 0.0

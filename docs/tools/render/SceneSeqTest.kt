@@ -87,6 +87,8 @@ class SceneSeqTest {
         val anchored = mode == "anchor"
         val ast = LaneAnchor.State()
         val rst = LaneRibbon.State()
+        val trace = ArrayList<String>()
+        rst.trace = trace
         var afit: LaneFit.Fit? = null
         var lastLaneShown = -1; var laneChanges = 0
         val od = File(out, "${name}_$mode").apply { mkdirs() }
@@ -131,6 +133,8 @@ class SceneSeqTest {
               afit = LaneAnchor.run(b, gps, r.f.getDouble("acc"), cam, odo, (r.t * 1000).toLong(), ast, cardNow, null, sh)
               val seen = afit
               afit = if (seen == null) null else LaneRibbon.update(b, ast, rst, cam, odo, (r.t * 1000).toLong())
+              for (ln in trace) log.append(String.format("ribbon %6.2f s: %s\n", r.t - t0, ln))
+              trace.clear()
               if (seen != null && afit == null && r.t >= t0) log.append(String.format("anchor %6.2f s: no ribbon (%d steps)\n", r.t - t0, rst.steps))
               if (r.t >= t0) {
                 if (lastLaneShown >= 0 && ast.lane != lastLaneShown) { laneChanges++; log.append(String.format("anchor %6.2f s: drawn in lane %d (was %d), crossed %d, %s\n", r.t - t0, ast.lane + 1, lastLaneShown + 1, sh, LaneAnchor.status)) }
