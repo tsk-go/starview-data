@@ -235,8 +235,13 @@ object LaneAnchor {
       st.off -= shift * laneWidth(lat, shown.coerceAtLeast(0))
     }
     norm(p)
+    // 2.90.4: standing still we can't change lanes, and what we see doesn't change either - only what's in the way: at a
+    // light the car beside us hid the line on our left, the lane card counted no lane there (99 %) and in 15 s the belief
+    // moved us over into it, the car beside us drawn across the yellow line (owner, Nov 18: "messed up position wise").
+    // So standing, the belief stays as it was when we stopped (from the start, the GPS place alone).
+    val standing = speed.isFinite() && speed < 1.0
     // a little doubt creeps in with time (a lane change the camera missed)
-    val eps = min(0.02, 0.03 * dt)
+    val eps = if (standing) 0.0 else min(0.02, 0.03 * dt)
     val q = DoubleArray(n)
     for (j in 0 until n) { q[j] += p[j] * (1 - 2 * eps); q[max(0, j - 1)] += p[j] * eps; q[min(n - 1, j + 1)] += p[j] * eps }
     p = q
@@ -245,7 +250,7 @@ object LaneAnchor {
     // without crossing a line, so apart from that the belief may only move on what lasts: each reading counts once per
     // 8 s (once per 2 s in the first 10 s, while finding the lane).
     if (fresh) st.bornMs = now
-    val a = min(1.0, dt / (if (now - st.bornMs < 10_000) 2.0 else 8.0))
+    val a = if (standing) 0.0 else min(1.0, dt / (if (now - st.bornMs < 10_000) 2.0 else 8.0))
     val guess = if (shown >= 0) st.off else 0.0
     for (j in 0 until n) {
       var l = 1.0

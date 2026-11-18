@@ -64,7 +64,9 @@ object LaneRibbon {
      *  other way's lanes), as on the map here, and eased like the lane counts */
     var pr = 0.0; var pl = 0.0
     var spr = 0.0; var spl = 0.0
-    fun park(w: LaneMap.BWay, dir: Int): Smp { pr = if (dir > 0) w.parkR else w.parkL; pl = if (dir > 0) w.parkL else w.parkR; spr = pr; spl = pl; return this }
+    /** 2.90.4: the street's lanes are painted (a small two-way street without: no line down its middle) */
+    var marked = true
+    fun park(w: LaneMap.BWay, dir: Int): Smp { pr = if (dir > 0) w.parkR else w.parkL; pl = if (dir > 0) w.parkL else w.parkR; spr = pr; spl = pl; marked = w.marked; return this }
   }
 
   /** a road meeting ours near step [idx] of the thread: along way [wayId] from its point [v] going [d] */
@@ -893,7 +895,9 @@ object LaneRibbon {
       }
     }
     fun twoWay(s: Smp) = !s.oneway
-    fun plain(s: Smp) = twoWay(s) && s.hw in MINOR && s.n <= 1          // a small street: no line down its middle
+    // a small street with no painted lanes: no line down its middle. 2.90.4: only when the map doesn't count its lanes
+    // (owner, Nov 18, on a two-way residential street with a double yellow line: "No lines" - its map has lanes=2)
+    fun plain(s: Smp) = twoWay(s) && s.hw in MINOR && s.n <= 1 && !s.marked
     val left = { s: Smp -> -(s.nl + 0.5) * LW }
     // (no edge line beside a parking lane: the street's own paint has none there either)
     line(LaneMap.SOLID_WHITE, false, { !it.openR && it.spr < 1.2 }) { (it.nr + 0.5) * LW }

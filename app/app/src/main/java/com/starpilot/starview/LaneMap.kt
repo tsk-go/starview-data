@@ -69,7 +69,7 @@ object LaneMap {
   private val KEEP_TAGS = setOf("highway", "name", "ref", "oneway", "junction", "lanes", "lanes:forward",
     "lanes:backward", "lanes:both_ways", "turn:lanes", "turn:lanes:forward", "turn:lanes:backward", "width",
     "parking:both", "parking:left", "parking:right", "parking:lane:both", "parking:lane:left", "parking:lane:right",
-    "placement", "layer", "bridge", "tunnel", "destination", "destination:ref", "destination:lanes")
+    "placement", "layer", "bridge", "tunnel", "destination", "destination:ref", "destination:lanes", "lane_markings")
   private val URLS = listOf("https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter")
 
@@ -96,6 +96,8 @@ object LaneMap {
     val parkL: Double = 0.0, val parkR: Double = 0.0,
     /** 2.90.2: the painted median this map puts between the two directions (m; a stretch between turn bays) */
     val median: Double = 0.0,
+    /** 2.90.4: its lanes are painted ([Layout.marked]) */
+    val marked: Boolean = true,
   ) {
     /** 2.89.2: the lines as built, before trim cut them at junctions: what LaneFit lines the camera's lines up with
      *  (the camera's lane lines carry on through a junction, so lines cut there made the fit worse just before one) */
@@ -287,7 +289,9 @@ object LaneMap {
   }
 
   class Lane(val dir: Int, val turn: String, val w: Double)
-  class Layout(val lanes: List<Lane>, val parkL: Double, val parkR: Double, val oneway: Boolean)
+  /** [marked] (2.90.4): the lanes are painted - the map says so (lane_markings=yes) or counts them (a lanes tag);
+   *  lane_markings=no, or no count on a small street, is a street with no line down its middle */
+  class Layout(val lanes: List<Lane>, val parkL: Double, val parkR: Double, val oneway: Boolean, val marked: Boolean = true)
 
   private fun num(v: String?): Double? {
     if (v.isNullOrBlank()) return null
@@ -341,7 +345,9 @@ object LaneMap {
       val inner = wt - parkL - parkR
       if (inner > 2.5 * lanes.size) lanes = lanes.map { Lane(it.dir, it.turn, inner / lanes.size) }
     }
-    return Layout(lanes, parkL, parkR, oneway)
+    val lm = t["lane_markings"]
+    val marked = if (lm == "no") false else lm == "yes" || t["lanes"] != null || t["lanes:forward"] != null || t["lanes:backward"] != null
+    return Layout(lanes, parkL, parkR, oneway, marked)
   }
 
   /** the carriageway's centre relative to the way line, from placement=left_of:N / right_of:N / middle_of:N
@@ -701,6 +707,6 @@ object LaneMap {
     val pad = W / 2 + 6
     val flow = if (!w.lay.oneway) 0 else if (t["oneway"] == "-1") -1 else 1
     return BWay(w.w.id, w.hw, w.key, w.lay.oneway, layer, W, w.px, w.py, w.keys, lines, lx, ly, rx, ry, mlanes, arrows, flow,
-      minX - pad, minY - pad, maxX + pad, maxY + pad, w.lay.parkL, w.lay.parkR, med)
+      minX - pad, minY - pad, maxX + pad, maxY + pad, w.lay.parkL, w.lay.parkR, med, w.lay.marked)
   }
 }

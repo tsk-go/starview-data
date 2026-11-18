@@ -14,8 +14,9 @@ import kotlin.math.sin
 
 /**
  * 2.90.0: LaneAnchor (the map is the road, the camera places us on it) on a made-up straight one-way road of three
- * lanes going north, driven at 34 mph in the middle lane with a GPS that wanders 10 ft to either side. 2.90.2: parked at
- * the curb of a two-way avenue and pulling out; and the way round when we start standing still.
+ * lanes going north, driven at 34 mph in the middle lane with a GPS that wanders 10 ft to either side; 2.90.4: standing
+ * at a light. 2.90.2: parked at the curb of a two-way avenue and pulling out; and the way round when we start standing
+ * still.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
@@ -108,6 +109,26 @@ class LaneAnchorTest {
         assertEquals("the lane drawn at $t s", 2, st.lane)
         assertTrue("where we are at $t s: ${pose.y} for ${-300 + 15 * t}", abs(pose.y - (-300 + 15 * t)) < 4.0)
       }
+    }
+  }
+
+  @Test fun standingAtALightWhatTheCameraCantSeeMovesNothing() {
+    // 2.90.4, Nov 18 at a light: the car beside us hid the line on our left, the lane card counted no lane there and
+    // within 15 s the Scene had moved us over into the lane that car was in. Here the map is 5 ft off to the left, and
+    // standing, the camera is sure of neither road edge (as at that light).
+    val st = LaneAnchor.State()
+    val c = cam(1, 0.0)
+    val stopped = LaneFit.Cam(c.lx, c.ly, c.lp, c.ex, c.ey, floatArrayOf(2.0f, 2.0f))
+    var t = 0.0; var y = -300.0
+    while (t <= 60.0) {
+      val v = if (t < 10) 15.0 else 0.0
+      y += v * 0.25
+      val card = if (t < 10) LaneSceneView.Lanes(1, 1, -1) else LaneSceneView.Lanes(0, 2, -1)
+      val f = LaneAnchor.run(b, LaneFit.Pose(mid[1] - 1.5, y, if (v > 0) 0.0 else Double.NaN), 0.5, if (v > 0) c else stopped,
+        doubleArrayOf(mid[1], y, PI / 2, y + 300), (t * 1000).toLong() + 1000, st, card, null, 0, v)
+      assertNotNull("a fit at $t s: ${LaneAnchor.status}", f)
+      if (t > 5) assertEquals("the lane drawn at $t s: ${LaneAnchor.status}", 1, st.lane)
+      t += 0.25
     }
   }
 

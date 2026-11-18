@@ -1,5 +1,6 @@
 package com.starpilot.starview
 
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -218,6 +219,20 @@ class LaneRibbonTest {
     assertTrue("the thread around the bay: ${p.size} steps", p.size > 100)
     for (q in p) assertTrue("our lane runs straight on at y ${q[1].toInt()}: x ${q[0]}\n${st.trace}", abs(q[0] - p[0][0]) < 0.3)
     assertTrue("our lane, not the middle of the street: ${p[0][0]}", abs(p[0][0] - x0) < 0.6)
+  }
+
+  @Test fun aSmallStreetHasItsMiddleLineWhenTheMapCountsItsLanes() {
+    // 2.90.4 (owner, Nov 18, on a two-way residential street with a double yellow line and parking both sides: "No
+    // lines"): a small two-way street had no line down its middle, and since 2.90.2 no edge line beside its parking
+    // lanes either. The map counting its lanes (or lane_markings=yes) means they are painted.
+    val pts = listOf(0.0 to -400.0, 0.0 to 400.0).joinToString(",") { """{"lat":${lat0 + it.second / ky},"lon":${lon0 + it.first / kx}}""" }
+    for ((tags, painted) in listOf(""""lanes":"2",""" to true, "" to false, """"lane_markings":"yes",""" to true,
+                                   """"lanes":"2","lane_markings":"no",""" to false)) {
+      val b = build("""{"type":"way","id":1,"tags":{"highway":"residential","name":"S1","oneway":"no",$tags"parking:both":"lane"},"geometry":[$pts]}""")
+      drive(b, listOf(doubleArrayOf(1.5, -380.0), doubleArrayOf(1.5, -60.0)))
+      val road = last!!.built.ways.single { it.id == 1L }
+      assertEquals("{$tags}: a double yellow line", painted, road.lines.any { it.style == LaneMap.DOUBLE_YELLOW })
+    }
   }
 
   @Test fun aStreetGoingOffOnOneSideStaysOnThatSide() {
