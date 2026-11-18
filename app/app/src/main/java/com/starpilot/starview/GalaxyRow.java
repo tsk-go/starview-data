@@ -49,6 +49,7 @@ public final class GalaxyRow {
         Control control;
         Intrinsics.checkNotNullParameter(o, "o");
         this.index = index;
+        o = GalaxyMirror.row(this, o);   // Galaxy's presentation of rows that came after the recovery (hybrid patch)
         String optString = o.optString("label");
         Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
         this.label = optString;

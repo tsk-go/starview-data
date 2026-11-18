@@ -389,6 +389,21 @@ m.insert_after(":cond_4", ["iget-object v1, v4, Lkotlin/jvm/internal/Ref$ObjectR
                            "move-result-object v1",
                            "iput-object v1, v4, Lkotlin/jvm/internal/Ref$ObjectRef;->element:Ljava/lang/Object;"])
 
+# ---------------------------------------------------------------- Galaxy's settings rows (StarPilot testing, Nov 18)
+GMIR = "Lcom/starpilot/starview/GalaxyMirror;"
+GROW = "Lcom/starpilot/starview/GalaxyRow;"
+# the row's JSON as Galaxy presents it, before anything reads it (p2 = the JSON; "selected-profile", learnedValue)
+m = M("GalaxyRow", "<init>(ILorg/json/JSONObject;)V")
+m.insert_after(f"iput p1, p0, {GROW}->index:I",
+               [f"invoke-static {{p0, p2}}, {GMIR}->row({GROW}Lorg/json/JSONObject;)Lorg/json/JSONObject;", "move-result-object p2"])
+# the learned value beside a slider's value (v13 = the slider's header, v9 = the row)
+m = M("GalaxySettingsView", "sliderRow(Lcom/starpilot/starview/GalaxyRow;)V")
+i = m.find("invoke-direct {v8, v13, v9}, Lcom/starpilot/starview/GalaxySettingsView;->defaultButton(Landroid/widget/LinearLayout;"
+           "Lcom/starpilot/starview/GalaxyRow;)V")
+k = min(x for x in instr_idx(m.lines) if x > i and "addView" in m.lines[x])
+assert m.lines[k].strip() == "invoke-virtual {v13, v0}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V", m.lines[k]
+m.add(k + 1, k + 1, [f"\n    invoke-static {{v13, v9}}, {GMIR}->learned(Landroid/widget/LinearLayout;{GROW})V\n"])
+
 # ---------------------------------------------------------------- checks + output
 for m in METHODS:
   for old, new in m.edits:

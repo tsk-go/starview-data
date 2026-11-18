@@ -12,7 +12,7 @@ guard.py stops the build until the decision (and the patch) are looked at again.
 """
 
 METHOD_LEVEL = {"MainActivity", "SettingsActivity", "MapPane", "HudEditor", "WheelButton", "UiSettings", "LaneSuggest",
-                "VoiceNote", "LaneBrain"}
+                "VoiceNote", "LaneBrain", "GalaxyRow", "GalaxySettingsView"}
 
 DECISIONS = {
   "MainActivity": {
@@ -82,6 +82,13 @@ DECISIONS = {
   "LaneBrain": {
     "answer()V": ("patch", "48e94868aa19"),
     "edges$side$12(Lcom/starpilot/starview/LaneBrain;FJILcom/starpilot/starview/LaneBrain$Vote;FFFLcom/starpilot/starview/LaneMarks$Mark;F)V": ("patch", "e5fc79ddb7c7"),
+  },
+  # 2.90.1: Galaxy's settings rows as StarPilot's Nov 18 testing update presents them (GalaxyMirror)
+  "GalaxyRow": {
+    "<init>(ILorg/json/JSONObject;)V": ("patch", "d6102427f348"),
+  },
+  "GalaxySettingsView": {
+    "sliderRow(Lcom/starpilot/starview/GalaxyRow;)V": ("patch", "add69477ed90"),
   },
   "VoiceNote": {
     "start(Ljava/io/File;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": ("patch", "68e8f99ee3f0"),
