@@ -58,6 +58,12 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     set(v) { field = v.coerceIn(12f, 48f) }
   /** tests: draw this instead of the live data */
   var frame: Frame? = null
+  /** 2.90.0: the picture holds still (SceneSteady). false = every frame from that instant's guess, as before (kept to
+   *  compare the two on a recorded drive) */
+  var steady = true
+  /** 2.90.0: the map is the road and the only lines drawn; the camera only places us on it (LaneAnchor). false = the
+   *  camera's lines near the van joined to the map's beyond (LaneFit), as before. Needs [steady]. */
+  var anchor = true
 
   companion object {
     const val DEF_DIST = 17.24f
@@ -78,6 +84,12 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   /** [pole]: 2.89.2, a traffic light's mast pole sideways (m right of us; NaN = 4 m right of the light) */
   class Thing(val id: Long, val model: String, var r: Double, var f: Double, var psi: Double, val lead: Boolean, val remembered: Boolean,
               val pole: Double = Double.NaN) {
+    /** 2.90.0: how strongly it's drawn (a road user fades in when first seen and out when lost) */
+    var alpha = 1.0
+    /** 2.90.0: a vehicle from the camera's detector: its heading as the detector guessed it (NaN = no guess) and the
+     *  road's direction where it is. Set = [psi] is worked out from how it moves (SceneSteady.Facing). */
+    var hint = Double.NaN
+    var road = Double.NaN
     /** a place and a direction that can be drawn (no NaN, no infinity) */
     fun ok() = r.isFinite() && f.isFinite() && psi.isFinite()
   }
@@ -85,7 +97,9 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   /** Everything one drawing needs (the live one is made from the telemetry; tests make their own). */
   class Frame(val model: ModelSnapshot?, val fit: LaneFit.Fit?, val pose: LaneFit.Pose?, val travelled: Double,
               val things: List<Thing>, val latActive: Boolean, val blindL: Boolean, val blindR: Boolean,
-              val marks: Array<LaneMarks.Mark>?, val lanes: Lanes? = null)
+              val marks: Array<LaneMarks.Mark>?, val lanes: Lanes? = null,
+              /** 2.90.0: how much of the map is drawn (0 = the camera's road only .. 1), and the moment drawn */
+              val mapAlpha: Float = if (pose != null && fit != null && !fit.hidden) 1f else 0f, val atNs: Long = System.nanoTime())
 
   /**
    * 2.87.1: the lane card's count (LaneBrain), when it's sure (70 %, each side on its own): lanes our way left / right
@@ -179,8 +193,26 @@ class LaneSceneView(ctx: Context) : View(ctx) {
 
   // ------------------------------------------------------------------------------------------- state
   private val smooth = LaneFit.Smooth()
+  // 2.90.0 (SceneSteady): what the picture remembers between frames
+  private val sPose = SceneSteady.Pose()
+  private val sLanes = SceneSteady.Lanes()
+  private val sLines = SceneSteady.Lines()
+  private val mapEase = SceneSteady.Ease(0.16, 0.0)
+  private var shownFit: LaneFit.Fit? = null      // the last fit that lined up: carried on while the next ones don't
+  private var shownNs = 0L
+  private var shownOdo = 0.0
+  private var frameNs = 0L
+  private var pendingShift = 0
+  private val covEase = arrayOf(SceneSteady.Ease(0.4), SceneSteady.Ease(0.4))
+  private val edgeY = arrayOfNulls<FloatArray>(2)
+  private val edgeA = FloatArray(2)
+  private val edgeOn = BooleanArray(2)
+  private var drawNs = 0L
+  private var roadL: DoubleArray? = null; private var roadR: DoubleArray? = null
+  private val roadFar = SceneSteady.Ease(0.4)
+  private val roadA = SceneSteady.Ease(0.25, 0.0)
   private val traffic = Traffic()
-  private val seen = HashMap<Long, DoubleArray>()      // id -> r, f, psi, last ns
+  private val seen = HashMap<Long, Seen>()
   private var lastNs = 0L
   private var lastFrameNs = 0L
   private val pFill = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
@@ -251,9 +283,9 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   private fun liveFrame(t: Telemetry): Frame {
     val nowNs = System.nanoTime()
     val odo = Odometry.at(nowNs)
-    var fit = LaneFit.fit
+    var fit = if (steady && anchor) LaneAnchor.fit else LaneFit.fit
     if (fit != null && System.currentTimeMillis() - fit.atMs > 2000) fit = null
-    val pose = if (fit != null && !fit.hidden) smooth.pose(fit, odo, nowNs) else null
+    if (steady && anchor) LaneAnchor.marks = detector?.laneMarks?.marks
     val m = t.model
     val things = ArrayList<Thing>()
     val nowMs = System.currentTimeMillis()
@@ -262,7 +294,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       val name = GENERIC[v.kind and 3]
       val L = SceneSprites.models[name]?.L ?: 4.6f
       // 2.87.1: only the car openpilot follows (radarState's leadOne) is blue, not the second lead or the cars beside us
-      things.add(Thing(v.id, name, v.y, v.x + L / 2, roadHeading(m, v.x), v.id == FOLLOWED_ID, false))
+      things.add(Thing(v.id, name, v.y, v.x + L / 2, roadHeading(m, v.x), v.id == FOLLOWED_ID, false).also { if (v.id != FOLLOWED_ID) it.road = it.psi })
     }
     if (showTraffic) {
       val det = detector
@@ -283,7 +315,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
           val facing = o.cls == 9 || o.cls == 11
           val psi = if (!vehicle) (if (facing) Math.PI else 0.0) else if (hd.isFinite()) hd else roadHeading(m, cx)
           val pole = if (o.cls == 9) curbRight(m, cx, cy) else Double.NaN
-          things.add(Thing(-o.id - 5_000_000L, name, cy, cx, psi, false, false, pole))
+          things.add(Thing(-o.id - 5_000_000L, name, cy, cx, psi, false, false, pole).also { if (vehicle) { it.hint = hd; it.road = roadHeading(m, cx) } })
         }
       }
       if (t.s("car_memory")) carMemory?.ghosts?.forEach { g ->
@@ -292,20 +324,96 @@ class LaneSceneView(ctx: Context) : View(ctx) {
         things.add(Thing(-1_000_000L - g.id, name, g.y, g.x + L / 2, roadHeading(m, g.x), false, true))
       }
     }
+    val lanes = try { Lanes.live() } catch (e: Exception) { null }
+    return frameOf(m, fit, odo, nowNs, things, t.latActive, t.leftBlindspot, t.rightBlindspot, detector?.laneMarks?.marks, lanes, t.vEgo.toDouble())
+  }
+
+  /** 2.90.0: [r] / [f] is left of a yellow line drawn on our left (the other direction's side of the road) */
+  private fun pastYellow(r: Double, f: Double): Boolean {
+    for (t in sLines.tracks) {
+      if (t.alpha < 0.5f || t.r >= 0 || (t.style != LaneMap.EDGE_YELLOW && t.style != LaneMap.DOUBLE_YELLOW)) continue
+      if (r < LaneFit.interp(t.x, t.y, f.coerceIn(0.0, 80.0)) - 0.6) return true
+    }
+    return false
+  }
+
+  private class Seen(var r: Double, var f: Double, var psi: Double, var ns: Long, var alpha: Double, var th: Thing) {
+    var facing: SceneSteady.Facing? = null
+  }
+
+  /**
+   * One frame from what is known at [nowNs] (the live loop and the replay tests both come through here): where we are
+   * on the map, the road users eased toward where they were seen, the lane card's count.
+   * 2.90.0, with [steady]: the map stays through a few fits that don't line up (the last good one carried on by the
+   * car's own motion for up to 2.5 s / 200 ft) and then fades instead of vanishing; a correction of our place on it
+   * slides in; road users fade in and out; the lane card's count goes through SceneSteady.Lanes.
+   */
+  fun frameOf(m: ModelSnapshot?, fitIn: LaneFit.Fit?, odo: DoubleArray, nowNs: Long, thingsIn: List<Thing>, latActive: Boolean,
+              blindL: Boolean, blindR: Boolean, marks: Array<LaneMarks.Mark>?, rawLanes: Lanes?, vEgo: Double = 0.0): Frame {
+    val things = ArrayList<Thing>(thingsIn)
     things.removeAll { !it.ok() }
     // ease every road user toward where it was seen (radar and camera jump a little from frame to frame)
-    val dt = if (lastNs == 0L) 0.0 else (nowNs - lastNs) / 1e9
+    val dt = if (lastNs == 0L) 0.0 else ((nowNs - lastNs) / 1e9).coerceIn(0.0, 0.5)
+    val first = lastNs == 0L
     lastNs = nowNs
     val k = 1 - exp(-dt / 0.12)
+    // 2.90.0: its direction turns slower than its place (the detector's heading flickers, and each turn is another picture)
+    val kPsi = if (steady) 1 - exp(-dt / 0.35) else k
     for (th in things) {
-      val s = seen[th.id]
-      if (s == null || abs(s[1] - th.f) > 8 || abs(s[0] - th.r) > 3 || !(s[0] + s[1] + s[2]).isFinite()) { seen[th.id] = doubleArrayOf(th.r, th.f, th.psi, nowNs.toDouble()); continue }
-      s[0] += (th.r - s[0]) * k; s[1] += (th.f - s[1]) * k; s[2] += (th.psi - s[2]) * k; s[3] = nowNs.toDouble()
-      th.r = s[0]; th.f = s[1]; th.psi = s[2]
+      var s = seen[th.id]
+      // 2.90.0: a detected car faces the way it moves, not the way the detector guessed in this frame
+      if (steady && th.road.isFinite()) {
+        val fc = s?.facing ?: SceneSteady.Facing()
+        th.psi = fc.update(th.r, th.f, vEgo, th.road, th.hint, dt, pastYellow(th.r, th.f))
+        if (s != null) s.facing = fc else { s = Seen(th.r, th.f, th.psi, nowNs, if (first) 1.0 else 0.0, th).also { it.facing = fc }; seen[th.id] = s; th.alpha = s.alpha; continue }
+      }
+      if (s == null || abs(s.f - th.f) > 8 || abs(s.r - th.r) > 3 || !(s.r + s.f + s.psi).isFinite()) {
+        val nw = Seen(th.r, th.f, th.psi, nowNs, if (steady && !first && s == null) 0.0 else 1.0, th)
+        nw.facing = s?.facing
+        seen[th.id] = nw; th.alpha = nw.alpha; continue
+      }
+      s.r += (th.r - s.r) * k; s.f += (th.f - s.f) * k
+      val dPsi = Math.IEEEremainder(th.psi - s.psi, 2 * Math.PI)
+      // turned around (it faces us after all): at once - easing through it would be the car spinning on the spot
+      if (steady && abs(dPsi) > 1.75) s.psi = th.psi else s.psi += dPsi * kPsi
+      s.ns = nowNs
+      s.alpha = min(1.0, s.alpha + dt / 0.3)
+      th.r = s.r; th.f = s.f; th.psi = s.psi; th.alpha = s.alpha; s.th = th
     }
-    seen.values.removeAll { nowNs - it[3] > 2e9 }
-    val lanes = try { Lanes.live() } catch (e: Exception) { null }
-    return Frame(m, fit, pose, odo[3], things, t.latActive, t.leftBlindspot, t.rightBlindspot, detector?.laneMarks?.marks, lanes)
+    if (steady) {
+      // a road user no longer reported fades out where it was (0.3 s) instead of blinking off
+      for (s in seen.values) if (s.ns != nowNs) {
+        s.alpha -= dt / 0.3
+        if (s.alpha > 0.02) things.add(Thing(s.th.id, s.th.model, s.r, s.f, s.psi, s.th.lead, s.th.remembered, s.th.pole).also { it.alpha = s.alpha })
+      }
+      seen.values.removeAll { it.ns != nowNs && it.alpha <= 0.02 }
+    } else seen.values.removeAll { nowNs - it.ns > 2_000_000_000L }
+
+    if (!steady) {
+      val pose = if (fitIn != null && !fitIn.hidden) smooth.pose(fitIn, odo, nowNs) else null
+      return Frame(m, fitIn, pose, odo[3], things, latActive, blindL, blindR, marks, rawLanes, atNs = nowNs)
+    }
+    val fdt = if (frameNs == 0L) 0.0 else ((nowNs - frameNs) / 1e9).coerceIn(0.0, 0.5)
+    val startUp = frameNs == 0L || nowNs - frameNs > 1_500_000_000L
+    frameNs = nowNs
+    val good = fitIn != null && !fitIn.hidden
+    val kept = shownFit
+    val fit: LaneFit.Fit?
+    val target: Double
+    if (good) { fit = fitIn; shownFit = fitIn; shownNs = nowNs; shownOdo = odo[3]; target = 1.0 }
+    else if (kept != null && (fitIn == null || LaneFit.sameFrame(kept.built, fitIn.built))) {
+      // no fit that lines up right now: the last one that did, carried on - shown as it was for a little while, then fading
+      fit = kept
+      target = if (nowNs - shownNs < 2_500_000_000L && odo[3] - shownOdo < 60.0) 1.0 else 0.0
+    } else { fit = null; shownFit = null; target = 0.0 }
+    if (startUp) mapEase.set(target)
+    var a = mapEase.to(target, fdt)
+    if (fit == null) { a = 0.0; mapEase.set(0.0) }
+    if (target == 0.0 && a < 0.02) { shownFit = null; a = 0.0 }
+    val pose = if (fit != null && a > 0.0) sPose.pose(fit, odo, nowNs) else null
+    val lanes = sLanes.update(rawLanes, pendingShift, nowNs / 1_000_000)
+    pendingShift = 0
+    return Frame(m, fit, pose, odo[3], things, latActive, blindL, blindR, marks, lanes, if (pose != null) a.toFloat() else 0f, nowNs)
   }
 
   /** 2.89.2: where a traffic light's mast pole stands: the right road edge openpilot sees at [f] m (+1 m), else 4 m right
@@ -357,10 +465,29 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     val m = fr.model
     val mapOn = fr.pose != null && fr.fit != null && !fr.fit.hidden
     val styleAt = ArrayList<DoubleArray>()          // map lines' (right, style) at 20 m ahead, for the camera's lines
-    if (mapOn) drawMap(c, fr.fit!!, fr.pose!!, pal, styleAt, m)
-    else if (m != null) drawCamRoad(c, m, pal)
+    val ddt = if (drawNs == 0L) -1.0 else ((fr.atNs - drawNs) / 1e9).let { if (it < 0 || it > 0.6) -1.0 else it }
+    drawNs = fr.atNs
+    if (!steady) {
+      if (mapOn) drawMap(c, fr.fit!!, fr.pose!!, pal, styleAt, m, -1.0)
+      else if (m != null) drawCamRoad(c, m, pal)
+    } else {
+      // 2.90.0: the map and the camera's own road cross-fade (the map used to appear and vanish between two frames)
+      val a = if (mapOn) fr.mapAlpha else 0f
+      anchorDraw = anchor
+      if (a < 0.995f && m != null) drawCamRoadSteady(c, m, pal, 1f - a, ddt)
+      if (a >= 0.995f) drawMap(c, fr.fit!!, fr.pose!!, pal, styleAt, m, ddt)
+      else if (a > 0.005f) {
+        val sc = c.saveLayerAlpha(0f, 0f, W, H, (a * 255).roundToInt())
+        try { drawMap(c, fr.fit!!, fr.pose!!, pal, styleAt, m, ddt) } finally { c.restoreToCount(sc) }
+      }
+    }
     if (m != null) {
-      drawCamLines(c, m, fr, pal, mapOn, styleAt)
+      val ma = if (mapOn) fr.mapAlpha else 0f
+      // with the map as the road (LaneAnchor) its lines are the lines: the camera's own are only followed (for the
+      // moment we cross one) and drawn where there is no map
+      if (steady && anchor) drawCamLinesSteady(c, m, fr, pal, 0f, styleAt, ddt, 1f - ma)
+      else if (steady) drawCamLinesSteady(c, m, fr, pal, ma, styleAt, ddt, 1f)
+      else drawCamLines(c, m, fr, pal, mapOn, styleAt)
       drawLaneTints(c, m, fr, pal)
       drawPath(c, m, fr, pal)
     }
@@ -376,13 +503,19 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   // ---------------------------------------------------------------- the map
   private fun ensure(n: Int) { if (rs.size < n) { rs = DoubleArray(n * 2); fs = DoubleArray(n * 2) } }
 
-  private fun drawMap(c: Canvas, fit: LaneFit.Fit, pose: LaneFit.Pose, pal: Pal, styleAt: ArrayList<DoubleArray>, m: ModelSnapshot?) {
+  private fun drawMap(c: Canvas, fit: LaneFit.Fit, pose: LaneFit.Pose, pal: Pal, styleAt: ArrayList<DoubleArray>, m: ModelSnapshot?, dt: Double) {
     // what the camera covers sideways (10 m ahead): map lines there give way to the camera's own near the car; the
     // rest (a ramp beside us, the far side of a wide road) are drawn all the way
     var covL = Double.NaN; var covR = Double.NaN
     if (m != null) {
       for (i in 0 until 4) if (m.laneProb[i] >= 0.35f) { val r = LaneFit.interp(m.laneX[i], m.laneY[i], 10.0); covL = if (covL.isNaN()) r else min(covL, r); covR = if (covR.isNaN()) r else max(covR, r) }
       for (e in 0 until min(2, m.edgeStd.size)) if (m.edgeStd[e] <= 1.2f) { val r = LaneFit.interp(m.edgeX[e], m.edgeY[e], 10.0); covL = if (covL.isNaN()) r else min(covL, r); covR = if (covR.isNaN()) r else max(covR, r) }
+    }
+    if (steady) {
+      // 2.90.0: what the camera covers widens and narrows smoothly (a map line near the car switched between faded and
+      // full as a camera line came and went)
+      if (dt < 0) { covEase[0].set(covL); covEase[1].set(covR) }
+      covL = covEase[0].to(covL, dt); covR = covEase[1].to(covR, dt)
     }
     val b = fit.built
     val reach = fit.reach
@@ -400,7 +533,8 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     c.drawPath(path, pFill)
     // lines, fading in where the camera's own lines fade out (25 - 40 m)
     val ya = yAt(25.0); val yb = yAt(40.0)
-    for ((style, color) in listOf(LaneMap.EDGE_WHITE to pal.white, LaneMap.DASH_WHITE to pal.white, LaneMap.SOLID_WHITE to pal.white,
+    val dim = if (night) 0xFF78808C.toInt() else 0xFF98A1AC.toInt()      // the other direction's lines (LaneRibbon)
+    for ((style, color) in listOf(LaneMap.DASH_DIM to dim, LaneMap.SOLID_DIM to dim, LaneMap.EDGE_WHITE to pal.white, LaneMap.DASH_WHITE to pal.white, LaneMap.SOLID_WHITE to pal.white,
         LaneMap.EDGE_YELLOW to pal.yellow, LaneMap.DOUBLE_YELLOW to pal.yellow, LaneMap.CURB to pal.curb)) {
       for (covered in listOf(true, false)) {
         path.rewind()
@@ -414,6 +548,9 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     grad(c, ya, yb, pal.arrow and 0x00FFFFFF, pal.arrow)
   }
 
+  private var anchorDraw = false
+  /** tests: the last line crossing the camera's lines showed (1 right, -1 left), 0 once read */
+  var crossed = 0
   private var besideFit: LaneFit.Fit? = null
   private var besideWays: BooleanArray? = null
 
@@ -449,7 +586,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   /** a map line the camera's own lines stand for near the car: where it's nearest to the car within 30 m ahead, it
    *  lies between the camera's outermost lines (+-1 m) */
   private fun coveredBy(ln: LaneMap.MLine, pose: LaneFit.Pose, covL: Double, covR: Double): Boolean {
-    if (covL.isNaN()) return false
+    if (covL.isNaN() || (steady && anchorDraw)) return false
     var best = Double.MAX_VALUE; var r = 0.0; var any = false
     for (i in ln.x.indices) {
       val f = pose.fwd(ln.x[i].toDouble(), ln.y[i].toDouble())
@@ -457,7 +594,10 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       val d = abs(f - 10)
       if (d < best) { best = d; r = pose.right(ln.x[i].toDouble(), ln.y[i].toDouble()); any = true }
     }
-    return !any || (r > covL - 1.0 && r < covR + 1.0)
+    // 2.90.0: 7 ft past the camera's outer lines, not 3: a map line half a lane off the camera's own (the fit is never
+    // exact) was drawn beside it - two double yellow lines next to each other. A full lane further out is another line.
+    val pad = if (steady) 2.2 else 1.0
+    return !any || (r > covL - pad && r < covR + pad)
   }
 
   /** road surface between two side lines, cut where it leaves the drawn range */
@@ -507,7 +647,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     }
     val w = if (ln.style == LaneMap.CURB) 0.12 else 0.15
     when (ln.style) {
-      LaneMap.DASH_WHITE -> dashed(n, ln.s, w)
+      LaneMap.DASH_WHITE, LaneMap.DASH_DIM -> dashed(n, ln.s, w)
       LaneMap.DOUBLE_YELLOW -> { runs(n, -0.1, 0.11); runs(n, 0.1, 0.11) }
       else -> runs(n, 0.0, w)
     }
@@ -643,6 +783,165 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     return null
   }
 
+  /** 2.90.0: no map: the camera's road surface, its sides moving smoothly (they jumped between the road edge and the
+   *  outer lane line as the camera saw one or the other) and the whole fading in and out. [dt] < 0: nothing to ease from */
+  private fun drawCamRoadSteady(c: Canvas, m: ModelSnapshot, pal: Pal, alpha: Float, dt: Double) {
+    val left = sideLine(m, true); val right = sideLine(m, false)
+    val ok = left != null && right != null
+    val n = 27
+    if (ok) {
+      val far = min(left!!.third, right!!.third)
+      var l = roadL; var r = roadR
+      if (l == null || r == null || dt < 0 || !roadFar.v.isFinite()) {
+        l = DoubleArray(n) { LaneFit.interp(left.first, left.second, FMIN + it * 3.0) }
+        r = DoubleArray(n) { LaneFit.interp(right.first, right.second, FMIN + it * 3.0) }
+        roadL = l; roadR = r; roadFar.set(far)
+      } else {
+        val k = 1 - exp(-dt / 0.4)
+        for (i in 0 until n) {
+          val f = FMIN + i * 3.0
+          l[i] += (LaneFit.interp(left.first, left.second, f) - l[i]) * k
+          r[i] += (LaneFit.interp(right.first, right.second, f) - r[i]) * k
+        }
+        roadFar.to(far, dt)
+      }
+    }
+    if (dt < 0) roadA.set(if (ok) 1.0 else 0.0)
+    val a = roadA.to(if (ok) 1.0 else 0.0, max(0.0, dt)) * alpha
+    val l = roadL ?: return; val r = roadR ?: return
+    val far = roadFar.v
+    if (!far.isFinite() || a < 0.02) return
+    path.rewind()
+    var first = true
+    var i = 0
+    while (i < n && FMIN + i * 3.0 <= far) { if (proj(l[i], FMIN + i * 3.0)) { if (first) path.moveTo(px, py) else path.lineTo(px, py); first = false }; i++ }
+    i--
+    while (i >= 0) { if (proj(r[i], FMIN + i * 3.0)) path.lineTo(px, py); i-- }
+    path.close()
+    val col = (pal.road and 0x00FFFFFF) or ((a * 255).roundToInt().coerceIn(0, 255) shl 24)
+    grad(c, yAt(far * 0.55), yAt(far), col, col and 0x00FFFFFF)
+  }
+
+  /** how camera line [i] is painted right now (LaneMap style, -1 = not at all): the map line it lies on, the camera's
+   *  line reader, and which line of the road it is by the lane card's count */
+  private fun lineStyle(i: Int, m: ModelSnapshot, fr: Frame, role: Int, styleAt: ArrayList<DoubleArray>, reach: Double): Int {
+    val r20 = LaneFit.interp(m.laneX[i], m.laneY[i], min(20.0, reach * 0.5))
+    val near = styleAt.minByOrNull { abs(it[0] - r20) }
+    var mapStyle = if (near != null && abs(near[0] - r20) < 0.9) near[1].toInt() else -1
+    if (mapStyle == LaneMap.CURB || mapStyle == LaneMap.EDGE_WHITE) mapStyle = LaneMap.SOLID_WHITE
+    val mk = fr.marks?.getOrNull(i)
+    val rd = if (mk == null || mk.kind < LaneMarks.DASHED) -1 else when {
+      mk.yellow && mk.double -> LaneMap.DOUBLE_YELLOW
+      mk.yellow -> LaneMap.EDGE_YELLOW
+      mk.kind == LaneMarks.SOLID -> LaneMap.SOLID_WHITE
+      else -> LaneMap.DASH_WHITE
+    }
+    return when (role) {
+      Lanes.ROLE_LEFT_EDGE -> if (mapStyle == LaneMap.EDGE_YELLOW || mapStyle == LaneMap.DOUBLE_YELLOW) mapStyle
+        else if (fr.lanes!!.leftEdge >= 0) fr.lanes.leftEdge else rd
+      Lanes.ROLE_RIGHT_EDGE -> LaneMap.SOLID_WHITE
+      Lanes.ROLE_INNER -> if (rd == LaneMap.SOLID_WHITE || (rd < 0 && mapStyle == LaneMap.SOLID_WHITE)) LaneMap.SOLID_WHITE else LaneMap.DASH_WHITE
+      else -> if (rd >= 0) rd else if (mapStyle >= 0) mapStyle else LaneMap.DASH_WHITE
+    }
+  }
+
+  /**
+   * 2.90.0 (owner, Nov 17, on the first try of this version: "the yellow line is jumping ... take a look at Tesla"):
+   * the paint belongs to the line. Until now the lane card's count said which of the camera's lines is the road's left
+   * edge, and that one was painted yellow - so each time the count changed its mind the yellow hopped a lane over, or
+   * went from single to double. Now a line is painted the way the camera's line reader sees it (yellow or white, solid,
+   * dashed, double); with no reading, like the map's line it lies on; with neither, plain grey ([LaneMap.CURB]: a line
+   * is there, its paint isn't known) - never by a guess. SceneSteady.Lines keeps that paint on the same line of the
+   * road as it moves across the screen. The count only still says which lines lie past the road's edge (not drawn).
+   */
+  private fun linePaint(i: Int, m: ModelSnapshot, fr: Frame, styleAt: ArrayList<DoubleArray>, reach: Double): Int {
+    val mk = fr.marks?.getOrNull(i)
+    if (mk != null && mk.kind >= LaneMarks.DASHED) return when {
+      mk.yellow && mk.double -> LaneMap.DOUBLE_YELLOW
+      mk.yellow -> LaneMap.EDGE_YELLOW
+      mk.kind == LaneMarks.SOLID -> LaneMap.SOLID_WHITE
+      else -> LaneMap.DASH_WHITE
+    }
+    val r20 = LaneFit.interp(m.laneX[i], m.laneY[i], min(20.0, reach * 0.5))
+    val near = styleAt.minByOrNull { abs(it[0] - r20) }
+    if (near != null && abs(near[0] - r20) < 0.9) return near[1].toInt().let { if (it == LaneMap.EDGE_WHITE) LaneMap.SOLID_WHITE else it }
+    return LaneMap.CURB
+  }
+
+  private val lsStyle = IntArray(4); private val lsWant = BooleanArray(4); private val lsReach = DoubleArray(4)
+
+  /**
+   * 2.90.0: the camera's lines and road edges, held still (SceneSteady.Lines): each line is followed by where it is on
+   * the road, fades in and out, and changes its paint by cross-fading once the new paint held. [mapA]: how much of the
+   * map is drawn - with it the camera's lines hand over to the map's at 80 - 130 ft, without it they run as far as seen.
+   */
+  private fun drawCamLinesSteady(c: Canvas, m: ModelSnapshot, fr: Frame, pal: Pal, mapA: Float, styleAt: ArrayList<DoubleArray>, dt: Double, show: Float) {
+    if (m.laneX.size >= 4 && m.laneY.size >= 4 && m.laneProb.size >= 4) {
+      for (i in 0 until 4) {
+        val role = fr.lanes?.role(i) ?: Lanes.ROLE_UNKNOWN
+        lsWant[i] = role != Lanes.ROLE_BEYOND
+        val full = lineReach(m, i)
+        lsReach[i] = full + (min(42.0, full) - full) * mapA
+        lsStyle[i] = linePaint(i, m, fr, styleAt, lsReach[i])
+      }
+      sLines.update(m.laneX, m.laneY, m.laneProb, lsWant, lsStyle, lsReach, fr.atNs)
+      if (sLines.shift != 0) { pendingShift = sLines.shift; if (anchor && frame == null) LaneAnchor.pendingShift = sLines.shift; crossed = sLines.shift }
+      if (show > 0.02f) for (t in sLines.tracks) {
+        if (t.alpha < 0.02f) continue
+        if (t.mix < 1f) camLine(c, t, t.from, t.alpha * (1 - t.mix) * show, fr, pal, mapA)
+        camLine(c, t, t.style, t.alpha * t.mix * show, fr, pal, mapA)
+      }
+    }
+    // road edges: each comes and goes softly (seen at a spread of 1.0 m, lost at 1.4) and moves smoothly
+    for (e in 0 until 2) {
+      val has = m.edgeStd.size > e && m.edgeX.size > e && m.edgeY.size > e && m.edgeX[e].size >= 2
+      val std = if (has) m.edgeStd[e] else 9f
+      edgeOn[e] = std <= (if (edgeOn[e]) 1.4f else 1.0f)
+      var ys = edgeY[e]
+      if (has) {
+        val src = m.edgeY[e]
+        if (ys == null || ys.size != src.size || dt < 0 || abs(LaneFit.interp(m.edgeX[e], src, 10.0) - LaneFit.interp(m.edgeX[e], ys, 10.0)) > 2.0) {
+          if (ys != null && ys.size == src.size && dt >= 0) edgeA[e] *= 0.3f       // somewhere else: it comes in again
+          ys = src.copyOf(); edgeY[e] = ys
+        } else { val k = (1 - exp(-dt / 0.12)).toFloat(); for (j in ys.indices) ys[j] += (src[j] - ys[j]) * k }
+      }
+      val target = if (edgeOn[e]) 1f else 0f
+      edgeA[e] = if (dt < 0) target else (edgeA[e] + (target - edgeA[e]) * (1 - exp(-dt / (if (target > edgeA[e]) 0.3 else 0.45)))).toFloat()
+      if (!has || ys == null || edgeA[e] * show < 0.02f) continue
+      val xs = m.edgeX[e]
+      val full = min(70.0, xs.last().toDouble())
+      val reach = full + (min(42.0, full) - full) * mapA
+      val n = (((reach - FMIN) / 3.0).toInt() + 1).coerceAtMost(120)
+      if (n < 2) continue
+      ensure(n)
+      for (k in 0 until n) { val f = FMIN + k * 3.0; fs[k] = f; rs[k] = LaneFit.interp(xs, ys, f) }
+      path.rewind()
+      runs(n, 0.0, 0.12)
+      val col = (pal.curb and 0x00FFFFFF) or (((pal.curb ushr 24) * edgeA[e] * show).roundToInt().coerceIn(0, 255) shl 24)
+      grad(c, yAt(45.0 + (25.0 - 45.0) * mapA), yAt(70.0 + (40.0 - 70.0) * mapA), col, col and 0x00FFFFFF)
+    }
+  }
+
+  private fun camLine(c: Canvas, t: SceneSteady.Line, style: Int, a: Float, fr: Frame, pal: Pal, mapA: Float) {
+    if (style < 0 || a < 0.02f) return
+    val reach = t.reach
+    val n = (((reach - FMIN) / 3.0).toInt() + 1).coerceAtMost(120)
+    if (n < 2) return
+    ensure(n)
+    for (k in 0 until n) { val f = FMIN + k * 3.0; fs[k] = f; rs[k] = LaneFit.interp(t.x, t.y, f) }
+    path.rewind()
+    when (style) {
+      LaneMap.DASH_WHITE -> camDashes(n, fr.travelled)
+      LaneMap.DOUBLE_YELLOW -> { runs(n, -0.1, 0.11); runs(n, 0.1, 0.11) }
+      LaneMap.CURB -> runs(n, 0.0, 0.12)
+      else -> runs(n, 0.0, 0.15)
+    }
+    val color = if (style == LaneMap.EDGE_YELLOW || style == LaneMap.DOUBLE_YELLOW) pal.yellow else if (style == LaneMap.CURB) pal.curb else pal.white
+    val col = (color and 0x00FFFFFF) or ((a * 255).roundToInt().coerceIn(0, 255) shl 24)
+    val fa = reach * 0.65 + (25.0 - reach * 0.65) * mapA; val fb = reach + (40.0 - reach) * mapA
+    grad(c, yAt(fa), yAt(fb), col, col and 0x00FFFFFF)
+  }
+
   private fun drawCamLines(c: Canvas, m: ModelSnapshot, fr: Frame, pal: Pal, mapOn: Boolean, styleAt: ArrayList<DoubleArray>) {
     for (i in 0 until 4) {
       val p = m.laneProb[i]
@@ -755,9 +1054,28 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   private fun drawPath(c: Canvas, m: ModelSnapshot, fr: Frame, pal: Pal) {
     val xs = m.posX; val ys = m.posY
     if (xs.size < 3) return
-    val to = min(70.0, xs.last().toDouble())
-    val n = (to / 2.0).toInt() + 1
+    var to = min(70.0, xs.last().toDouble())
+    var n = (to / 2.0).toInt() + 1
     ensure(n)
+    val geo = if (steady && anchor) fr.fit?.ribbon else null
+    val pose = fr.pose
+    if (geo != null && pose != null && fr.mapAlpha > 0.5f && !m.laneChanging) {
+      // 2.90.0: on the generated road the path runs along our lane (from where we are in it to its middle within 100 ft);
+      // openpilot's own path follows the real road's bends, which the drawn road only has roughly
+      val adv = fr.travelled - (fr.fit?.odo?.getOrNull(3) ?: fr.travelled)       // driven since the fit
+      var k = 0
+      while (k < n) {
+        val f = k * 2.0
+        val p = geo.place(adv + f, geo.laneD + (geo.d - geo.laneD) * exp(-f / 12.0)) ?: break
+        fs[k] = pose.fwd(p[0], p[1]); rs[k] = pose.right(p[0], p[1]); k++
+      }
+      n = k
+      if (n < 2) return
+      // it starts under the van (drawn a moment behind where the road has us) and is on the lane within 60 ft
+      val r0 = rs[0]
+      for (j in 0 until n) rs[j] -= r0 * exp(-max(0.0, fs[j]) / 6.0)
+      to = fs[n - 1]
+    } else
     for (k in 0 until n) { val f = k * 2.0; fs[k] = f; rs[k] = LaneFit.interp(xs, ys, f) }
     path.rewind()
     ribbon(0, n, 0.0, 1.7)
@@ -772,7 +1090,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   private fun drawThings(c: Canvas, fr: Frame, pal: Pal) {
     class D(val z: Double, val th: Thing?)
     val list = ArrayList<D>()
-    for (th in fr.things) { if (!th.ok() || th.f < FMIN || th.f > 200 || abs(th.r) > 40) continue; if (proj(th.r, th.f)) list.add(D(pz, th)) }
+    for (t0 in fr.things) { val th = onRibbon(t0, fr); if (!th.ok() || th.f < FMIN || th.f > 200 || abs(th.r) > 40) continue; if (proj(th.r, th.f)) list.add(D(pz, th)) }
     if (proj(0.0, -EGO_BACK)) list.add(D(pz, null))
     list.sortByDescending { it.z }
     for (d in list) {
@@ -790,6 +1108,40 @@ class LaneSceneView(ctx: Context) : View(ctx) {
     }
   }
   private var thingFailAt = 0L
+
+  /**
+   * 2.90.0: a road user on the generated road (LaneRibbon). The camera and the radar say where it is against us and
+   * against the path we'll drive; the drawn road bends only roughly like the real one, so it is put the same distance
+   * along the drawn road and the same distance beside our drawn path - a car in the next lane stays in the next lane
+   * round a bend. A vehicle is drawn in the middle of its lane, facing along it (toward us in the other way's lanes),
+   * unless it is seen driving across.
+   */
+  private fun onRibbon(th: Thing, fr: Frame): Thing {
+    val geo = (if (steady && anchor) fr.fit?.ribbon else null) ?: return th
+    val pose = fr.pose ?: return th
+    if (fr.mapAlpha < 0.5f || !th.ok() || th.f < -8 || th.f > 190) return th
+    val m = fr.model
+    val vehicle = th.model.startsWith("car") || th.model == "truck" || th.model == "bus" || th.model == "motorcycle"
+    val beside = th.r - (if (m != null && m.posX.size >= 3 && th.f > 0) LaneFit.interp(m.posX, m.posY, th.f) else 0.0)
+    var d = geo.d + beside
+    val adv = fr.travelled - (fr.fit?.odo?.getOrNull(3) ?: fr.travelled)
+    val e = geo.edges(adv + th.f)
+    val across = th.road.isFinite() && abs(abs(Math.IEEEremainder(th.psi - th.road, 2 * Math.PI)) - Math.PI / 2) < Math.PI / 4
+    val onRoad = d > e[2] - 1.2 && d < e[1] + 1.2
+    if (vehicle && onRoad && !across) {
+      val mid = Math.round(d / LaneRibbon.LW) * LaneRibbon.LW
+      d += (mid - d) * 0.75
+    }
+    val p = geo.place(adv + th.f, d) ?: return th
+    var psi = th.psi
+    if (vehicle && !across) {
+      val away = if (th.road.isFinite()) abs(Math.IEEEremainder(th.psi - th.road, 2 * Math.PI)) > Math.PI / 2 else false
+      val otherSide = onRoad && d < e[0] - 0.3 && e[2] < e[0] - 1.0
+      psi = p[2] - pose.h + (if (otherSide || (away && !onRoad)) Math.PI else 0.0)
+    }
+    return Thing(th.id, th.model, pose.right(p[0], p[1]), pose.fwd(p[0], p[1]), psi, th.lead, th.remembered,
+      if (th.pole.isFinite()) th.pole + (pose.right(p[0], p[1]) - th.r) else th.pole).also { it.alpha = th.alpha }
+  }
 
   /** a soft dark oval on the road under a car (its footprint, blurred at the edges) */
   private fun shadow(c: Canvas, r: Double, f: Double, psi: Double, L: Double, Wd: Double, pal: Pal, alpha: Int) {
@@ -817,7 +1169,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   private fun drawThing(c: Canvas, th: Thing, pal: Pal) {
     val mdl = SceneSprites.models[th.model] ?: return
     val vehicle = th.model.startsWith("car") || th.model == "truck" || th.model == "bus" || th.model == "motorcycle"
-    val fade = ((200 - th.f) / 60).coerceIn(0.0, 1.0)
+    val fade = ((200 - th.f) / 60).coerceIn(0.0, 1.0) * th.alpha.coerceIn(0.0, 1.0)
     if (vehicle) shadow(c, th.r, th.f, th.psi, mdl.L + 1.0, mdl.W + 0.7, pal, (0x80 * fade).toInt())
     // 2.89.2: a traffic light hangs over the road from a mast arm (it stood in the lane like a post before)
     val lift = if (th.model == "traffic_light") HANG else 0.0

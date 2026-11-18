@@ -44,6 +44,12 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
     // only a "valid" reading, so the sign came for a moment and went again. Forgotten when the car turns off.
     @Volatile private var lastMps = Float.NaN
 
+    // 2.90.0 (owner's video, Nov 17: the sign went 40, 35, 40, 35, 40, 35 in 41 s - the combined reading came and
+    // went, and in between a single source's own was shown): another limit than the one shown replaces it only after it
+    // was read for 2.5 s without the shown one coming back. The first limit of a drive shows at once.
+    private val hold = SceneSteady.SpeedHold()
+    private fun held(fresh: Float, nowNs: Long): Float { val v = hold.put(fresh, nowNs); lastMps = v; return v }
+
     /** 2.86.5: with no combined reading, a source's own (the ones the speed limit controller uses first) */
     private val ORDER = listOf("dashboard", "map", "mapbox", "navigation", "vision")
     private fun ok(v: Float) = v.isFinite() && v > 0f
@@ -53,6 +59,7 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
      *  from a source the controller doesn't use), else the last one this drive. */
     fun postedMps(t: Telemetry): Float {
       if (!t.started) {
+        hold.clear()
         lastMps = Float.NaN
         return Float.NaN
       }
@@ -69,10 +76,7 @@ class SpeedSignView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs
       } else {
         for (v in floatArrayOf(t.slcSpeedLimit, t.slcMapSpeedLimit, t.slcMapbox)) if (ok(v)) { fresh = v; break }
       }
-      if (ok(fresh)) {
-        lastMps = fresh
-        return fresh
-      }
+      if (ok(fresh)) return held(fresh, System.nanoTime())
       if (ok(lastMps)) return lastMps
       // 2.89.1: no longer the speed limit controller's accepted limit when nothing was read this drive: it keeps the
       // last one it adopted (Nov 16: 50 from an earlier drive on a local street, every source unknown / absent), so the

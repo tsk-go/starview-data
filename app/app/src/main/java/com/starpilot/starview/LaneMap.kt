@@ -52,6 +52,9 @@ object LaneMap {
   const val SOLID_WHITE = 3
   const val DOUBLE_YELLOW = 4
   const val CURB = 5
+  /** 2.90.0 (LaneRibbon): the other direction's lines, in grey */
+  const val DASH_DIM = 6
+  const val SOLID_DIM = 7
   fun isEdge(style: Int) = style == EDGE_WHITE || style == EDGE_YELLOW || style == CURB
 
   val DRIVE = setOf("motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "secondary",
