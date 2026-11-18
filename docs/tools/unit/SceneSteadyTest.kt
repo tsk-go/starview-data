@@ -204,6 +204,16 @@ class SceneSteadyTest {
     // two lane changes to the left, 8 s apart, each told by both: twice
     assertEquals(listOf(-1, 0, 0, -1, 0, 0), run(s(3000, -1, "s", -1), s(3800, 0, "f", -1), s(4500, 0, "", 0),
       s(11000, 0, "f", -1), s(11400, -1, "f", -1), s(12000, 0, "", 0)))
+    // finishing unseen (starting, then off): counted at the end - 5 s of starting, as on Nov 18
+    assertEquals(listOf(0, 0, -1, 0), run(s(17000, 0, "s", -1), s(20000, 0, "s", -1), s(22900, 0, "", 0), s(23500, 0, "", 0)))
+    // ... but not a change ended after a moment of starting
+    assertEquals(listOf(0, 0), run(s(1000, 0, "s", 1), s(2200, 0, "", 0)))
+    // the model losing our lane's lines while we cross and finding them again: counted then, not again at the end
+    val c = SceneSteady.Crossings()
+    val seen = listOf(c.update(0, true, false, -1, 17000, 0.99f, 0.99f), c.update(0, true, false, -1, 18600, 0.2f, 0.1f),
+      c.update(0, true, false, -1, 20000, 0.1f, 0.05f), c.update(0, true, false, -1, 21600, 0.64f, 0.92f),
+      c.update(0, true, true, -1, 22600, 0.8f, 0.9f), c.update(0, false, false, 0, 23000, 0.9f, 0.9f))
+    assertEquals(listOf(0, 0, 0, -1, 0, 0), seen)
     // by hand, no openpilot lane change: the camera alone
     assertEquals(listOf(1, 0, -1), run(s(1000, 1, "", 0), s(2000, 0, "", 0), s(9000, -1, "", 0)))
     // the camera seeing it twice (back over at once): both count, and openpilot's own then matches the last

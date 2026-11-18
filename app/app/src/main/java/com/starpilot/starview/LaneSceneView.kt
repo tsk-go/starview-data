@@ -888,7 +888,7 @@ class LaneSceneView(ctx: Context) : View(ctx) {
         lsStyle[i] = linePaint(i, m, fr, styleAt, lsReach[i])
       }
       sLines.update(m.laneX, m.laneY, m.laneProb, lsWant, lsStyle, lsReach, fr.atNs)
-      val cr = crossings.update(sLines.shift, m.laneChanging, m.laneChangeFinishing, m.laneChangeDir, fr.atNs / 1_000_000)
+      val cr = crossings.update(sLines.shift, m.laneChanging, m.laneChangeFinishing, m.laneChangeDir, fr.atNs / 1_000_000, m.laneProb[1], m.laneProb[2])
       if (cr != 0) { pendingShift = cr; if (anchor && frame == null) LaneAnchor.pendingShift = cr; crossed = cr }
       if (show > 0.02f) for (t in sLines.tracks) {
         if (t.alpha < 0.02f) continue

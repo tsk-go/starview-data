@@ -153,14 +153,29 @@ object SceneSteady {
    */
   class Crossings {
     private var lastDir = 0; private var lastSrc = 0; private var lastMs = 0L
-    private var opWas = false
+    private var phase = 0; private var startMs = 0L; private var phaseDir = 0; private var counted = false
+    private var lostMs = 0L
 
-    /** the crossing to act on now: 1 right, -1 left, 0 none. [camShift]: [Lines.shift]; the rest: openpilot's lane change */
-    fun update(camShift: Int, opChanging: Boolean, opFinishing: Boolean, opDir: Int, nowMs: Long): Int {
-      val op = opChanging && opFinishing && opDir != 0
+    /**
+     * The crossing to act on now: 1 right, -1 left, 0 none. [camShift]: [Lines.shift]; [lp1] / [lp2]: how sure the model
+     * is of our lane's two lines; the rest: openpilot's lane change (starting or finishing, finishing, its direction).
+     * During its change the model loses its lines while we cross (Nov 18: all four under 25 % for 3 s) and finds them
+     * again in the new lane: that is when openpilot's change counts - or when it turns to finishing, or, that gone by
+     * unseen (it can last a moment), when it ends after 2 s and more of starting. Once per change.
+     */
+    fun update(camShift: Int, opChanging: Boolean, opFinishing: Boolean, opDir: Int, nowMs: Long, lp1: Float = 1f, lp2: Float = 1f): Int {
+      val ph = if (!opChanging || opDir == 0) 0 else if (opFinishing) 2 else 1
+      val dir = if (opDir < 0) -1 else 1
       var out = 0
-      if (op && !opWas) out = take(if (opDir < 0) -1 else 1, OP, nowMs)
-      opWas = op
+      if (ph == 1 && phase != 1) { startMs = nowMs; phaseDir = dir; counted = false; lostMs = 0L }
+      if (ph == 1 && !counted) {
+        if (lp1 < 0.3f && lp2 < 0.3f) { if (lostMs == 0L) lostMs = nowMs }
+        else if (lostMs != 0L && nowMs - lostMs >= 800 && lp1 >= 0.5f && lp2 >= 0.5f) { counted = true; out = take(dir, OP, nowMs) }
+      }
+      if (ph == 2 && !counted) { counted = true; out = take(dir, OP, nowMs) }
+      if (ph == 0 && phase == 1 && !counted && nowMs - startMs >= 2000) out = take(phaseDir, OP, nowMs)
+      if (ph == 0) { counted = false; lostMs = 0L }
+      phase = ph
       if (camShift != 0) { val c = take(camShift, CAM, nowMs); if (out == 0) out = c }
       return out
     }
