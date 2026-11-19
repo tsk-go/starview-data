@@ -75,6 +75,16 @@ extract around it and each segment's `qcamera.ts`. `lane_conv.py OSM_DIR EXPORT.
 speed] when there was a fix within 0.6 s). Run the converter with `python3 -I` on the extracted files in a folder of
 their own. The exports hold where the car drove: never in git.
 
+## `steer/sv_steer_export.py`: openpilot's steering on stretches of a drive (Nov 19)
+
+`sv_steer_export.py NAME T0 T1 [T0 T1 ...]` runs on the comma (copied to `/data/sv_steer_export.py`; run parked -
+streamed rlogs, nice 19, idle I/O). For finding a wobble: the model's curvature and path, controlsState's desired and
+actual curvature with the torque controller's p / i / f / output, carControl / carOutput, the steering angle, rate,
+driver and EPS torque, yaw rate, the live steering ratio / torque / delay estimates, starpilotLateralState and the
+steering settings; fast signals at 50 a second, columns per message (`services.carState.angle` ...). Drives older than
+the comma keeps come from the EXTDATA stick: it takes the log archive's lock, mounts the stick read-only and unmounts it
+again. Writes `/data/starview/steer_NAME.json.gz`: no positions, but drive data - never in git.
+
 ## `render/SceneSeqTest.kt`: the Scene view as a film of a recorded drive (2.90.0)
 
 Pictures of single moments (LaneSceneTest) can't show a road that jumps; this replays whole stretches of a drive at 10
