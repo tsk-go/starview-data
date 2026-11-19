@@ -90,6 +90,8 @@ object LaneRibbon {
     internal var rem = 0.0                  // m to the next step
     internal var prevWay = Long.MIN_VALUE; internal var prevV = 0; internal var prevD = 0   // the piece we came along
     internal var dead = false
+    /** the map the thread ended on (2.90.10: a map built again later is asked once more, see [extend]) */
+    internal var deadOn: LaneMap.Built? = null
     // how the thread comes onto the piece it takes up next (see extend): which lane, and the joint it is at
     internal var jKind = J_TURN; internal var jCi = -1; internal var jSkip = 0.0; internal var jX = 0.0; internal var jY = 0.0
     internal var jSide = 0                  // an exit: it leaves on the right (1) / the left (-1)
@@ -335,12 +337,26 @@ object LaneRibbon {
    */
   private fun extend(b: LaneMap.Built, st: State) {
     val idx = wayIndex(b, st)
+    // 2.90.10 (owner, Nov 19: "it loses part of the road for a few seconds, maybe a second"): the thread ends where the
+    // map it was laid on ends - and a long piece takes it there: on the owner's avenue one piece runs half a mile, its far
+    // end past the 3/4 mile built around us, so the road after it wasn't on that map yet. That end used to stay for good:
+    // the map built again a few seconds later had the road, but the thread never asked again, the road drawn ended
+    // there, and as we drove up to it the Scene's road got shorter until it stopped at the van, then went, until the
+    // road was laid from scratch past it. Now a map built since is asked again from the end: its last steps are
+    // smoothed again with what follows (a real dead end gives the same steps back).
+    if (st.dead && st.deadOn !== b && st.smp.isNotEmpty()) {
+      val n = st.smp.size
+      for (i in max(0, n - KN - 1) until n) st.smp[i].done = false
+      st.dead = false
+      st.trace?.add("asked the map again at step ${st.first + n}")
+    }
+    fun die() { st.dead = true; st.deadOn = b }
     var guard = 0
     while (!st.dead && (st.first + st.smp.size - st.van) * STEP < AHEAD && guard++ < 60) {
-      val wi = idx[st.endWay] ?: run { st.dead = true; return }
+      val wi = idx[st.endWay] ?: run { die(); return }
       val w = b.ways[wi]
       val ls = lanesOf(w, st.endDir, st.endX, st.endY)
-      if (ls.isEmpty()) { st.dead = true; return }
+      if (ls.isEmpty()) { die(); return }
       val kind = st.jKind
       val ci = if (st.jCi in ls.indices) st.jCi else ls.indices.minByOrNull { abs(ls[it].second.side) } ?: 0
       st.jKind = J_TURN; st.jCi = -1
@@ -355,7 +371,7 @@ object LaneRibbon {
       val off = if (hold) st.offNow else natural
       st.offNow = off; st.offN = ls.size; st.offCi = ci; st.offTwo = !w.oneway
       val (lx, ly) = laneLine(w, st.endDir, ls[ci].first, off)
-      var p = LaneAnchor.project(lx, ly, st.endX, st.endY) ?: run { st.dead = true; return }
+      var p = LaneAnchor.project(lx, ly, st.endX, st.endY) ?: run { st.jKind = kind; st.jCi = ci; die(); return }
       val opp = w.lanes.size - ls.size
       val from = st.first + st.smp.size
       // where on this piece the thread takes it up: beside where it is now - or, at an exit or a merge, past the part
@@ -507,7 +523,9 @@ object LaneRibbon {
           st.forks.add(Fork(near, w.keys[v], w.id, ways, w.id, st.endDir, q.x, q.y, hv, STEP, st.prevWay, st.prevV, st.prevD, kind, ci, base))
         }
       }
-      if (bestU < 0) { st.dead = true; break }
+      // no road goes on from here on this map. This piece is laid; asked again (a map built since), it is taken up
+      // once more from its end, the way it was taken up now - no straight run again (jSkip), the same lane
+      if (bestU < 0) { st.jKind = kind; st.jCi = ci; st.jSkip = 0.0; die(); break }
       // ---------------------------------------------------------------- how we pass onto it
       val u = b.ways[bestU]
       val ul = lanesOf(u, bestD, st.endX, st.endY)

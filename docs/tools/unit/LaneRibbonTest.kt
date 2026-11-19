@@ -282,4 +282,46 @@ class LaneRibbonTest {
     for (k in road.lines.filter { it.style == LaneMap.CURB }) for (j in k.y.indices)
       assertTrue("no kerb across the crossing: ${k.x[j]}, ${k.y[j]}", abs(k.y[j]) > 4.0)
   }
+
+  @Test fun aLongPieceReachingPastTheMapGoesOnOnceTheMapIsBuiltAgain() {
+    // 2.90.10 (owner, Nov 19: "it loses part of the road for a few seconds, maybe a second"): a piece 900 m long whose
+    // far end lies past what is built around us (1200 m), so the road after it isn't on that map. Built again every
+    // 400 m as LaneMap does. Before: the thread ended there for good - the road ready to draw shrank to nothing at the
+    // van and was laid again from scratch past it. Now: it goes on when the map is built again, long before we're near.
+    val e = 20_000.0                                   // far from the other tests' roads
+    val ways = arrayOf(way(9101, "primary", 2, e, 0.0, e, 1000.0), way(9102, "primary", 2, e, 1000.0, e, 1900.0),
+      way(9103, "primary", 2, e, 1900.0, e, 3500.0))
+    LaneMap.offline = true
+    LaneMap.parse("""{"elements":[${ways.joinToString(",")}]}""")
+    fun ll(y: Double) = doubleArrayOf(lat0 + y / ky, lon0 + e / kx)
+    var builtAt = 0.0
+    ll(0.0).let { LaneMap.buildNow(it[0], it[1]) }
+    var b = LaneMap.built!!
+    val ast = LaneAnchor.State(); val rst = LaneRibbon.State()
+    rst.trace = ArrayList()
+    val seen = HashMap<Long, DoubleArray>()
+    var y = 50.0; var t = 0.0; var shortest = Double.MAX_VALUE
+    while (y < 2600.0) {
+      if (y - builtAt > 400.0) { ll(y).let { LaneMap.buildNow(it[0], it[1]) }; b = LaneMap.built!!; builtAt = y }
+      val q = ll(y).let { b.xy(it[0] , it[1]) }
+      val x = q[0] + 1.8                              // the right lane
+      val odo = doubleArrayOf(x, q[1], PI / 2, y)
+      val now = (t * 1000).toLong() + 1000
+      assertNotNull("on a road at $y", LaneAnchor.run(b, LaneFit.Pose(x, q[1], 0.0), 0.5, cam(), odo, now, ast, null, null, 0))
+      assertNotNull("a road drawn at $y: ${rst.trace}", LaneRibbon.update(b, ast, rst, cam(), odo, now))
+      val open = rst.smp.indexOfFirst { !it.done }.let { if (it < 0) rst.smp.size else it }
+      shortest = minOf(shortest, (rst.first + open - rst.van) * LaneRibbon.STEP)
+      for ((k, s) in rst.smp.withIndex()) {
+        if (!s.done) continue
+        val no = rst.first + k
+        val was = seen.getOrPut(no) { doubleArrayOf(s.sx, s.sy) }
+        val ahead = (no - rst.van) * LaneRibbon.STEP
+        assertTrue("a step of the road drawn ${(ahead / 0.3048).toInt()} ft ahead of us moved at $y", ahead > 305.0 || hypot(s.sx - was[0], s.sy - was[1]) < 0.05)
+        was[0] = s.sx; was[1] = s.sy
+      }
+      y += 15.0 * 0.25; t += 0.25
+    }
+    assertTrue("laid once: ${rst.trace}", rst.relaid == 1)
+    assertTrue("the road ready to draw never less than 1000 ft ahead: ${(shortest / 0.3048).toInt()} ft\n${rst.trace}", shortest > 305.0)
+  }
 }
