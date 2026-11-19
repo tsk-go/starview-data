@@ -86,6 +86,8 @@ DECISIONS = {
     # and adds the turn lanes (hybLabel)
     "laneCount()Lkotlin/Pair;": ("patch", "7f5da679f49e"),
     "label()Ljava/lang/String;": ("patch", "20194559f73c"),
+    # 2.90.7: a ramp the route takes that opens straight off the edge lane is no exit lane (hybModel)
+    "roadModel(Lcom/starpilot/starview/LaneBrain$Road;Lcom/starpilot/starview/LaneBrain$RoadInfo;)Lcom/starpilot/starview/LaneBrain$RoadModel;": ("patch", "4324506970cb"),
   },
   # 2.90.1: Galaxy's settings rows as StarPilot's Nov 18 testing update presents them (GalaxyMirror)
   "GalaxyRow": {

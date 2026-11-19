@@ -64,6 +64,34 @@ class LaneCardFollowTest {
     assertEquals("Left turn lane 2 of 2 (left of 3 lanes)", c.label())
   }
 
+  @Test fun anExitLaneTheScenesRoadDoesntCountStaysOnTheCard() {
+    // 2.90.7: Nov 18, the card had "Lane 3 of 3 + exit lane →" and 2.90.6 took the exit lane away (the map's road counts
+    // 3 there). The card's count is the Scene's plus that lane; its side follows the card's own camera, a little
+    val c = card(3, "HPMS", 0.9)
+    LaneBrain::class.java.getDeclaredField("model").apply { isAccessible = true }
+      .set(c, LaneBrain.RoadModel(3, "HPMS", 0.9, 0, 1, "", "exit", false, false))
+    val q = Array(6) { DoubleArray(6) { 1e-4 } }
+    q[2][1] = 0.9; q[2][0] = 0.09
+    LaneBrain::class.java.getDeclaredField("q").apply { isAccessible = true }.set(c, q)
+    scene(3, 3, 0, 0)
+    repeat(3) { c.hybAnswer() }
+    assertEquals(4, c.laneCount().first)
+    assertEquals("Lane 3 of 3 + exit lane →", c.label())
+  }
+
+  @Test fun aRampThatOpensOffOurLaneIsNoLane() {
+    // 2.90.7: owner, Nov 18: "there is no exit lane from lane 3, there's an opening" - the route's exit leaves straight
+    // from the edge lane (ExitTake.opening): the map's ramp is no lane beside us
+    val c = LaneBrain()
+    val m = LaneBrain.RoadModel(3, "HPMS", 0.9, 0, 1, "", "exit", false, false)
+    assertEquals(1, c.hybModel(m).getExtraR())
+    ExitTake.opening = 1
+    try {
+      assertEquals(0, c.hybModel(m).getExtraR())
+      assertEquals(1, LaneBrain.RoadModel(3, "HPMS", 0.9, 1, 0, "exit", "", false, false).let { c.hybModel(it).getExtraL() })
+    } finally { ExitTake.opening = 0 }
+  }
+
   @Test fun withoutTheSceneTheCardGoesByItsOwn() {
     val c = card(3, "your count", 0.97)
     c.hybAnswer()

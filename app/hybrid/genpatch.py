@@ -230,6 +230,14 @@ m = M("LaneBrain", "laneCount()Lkotlin/Pair;")
 m.insert_before("invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->total()Lkotlin/Pair;",
                 ["invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybCount()Lkotlin/Pair;", "move-result-object v0",
                  "if-eqz v0, :hyb_count_own", "return-object v0", ":hyb_count_own"])
+# 2.90.7: the road model as the card counts it - a ramp the route takes that opens straight off the edge lane is no exit
+# lane beside us (hybModel); v6 = the model returned, v7 (the lane count) is free by then
+m = M("LaneBrain", "roadModel(Lcom/starpilot/starview/LaneBrain$Road;Lcom/starpilot/starview/LaneBrain$RoadInfo;)"
+                   "Lcom/starpilot/starview/LaneBrain$RoadModel;")
+m.insert_before("return-object v6", ["move-object/from16 v7, p0",
+                                     "invoke-virtual {v7, v6}, Lcom/starpilot/starview/LaneBrain;->hybModel"
+                                     "(Lcom/starpilot/starview/LaneBrain$RoadModel;)Lcom/starpilot/starview/LaneBrain$RoadModel;",
+                                     "move-result-object v6"])
 m = M("LaneBrain", "label()Ljava/lang/String;")
 m.insert_before("invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->laneFromLeft()Lkotlin/Pair;",
                 ["invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybLabel()Ljava/lang/String;", "move-result-object v0",

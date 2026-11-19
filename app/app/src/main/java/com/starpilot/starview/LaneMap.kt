@@ -122,7 +122,7 @@ object LaneMap {
   }
 
   @Volatile var built: Built? = null
-    private set
+    internal set            // (tests: a test class building far away leaves no frame for the next)
   @Volatile var status = "no position yet"
     private set
   @Volatile var enabled = true

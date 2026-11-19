@@ -157,13 +157,17 @@ object LaneAnchor {
 
   /** LaneFit's worker thread, after its own fit. */
   internal fun tick(b: LaneMap.Built, gps: LaneFit.Pose, acc: Double, cam: LaneFit.Cam, odo: DoubleArray, now: Long, hint: LaneSceneView.Lanes?, speed: Double,
-                    rtkAcc: Double = Double.NaN, signal: Int = 0) {
+                    rtkAcc: Double = Double.NaN, signal: Int = 0, exit: ExitTake.Snap? = null) {
     val shift = pendingShift
     pendingShift = 0
+    var f: LaneFit.Fit? = null
     fit = try {
       // where we are (which road, which lane), then the road drawn around it (LaneRibbon)
-      if (run(b, gps, acc, cam, odo, now, live, hint, marks, shift, speed, rtkAcc, signal) == null) null else LaneRibbon.update(b, live, ribbon, cam, odo, now)
+      f = run(b, gps, acc, cam, odo, now, live, hint, marks, shift, speed, rtkAcc, signal)
+      if (f == null) null else LaneRibbon.update(b, live, ribbon, cam, odo, now)
     } catch (e: Throwable) { android.util.Log.w("StarView/LaneAnchor", "run", e); null }
+    // 2.90.7: the route's exit taken from our lane - on our place in the lane (the fix on the map), not the drawn road
+    if (exit != null) try { ExitTake.tick(b, f, live.rtkGood && !live.doubt, cam, exit, now) } catch (e: Throwable) { android.util.Log.w("StarView/ExitTake", "tick", e) }
   }
 
   private class Cand(val wi: Int, val lane: LaneMap.MLane, val pr: Proj)

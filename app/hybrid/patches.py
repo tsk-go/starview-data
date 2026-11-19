@@ -81,6 +81,10 @@ PATCHES = {
     ('    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->total()Lkotlin/Pair;\n',
      '    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybCount()Lkotlin/Pair;\n    move-result-object v0\n    if-eqz v0, :hyb_count_own\n    return-object v0\n    :hyb_count_own\n    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->total()Lkotlin/Pair;\n'),
   ],
+  ('LaneBrain', 'roadModel(Lcom/starpilot/starview/LaneBrain$Road;Lcom/starpilot/starview/LaneBrain$RoadInfo;)Lcom/starpilot/starview/LaneBrain$RoadModel;'): [
+    ('    return-object v6\n',
+     '    move-object/from16 v7, p0\n    invoke-virtual {v7, v6}, Lcom/starpilot/starview/LaneBrain;->hybModel(Lcom/starpilot/starview/LaneBrain$RoadModel;)Lcom/starpilot/starview/LaneBrain$RoadModel;\n    move-result-object v6\n    return-object v6\n'),
+  ],
   ('LaneBrain', 'label()Ljava/lang/String;'): [
     ('    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->laneFromLeft()Lkotlin/Pair;\n',
      '    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->hybLabel()Ljava/lang/String;\n    move-result-object v0\n    if-eqz v0, :hyb_label_own\n    return-object v0\n    :hyb_label_own\n    invoke-virtual {p0}, Lcom/starpilot/starview/LaneBrain;->laneFromLeft()Lkotlin/Pair;\n'),

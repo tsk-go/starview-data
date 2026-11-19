@@ -986,7 +986,7 @@ public final class LaneBrain {
         int n = ((Number) triple.component1()).intValue();
         String src = (String) triple.component2();
         double conf = ((Number) triple.component3()).doubleValue();
-        return new RoadModel(n, src, conf, i != null ? i.getExtraL() : 0, i != null ? i.getExtraR() : 0, (i == null || (kindL = i.getKindL()) == null) ? "" : kindL, (i == null || (kindR = i.getKindR()) == null) ? "" : kindR, i != null && i.getTunnel(), i != null && i.getBridge());
+        return hybModel(new RoadModel(n, src, conf, i != null ? i.getExtraL() : 0, i != null ? i.getExtraR() : 0, (i == null || (kindL = i.getKindL()) == null) ? "" : kindL, (i == null || (kindR = i.getKindR()) == null) ? "" : kindR, i != null && i.getTunnel(), i != null && i.getBridge()));
     }
 
     private final double fits(int t, RoadModel m) {
@@ -1048,6 +1048,33 @@ public final class LaneBrain {
         }
     }
 
+    /** 2.90.7: the exit / merge lanes on the left [0] and right [1] the card has from the map's ramps or the route
+     *  that the Scene's road of [n] lanes doesn't count (its count is the road's own: the card's road count) */
+    final int[] hybExtras(int n) {
+        RoadModel m = this.model;
+        if (m == null || m.getLanes() <= 0 || n != m.getLanes()) {
+            return new int[]{0, 0};
+        }
+        return new int[]{Math.max(0, m.getExtraL()), Math.max(0, m.getExtraR())};
+    }
+
+    /** 2.90.7: the road model as the card counts it (roadModel's result): a ramp the route takes that opens straight
+     *  off the edge lane on that side, with no exit lane before it (ExitTake.opening, from the RTK fix and the map), is
+     *  no exit lane beside us - the card counted one on the owner's exit on Nov 17 and 18 ("there is no exit lane from
+     *  lane 3, there's an opening") and asked to change lanes into it. */
+    final RoadModel hybModel(RoadModel m) {
+        try {
+            int op = ExitTake.INSTANCE.getOpening();
+            if (m == null || op == 0 || (op > 0 ? m.getExtraR() : m.getExtraL()) <= 0) {
+                return m;
+            }
+            return new RoadModel(m.getLanes(), m.getSrc(), m.getConf(), op < 0 ? 0 : m.getExtraL(), op > 0 ? 0 : m.getExtraR(),
+                op < 0 ? "" : m.getKindL(), op > 0 ? "" : m.getKindR(), m.getTunnel(), m.getBridge());
+        } catch (Throwable e) {
+            return m;
+        }
+    }
+
     /** 2.90.6: with the RTK fix placing us (hybAnswer), the card's count is the Scene's, said so ("Scene, RTK" after the
      *  road's own counts; it said "camera" before); null otherwise: the card's own count. */
     final Pair<Integer, String> hybCount() {
@@ -1056,7 +1083,8 @@ public final class LaneBrain {
             if (rl == null || System.currentTimeMillis() - LaneAnchor.INSTANCE.getRtkLaneMs() >= 1500L) {
                 return null;
             }
-            return TuplesKt.to(Integer.valueOf(rl[1]), "Scene, RTK");
+            int[] ex = hybExtras(rl[1]);
+            return TuplesKt.to(Integer.valueOf(rl[1] + ex[0] + ex[1]), ex[0] + ex[1] > 0 ? "Scene, RTK + " + extraText() : "Scene, RTK");
         } catch (Throwable e) {
             return null;
         }
@@ -1069,9 +1097,14 @@ public final class LaneBrain {
     final String hybLabel() {
         try {
             int[] rl = LaneAnchor.INSTANCE.getRtkLane();
+            String xs = ExitTake.INSTANCE.cardText();
             if (rl == null || rl.length < 4 || System.currentTimeMillis() - LaneAnchor.INSTANCE.getRtkLaneMs() >= 1500L
                     || rl[2] + rl[3] <= 0) {
-                return null;
+                if (xs.length() == 0 || rl == null || System.currentTimeMillis() - LaneAnchor.INSTANCE.getRtkLaneMs() >= 1500L) {
+                    return null;
+                }
+                // 2.90.7: taking the route's exit from our lane (ExitTake): the lane and what it's doing
+                return "Lane " + rl[0] + " of " + rl[1] + " · " + xs;
             }
             int lane = rl[0], n = rl[1], tl = rl[2], tr = rl[3];
             int through = n - tl - tr;
@@ -1083,7 +1116,7 @@ public final class LaneBrain {
                 return "Right turn lane" + (tr > 1 ? " " + (lane - (n - tr)) + " of " + tr : "") + " (right of " + of + ")";
             }
             String t = (tl > 0 ? " + turn lane ←" : "") + (tr > 0 ? " + turn lane →" : "");
-            return "Lane " + (lane - tl) + " of " + through + t;
+            return "Lane " + (lane - tl) + " of " + through + t + (xs.length() > 0 ? " · " + xs : "");
         } catch (Throwable e) {
             return null;
         }
@@ -1101,12 +1134,20 @@ public final class LaneBrain {
             // card doesn't even know", four stops in a row.
             int[] rl = LaneAnchor.INSTANCE.getRtkLane();
             if (rl != null && System.currentTimeMillis() - LaneAnchor.INSTANCE.getRtkLaneMs() < 1500L) {
-                int wantL = rl[0] - 1;
-                int wantR = rl[1] - rl[0];
+                // 2.90.7: an exit / merge lane the card has from the map's ramps or the route, that the Scene's road
+                // doesn't count (the map ends our road's piece before it): added on its side, and that side only a
+                // little, as 2.90.5 did - the card's camera knows best where such a lane begins. 2.90.6 pulled both
+                // sides to the Scene's count and an exit lane went from the card (Nov 18). (A ramp that opens straight
+                // off the edge lane is no lane beside us: hybModel has taken it out.)
+                int[] ex = hybExtras(rl[1]);
+                int wantL = rl[0] - 1 + ex[0];
+                int wantR = rl[1] - rl[0] + ex[1];
+                double kL = ex[0] > 0 ? 0.7d : 3.0d;
+                double kR = ex[1] > 0 ? 0.7d : 3.0d;
                 double s = 0.0d;
                 for (int l = 0; l < 6; l++) {
                     for (int r = 0; r < 6; r++) {
-                        double v = this.q[l][r] * (Math.exp(-3.0d * (Math.abs(l - wantL) + Math.abs(r - wantR))) + 1.0e-4d);
+                        double v = this.q[l][r] * (Math.exp(-kL * Math.abs(l - wantL) - kR * Math.abs(r - wantR)) + 1.0e-4d);
                         this.q[l][r] = v;
                         s += v;
                     }

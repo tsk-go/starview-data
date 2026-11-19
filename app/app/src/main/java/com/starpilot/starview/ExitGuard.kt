@@ -29,6 +29,9 @@ object ExitGuard {
       val (k, p) = b.side(if (s == 0) -1 else 1)
       if (k == 0 && p >= 0.9) sureNone[s] = now
     }
+    // 2.90.7: the route's exit opens straight off the edge lane (ExitTake): there is no exit lane to move into - the
+    // old signal would move us onto the shoulder before the opening; ExitTake takes that exit
+    if (dir != 0 && ExitTake.opening == dir) return -1
     if (dir == 0 || n != 1) return n
     val (k, p) = b.side(dir)
     if (k != 1 || p < 0.8) return -1

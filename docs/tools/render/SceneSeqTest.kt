@@ -29,7 +29,7 @@ import kotlin.math.sin
  * still with the map still laid on the camera's lines (SceneSteady over LaneFit), "anchor" = 2.90.0 as released
  * (LaneAnchor places us, LaneRibbon generates the road). Same data as LaneSceneTest (laneData/drive_*.json at 4 a
  * second, osm_all.json); laneData/seq.txt lists the stretches, one per line:
- * "window,YYYY-MM-DD HH:MM:SS (Eastern),seconds,name[,day][,flip][,spin][,rtk][,city][,lights=F[:G]][,zoom=D][,tilt=E]"
+ * "window,YYYY-MM-DD HH:MM:SS (Eastern),seconds,name[,day][,flip][,spin][,rtk][,city][,lights=F[:G]][,zoom=D][,tilt=E][,exit=LAT:LON:SIDE:M]"
  * (flip: the lane card changes its mind like in the owner's Nov 17 video; spin: three made-up detected cars whose
  * guessed heading flickers; the others are explained where they're used). The 30 s before a stretch are replayed
  * without drawing. Writes picOut/<name>_<mode>/NNNN.png (10 a second) and picOut/<name>.txt: what changed from one
@@ -114,6 +114,11 @@ class SceneSeqTest {
         val steady = mode != "before"
         val anchored = mode == "anchor"
         val ast = LaneAnchor.State()
+        // "exit=LAT:LON:SIDE:M": the route's next step an exit on SIDE (1 right, -1 left) at that point plus M metres
+        // (the route puts its point on the ramp): ExitTake runs on LaneAnchor's place (2.90.7)
+        val exitAt = p.firstOrNull { it.startsWith("exit=") }?.substring(5)?.split(':')?.map { it.toDouble() }
+        ExitTake.reset(); ExitTake.commaHasExit = true
+        var lastExit = ""
         val rst = LaneRibbon.State()
         val trace = ArrayList<String>()
         rst.trace = trace
@@ -170,6 +175,21 @@ class SceneSeqTest {
                 else if (r.f.optBoolean("lb") && !r.f.optBoolean("rb")) -1 else if (r.f.optBoolean("rb") && !r.f.optBoolean("lb")) 1 else 0
               afit = LaneAnchor.run(b, gps, acc, cam, odo, (r.t * 1000).toLong(), ast, cardNow, null, sh, r.f.getDouble("speed"), rtkAcc, signal)
               val seen = afit
+              if (exitAt != null) {
+                val pt = b.xy(exitAt[0], exitAt[1])
+                val dMan = hypot(pt[0] - xy[0], pt[1] - xy[1]) * (if (gps.fwd(pt[0], pt[1]) >= 0) 1 else -1) + exitAt[3]
+                val nav = JSONObject().put("valid", true).put("maneuverType", "off ramp")
+                  .put("maneuverModifier", if (exitAt[2] > 0) "right" else "left").put("maneuverDistance", dMan)
+                val lcd = if (r.lcState == "laneChangeStarting" || r.lcState == "laneChangeFinishing") r.lcDir else 0
+                ExitTake.tick(b, seen, ast.rtkGood && !ast.doubt, cam, ExitTake.Snap(r.f.getDouble("speed"), r.f.optBoolean("lb"),
+                  r.f.optBoolean("rb"), false, false, true, lcd, true, nav), (r.t * 1000).toLong())
+                val now = "${ExitTake.state} hold ${ExitTake.heldSide} ${ExitTake.heldWhy}"
+                if (r.t >= t0 - 25 && (now != lastExit || System.getenv("ANCHOR_LOG") != null))
+                  log.append(String.format("exit %6.2f s: %s, split %.0f ft, room %.1f m, cap %s, %s | %s\n", r.t - t0, now,
+                    ExitTake.splitM / 0.3048, ExitTake.room(cam, exitAt[2].toInt()),
+                    if (ExitTake.capNow.isFinite()) String.format("%.0f mph", ExitTake.capNow / 0.44704) else "-", ExitTake.note, LaneAnchor.status))
+                lastExit = now
+              }
               afit = if (seen == null) null else LaneRibbon.update(b, ast, rst, cam, odo, (r.t * 1000).toLong())
               for (ln in trace) log.append(String.format("ribbon %6.2f s: %s\n", r.t - t0, ln))
               trace.clear()

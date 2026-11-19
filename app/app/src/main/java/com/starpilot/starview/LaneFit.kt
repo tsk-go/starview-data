@@ -119,10 +119,15 @@ object LaneFit {
     // lane change: openpilot changing lanes, else the blinker
     val rtkAcc = if (rtk.fast(now) && rtk.accM.isFinite()) rtk.accM else Double.NaN
     val signal = if (m.laneChanging && m.laneChangeDir != 0) m.laneChangeDir else if (t.leftBlinker && !t.rightBlinker) -1 else if (t.rightBlinker && !t.leftBlinker) 1 else 0
+    // 2.90.7: what ExitTake needs to take the route's exit from our lane
+    val exit = try {
+      ExitTake.Snap(speed, t.leftBlinker, t.rightBlinker, t.leftBlindspot, t.rightBlindspot, t.latActive,
+        if (m.laneChanging) m.laneChangeDir else 0, t.s("exit_signals"), t.navState())
+    } catch (e: Throwable) { null }
     worker.execute {
       try {
         fit = run(b, gps, acc, cam, odo, now, fit)
-        LaneAnchor.tick(b, gps, acc, cam, odo, now, hint, speed, rtkAcc, signal)
+        LaneAnchor.tick(b, gps, acc, cam, odo, now, hint, speed, rtkAcc, signal, exit)
       } catch (e: Throwable) { Log.w(TAG, "fit", e) } finally { busy = false }
     }
   }
