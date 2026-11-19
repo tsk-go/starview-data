@@ -154,10 +154,39 @@ def rlog(d):
   return next((p for p in (d + "/rlog.zst", d + "/rlog.bz2", d + "/rlog") if os.path.exists(p)), None)
 
 
+def head_time(d):
+  """the segment's start (unix), from its first clock or GPS time - only its first messages are read"""
+  for i, dat in enumerate(_messages(rlog(d))):
+    if i > 20000:
+      return None
+    with log.Event.from_bytes(dat, traversal_limit_in_words=2 ** 63 - 1) as m:
+      w = m.which()
+      if w == "clocks" and m.clocks.wallTimeNanos > 1.6e18:
+        return m.clocks.wallTimeNanos / 1e9
+      if w == "gpsLocationExternal" and m.gpsLocationExternal.hasFix and m.gpsLocationExternal.unixTimestampMillis > 0:
+        return m.gpsLocationExternal.unixTimestampMillis / 1e3
+  return None
+
+
 def segments(root):
-  # a segment's rlog is last written at its end (60 s segments): those ending from 20 s before T0 to 70 s after T1
-  return sorted((os.path.getmtime(rlog(d)), d) for d in glob.glob(root + "/*--*")
-                if rlog(d) and any(a - 20 <= os.path.getmtime(rlog(d)) <= b + 70 for a, b in wins))
+  """(segment end, folder) of the segments with any of the stretches. A segment's rlog is last written at its end (60 s
+  segments), so those whose rlog was last written from 20 s before T0 to 70 s after T1; when that finds too few (a log
+  rewritten later has a later time), every segment whose rlog is newer than T0 is asked its own start time."""
+  found = [(os.path.getmtime(rlog(d)), d) for d in glob.glob(root + "/*--*")
+           if rlog(d) and any(a - 20 <= os.path.getmtime(rlog(d)) <= b + 70 for a, b in wins)]
+  if covered(found):
+    return sorted(found)
+  found = []
+  for d in glob.glob(root + "/*--*"):
+    if not rlog(d) or os.path.getmtime(rlog(d)) < min(a for a, _ in wins) - 20:
+      continue
+    try:
+      t0 = head_time(d)
+    except Exception:
+      t0 = None
+    if t0 is not None and any(a - 80 <= t0 <= b + 5 for a, b in wins):
+      found.append((t0 + 60, d))
+  return sorted(found)
 
 
 def covered(segs):
@@ -234,10 +263,16 @@ def params():
   return out
 
 
+def when(t):
+  return time.strftime("%a %b %d %H:%M", time.localtime(t))
+
+
 def main():
   segs = segments(SRC)
   where = "comma"
   locked = mounted = False
+  ends = sorted(os.path.getmtime(rlog(d)) for d in glob.glob(SRC + "/*--*") if rlog(d))
+  print("on the comma: %d segments for those times; its drives go back to %s" % (len(segs), when(ends[0]) if ends else "-"))
   try:
     if not covered(segs):
       where = "stick"
@@ -269,14 +304,21 @@ def main():
       if not any(l.split()[1] == MNT for l in open("/proc/mounts")):
         dev = sh("blkid -L EXTDATA").stdout.strip()
         if not dev.startswith("/dev/"):
-          sys.exit("those drives aren't on the comma any more and the EXTDATA stick isn't plugged in")
-        os.makedirs(MNT, exist_ok=True)
-        r = sh("mount -t ext4 -o ro,noatime %s %s" % (dev, MNT))
-        if r.returncode:
-          sys.exit("couldn't mount the stick: " + (r.stdout + r.stderr).strip())
-        mounted = True
+          msg = ("no EXTDATA stick found - it's on the USB hub, which is switched off a few minutes after the car: "
+                 "turn the car on (Park) and run this again")
+          if not segs:
+            sys.exit(msg)
+          print(msg + "; going on with what the comma has")
+          dev = None
+        if dev:
+          os.makedirs(MNT, exist_ok=True)
+          r = sh("mount -t ext4 -o ro,noatime %s %s" % (dev, MNT))
+          if r.returncode:
+            sys.exit("couldn't mount the stick: " + (r.stdout + r.stderr).strip())
+          mounted = True
       have = {os.path.basename(d) for _, d in segs}      # the comma's own copy first, the rest from the stick
-      segs = sorted(segs + [(t, d) for t, d in segments(MNT) if os.path.basename(d) not in have])
+      if mounted or any(l.split()[1] == MNT for l in open("/proc/mounts")):
+        segs = sorted(segs + [(t, d) for t, d in segments(MNT) if os.path.basename(d) not in have])
     print("reading", len(segs), "segments from the", where + ":", [os.path.basename(d) for _, d in segs])
     if not segs:
       sys.exit("no drive found for those times")
