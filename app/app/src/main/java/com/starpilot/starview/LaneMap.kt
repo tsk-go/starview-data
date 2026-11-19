@@ -26,9 +26,10 @@ import kotlin.math.roundToLong
  * :backward), width, parking, placement, oneway, layer / bridge / tunnel, name / ref.
  *
  * Streets come in 0.01 deg tiles (same grid as OsmRoads): OsmRoads' own Overpass tile when it has one (it keeps every
- * tag), else our own download of only the drivable roads, kept in files/lanes/. Everything runs on one background
- * thread: download, read, build. The build covers the roads within 1.2 km of the car and is redone after 400 m or when
- * a new tile arrives; the screen reads [built] (never changed after it is published).
+ * tag), else our own download of only the drivable roads, kept in files/lanes/. Tiles are read / downloaded on two
+ * background threads, nearest the car first (2.90.10, see [fetch]), the build on one of its own. The build covers the
+ * roads within 1.2 km of the car and is redone after 400 m or when a new tile arrives; the screen reads [built] (never
+ * changed after it is published).
  *
  * Frame: metres east (x) / north (y) of [Built.lat0], [Built.lon0]. Lanes are listed left to right looking along the
  * way. US conventions (right-hand traffic, yellow on the left of a one-way divided road).
@@ -70,7 +71,8 @@ object LaneMap {
     "lanes:backward", "lanes:both_ways", "turn:lanes", "turn:lanes:forward", "turn:lanes:backward", "width",
     "parking:both", "parking:left", "parking:right", "parking:lane:both", "parking:lane:left", "parking:lane:right",
     "placement", "layer", "bridge", "tunnel", "destination", "destination:ref", "destination:lanes", "lane_markings")
-  private val URLS = listOf("https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter",
+  /** the map servers, in the order first asked (tests point them elsewhere) */
+  internal var urls = listOf("https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter")
 
   /** One OSM way as downloaded. */
@@ -134,6 +136,25 @@ object LaneMap {
   private val failedAt = ConcurrentHashMap<String, Long>()
   private val tileWays = ConcurrentHashMap<String, LongArray>()
   private val worker = Executors.newSingleThreadExecutor { r -> Thread(r, "lanes").apply { priority = Thread.MIN_PRIORITY + 1 } }
+
+  // 2.90.10 (owner, Nov 19: no road at all in the Scene for a mile of a street the tablet hadn't had since the Scene got
+  // its map): the free map servers were overloaded - one answered "too busy" after 33 s, one not within a minute - and
+  // the tablet asked them for one square at a time, on the build's own thread, each server in turn for up to ~a minute,
+  // every square behind the ones asked before (also those already left behind). The squares came 5 - 15 minutes apart,
+  // after we had driven through them. Now squares are fetched on two threads of their own, nearest the car first (one
+  // left 1.5 miles behind is dropped, asked again if we come back), a server that hasn't answered in 6 s has the next
+  // one asked as well (the first good answer wins, the one that answered last is asked first next time), and the
+  // squares along the route are asked for as soon as it is known ([onRoute]).
+  private const val FETCH_MS = 45_000L
+  private const val STAGGER_MS = 6_000L
+  private const val DROP_M = 2500.0
+  private const val ROUTE_R = 200.0
+  private const val RETRY_MS = 20_000L
+  private val fetchers = Executors.newFixedThreadPool(2) { r -> Thread(r, "lanes-get").apply { priority = Thread.MIN_PRIORITY + 1; isDaemon = true } }
+  private val waiting = ConcurrentHashMap<String, Boolean>()
+  @Volatile private var routeKeys: Set<String> = emptySet()
+  @Volatile private var routeOf: Any? = null
+  @Volatile private var goodUrl: String? = null
   private val http by lazy { OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS).readTimeout(40, TimeUnit.SECONDS).build() }
   @Volatile private var lastPosMs = 0L
   @Volatile private var buildLat = Double.NaN
@@ -185,10 +206,68 @@ object LaneMap {
     val k = "${ty}_$tx"
     when (tiles[k]) {
       0, 1 -> return
-      2 -> if (System.currentTimeMillis() - (failedAt[k] ?: 0L) < 60_000) return
+      2 -> if (System.currentTimeMillis() - (failedAt[k] ?: 0L) < RETRY_MS) return
     }
     tiles[k] = 0
-    worker.execute { load(ty, tx, k) }
+    waiting[k] = true
+    // (each task takes whichever square is nearest the car when it runs, not this one)
+    fetchers.execute { next()?.let { n -> val p = n.split('_'); load(p[0].toInt(), p[1].toInt(), n) } }
+  }
+
+  /** The square waiting nearest the car; squares far behind us (not on the route) are let go - asked again when near. */
+  @Synchronized private fun next(): String? {
+    val (best, gone) = pick(waiting.keys, lastLat, lastLon, routeKeys)
+    for (k in gone) { waiting.remove(k); tiles.remove(k, 0) }
+    if (best != null) waiting.remove(best)
+    return best
+  }
+
+  /** of the squares [keys]: the one nearest ([lat], [lon]) and those to let go (farther than [DROP_M], not in [keep]) */
+  internal fun pick(keys: Collection<String>, lat: Double, lon: Double, keep: Set<String>): Pair<String?, List<String>> {
+    var best: String? = null; var bd = Double.MAX_VALUE
+    val gone = ArrayList<String>()
+    for (k in keys) {
+      val p = k.split('_')
+      val d = if (lat.isNaN()) 0.0 else dist(lat, lon, (p[0].toInt() + 0.5) * TILE, (p[1].toInt() + 0.5) * TILE)
+      if (d > DROP_M && k !in keep) { gone.add(k); continue }
+      if (d < bd) { bd = d; best = k }
+    }
+    return best to gone
+  }
+
+  /** tests: the squares [onRoute] asks for along [line] */
+  internal val routeSquares: Set<String> get() = routeKeys
+
+  /**
+   * 2.90.10: the squares within 650 ft of the route we're guided on, asked for at once (nearest the car first) and kept
+   * like the others, so the map is there before we are. From LaneFit's tick: the same route costs nothing.
+   */
+  fun onRoute(line: Nav.Line?) {
+    if (!enabled || line === routeOf) return
+    routeOf = line
+    if (line == null || line.mx.size < 2) { routeKeys = emptySet(); return }
+    val nav = Nav.INSTANCE
+    val keys = LinkedHashSet<String>()
+    var pLa = Double.NaN; var pLo = Double.NaN
+    fun add(la: Double, lo: Double) {
+      val kx = 111320.0 * cos(Math.toRadians(la))
+      val y0 = floor((la - ROUTE_R / KY) / TILE).toInt(); val y1 = floor((la + ROUTE_R / KY) / TILE).toInt()
+      val x0 = floor((lo - ROUTE_R / kx) / TILE).toInt(); val x1 = floor((lo + ROUTE_R / kx) / TILE).toInt()
+      for (ty in y0..y1) for (tx in x0..x1) keys.add("${ty}_$tx")
+    }
+    for (i in line.mx.indices) {
+      val la = nav.latOf(line.my[i]); val lo = nav.lonOf(line.mx[i])
+      if (!pLa.isNaN()) {
+        // points 100 m apart in between (a highway's route has points miles apart)
+        val n = (dist(pLa, pLo, la, lo) / 100.0).toInt()
+        for (j in 1..n) add(pLa + (la - pLa) * j / (n + 1), pLo + (lo - pLo) * j / (n + 1))
+      }
+      add(la, lo)
+      pLa = la; pLo = lo
+      if (keys.size > 400) break                       // (a trip across the country: the first part)
+    }
+    routeKeys = keys
+    for (k in keys) { val p = k.split('_'); want(p[0].toInt(), p[1].toInt()) }
   }
 
   private fun load(ty: Int, tx: Int, k: String) {
@@ -218,23 +297,65 @@ object LaneMap {
     val s = ty * TILE; val w = tx * TILE
     val bb = String.format(Locale.US, "%.4f,%.4f,%.4f,%.4f", s, w, s + TILE, w + TILE)
     val q = "[out:json][timeout:30];way[\"highway\"~\"^(motorway|trunk|primary|secondary|tertiary)(_link)?$|^(unclassified|residential)$\"]($bb);out tags geom;"
-    var err = ""
-    for (u in URLS) {
-      try {
-        val req = Request.Builder().url(u).header("User-Agent", "StarView/2.87 (openpilot tablet display)")
-          .post(FormBody.Builder().add("data", q).build()).build()
-        http.newCall(req).execute().use { r ->
-          val body = r.body?.string() ?: ""
-          if (r.isSuccessful && body.trimStart().startsWith("{")) {
-            val tmp = File(f.path + ".tmp"); tmp.writeText(body); tmp.renameTo(f)
-            return body
-          }
-          err = "HTTP ${r.code}"
-        }
-      } catch (e: Exception) { err = e.message ?: e.toString() }
+    val t0 = System.nanoTime()
+    try {
+      val body = fetch(q)
+      val tmp = File(f.path + ".tmp"); tmp.writeText(body); tmp.renameTo(f)
+      val ms = (System.nanoTime() - t0) / 1_000_000
+      if (ms > 15_000) Log.w(TAG, "tile $k took ${ms / 1000} s")
+      return body
+    } catch (e: java.io.IOException) {
+      if (have) return f.readText()      // an old copy beats nothing
+      throw e
     }
-    if (have) return f.readText()      // an old copy beats nothing
-    throw java.io.IOException(err)
+  }
+
+  /** an answer to keep: Overpass JSON, and not one whose query broke off on the server (a remark with an error: its
+   *  "elements" are empty or cut short, and the square would stay so for 60 days) */
+  internal fun goodAnswer(body: String): Boolean = try {
+    val head = body.take(600)
+    val i = head.indexOf("\"remark\"")
+    body.trimStart().startsWith("{") && body.trimEnd().endsWith("}") &&
+      !(i >= 0 && head.indexOf("error", i, ignoreCase = true) >= 0) &&
+      (body.length >= 4000 || !JSONObject(body).optString("remark").contains("error", ignoreCase = true))
+  } catch (e: Exception) { false }
+
+  /** One square from the map servers: the one that answered well last first; when it has no good answer within
+   *  [STAGGER_MS] the next is asked as well, the first good answer wins, at most [FETCH_MS] in all. */
+  internal fun fetch(q: String): String {
+    val order = urls.sortedBy { if (it == goodUrl) 0 else 1 }
+    val got = java.util.concurrent.LinkedBlockingQueue<Array<String?>>()     // [server, answer or null, why not]
+    val calls = ArrayList<okhttp3.Call>()
+    fun ask(u: String) {
+      val req = Request.Builder().url(u).header("User-Agent", "StarView/2.90 (openpilot tablet display)")
+        .post(FormBody.Builder().add("data", q).build()).build()
+      val c = http.newCall(req)
+      synchronized(calls) { calls.add(c) }
+      c.enqueue(object : okhttp3.Callback {
+        override fun onFailure(call: okhttp3.Call, e: java.io.IOException) { got.offer(arrayOf(u, null, e.message ?: e.toString())) }
+        override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+          response.use { r ->
+            val body = try { r.body?.string() ?: "" } catch (e: Exception) { got.offer(arrayOf(u, null, e.message ?: e.toString())); return }
+            got.offer(if (r.isSuccessful && goodAnswer(body)) arrayOf(u, body, "") else arrayOf(u, null, "HTTP ${r.code}"))
+          }
+        }
+      })
+    }
+    val t0 = System.nanoTime()
+    var asked = 0; var failed = 0; var err = ""
+    try {
+      ask(order[asked++])
+      while (true) {
+        val left = FETCH_MS - (System.nanoTime() - t0) / 1_000_000
+        if (left <= 0) throw java.io.IOException(err.ifEmpty { "no answer in ${FETCH_MS / 1000} s" })
+        val r = got.poll(if (asked < order.size) min(left, STAGGER_MS) else left, TimeUnit.MILLISECONDS)
+        if (r == null) { if (asked < order.size) ask(order[asked++]); continue }
+        val body = r[1]
+        if (body != null) { goodUrl = r[0]; return body }
+        failed++; err = "${r[0]?.substringAfter("//")?.substringBefore('/')}: ${r[2]}"
+        if (failed >= asked) { if (asked < order.size) ask(order[asked++]) else throw java.io.IOException(err) }
+      }
+    } finally { synchronized(calls) { for (c in calls) c.cancel() } }
   }
 
   /** Overpass JSON (out tags geom) -> raw ways; returns the ids it held. */

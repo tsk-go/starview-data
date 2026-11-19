@@ -103,6 +103,8 @@ object LaneFit {
     val p = NavPos.pos(t)
     if (p[0].isNaN()) return
     LaneMap.onPos(p[0], p[1], p[2], t.vEgo.toDouble())
+    // 2.90.10: the map squares along the route we're guided on, asked for before we get there
+    try { LaneMap.onRoute(if (Nav.INSTANCE.active) Nav.INSTANCE.line else null) } catch (e: Throwable) { Log.w(TAG, "route squares", e) }
     val b = LaneMap.built ?: return
     val m = t.model ?: return
     val cam = Cam.of(m) ?: return

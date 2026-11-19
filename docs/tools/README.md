@@ -149,6 +149,12 @@ lane (but the card knows there's no exit lane), an exit lane left to the old way
 `SceneSeqTest`'s flag `exit=LAT:LON:SIDE:M` (the route's exit at that point plus M m) runs ExitTake on a recorded drive
 and logs its steps ("exit ..." lines).
 
+`LaneMapFetchTest.kt` (2.90.10): the Scene's map squares in time, with local stand-ins for the map servers - a server
+that takes long has the next one asked after 6 s (and the one that answered is asked first next time), one saying it's
+busy is passed at once, an answer the server broke off is never kept, the square nearest the car goes first and ones
+far behind are let go, the route brings every square along it. LaneRibbonTest (2.90.10): a long road piece reaching past
+the map built around us goes on once the map is built again.
+
 `LaneCardFollowTest.kt` (2.90.6): the lane card with the Scene's lane by the RTK fix - its lane and count are the
 Scene's whatever its own count and the survey's say, through lanes counted and the turn lanes added after them ("Lane
 1 of 3 + turn lane ←", "Left turn lane (left of 3 lanes)"), which lanes are for turning only; without it, its own.
