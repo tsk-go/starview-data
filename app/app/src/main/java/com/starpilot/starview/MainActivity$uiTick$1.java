@@ -1967,6 +1967,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
         }
 
         var349.setVisibility(var151);
+        this.this$0.hybWhereTick();
         TextView var562 = this.this$0.mapBtn;
         TextView var350 = var562;
         if (var562 == null) {

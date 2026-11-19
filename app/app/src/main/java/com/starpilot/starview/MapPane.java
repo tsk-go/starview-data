@@ -1829,8 +1829,8 @@ public final class MapPane extends FrameLayout {
             tagTv.setText(sb);
             tagRow.addView(tagTv);
             body.addView(tagRow);
-            if (r.getVia().length() > 0) {
-                TextView via = label$default(this, "via " + r.getVia(), 13.0f, false, true, 4, null);
+            if (NavVia.of(r).length() > 0) {    // 2.90.9: Google's routes have no summary: their main roads from the steps
+                TextView via = label$default(this, "via " + NavVia.of(r), 13.0f, false, true, 4, null);
                 via.setMaxLines(1);
                 via.setEllipsize(TextUtils.TruncateAt.END);
                 body.addView(via);
@@ -1932,14 +1932,14 @@ public final class MapPane extends FrameLayout {
                 }
 
                 boolean var14;
-                if (var11.getVia().length() > 0) {
+                if (NavVia.of(var11).length() > 0) {
                     var14 = var7;
                 } else {
                     var14 = false;
                 }
 
                 if (var14) {
-                    String var20 = var11.getVia();
+                    String var20 = NavVia.of(var11);
                     var10.add("via " + var20);
                 }
 

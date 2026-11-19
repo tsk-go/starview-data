@@ -34,10 +34,12 @@ DECISIONS = {
     "wireControls$lambda$136(": "build",
   },
   "MainActivity$uiTick$1": {
-    "run()V": ("patch", "ffb58518d5f8"),
+    "run()V": ("patch", "d9ec2894eadd"),
   },
   "MapPane": {
     "<init>(Landroid/content/Context;Lcom/starpilot/starview/MapPane$Host;)V": ("patch", "048b5f0d357e"),
+    "fillLook(Landroid/widget/LinearLayout;)V": ("patch", "83a7b04eda92"),
+    "fillRoutes(Landroid/widget/LinearLayout;)V": ("patch", "95421cf5f1d8"),
     "goWithLooked$lambda$33(Lcom/starpilot/starview/MapPane;Ljava/lang/String;)Lkotlin/Unit;": ("patch", "f8eb9f7ce999"),
     "refreshBars()V": ("patch", "e52aa17dc6f2"),
   },

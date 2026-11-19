@@ -116,6 +116,14 @@ button by the saved values) and a Developer Parameters slider's `learnedValue`; 
 GalaxySettingsView's own `draw` into `OUT/galaxy_rows.png`. Set up like PicTest, then `PIC_OUT=OUT ./gradlew
 :app:testDebugUnitTest --offline --rerun --tests com.starpilot.starview.GalaxyRowsTest`.
 
+## `render/NavCardPicTest.kt`: the turn card, "Where to?" / "End" and the route list's "via" (2.90.9)
+
+Checks `NavOverlay.street` (the street from an instruction, without "Turn left onto") and `NavVia.fromSteps` (a Google
+route's main roads from its steps), then draws the turn card at the owner's size and the default one
+(`OUT/card_*_owner.png`, `card_*_default.png`), both states of the driving screen's button (`btn_where.png`,
+`btn_end.png`) and the route list through MapPane's own `fillRoutes` (`routes.png`). Set up like PicTest, then
+`PIC_OUT=OUT ./gradlew :app:testDebugUnitTest --offline --rerun --tests com.starpilot.starview.NavCardPicTest`.
+
 ## `unit/`: plain JVM tests of single pieces
 
 `SceneSteadyTest.kt`, `LaneAnchorTest.kt`, `LaneRibbonTest.kt` (2.90.0, the Scene view; Robolectric as for PicTest, no

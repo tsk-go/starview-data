@@ -68,6 +68,8 @@ PATCHES = {
      '    invoke-static {v2, v0}, Lcom/starpilot/starview/SpeedShown;->mps(Lcom/starpilot/starview/Telemetry;F)F\n    move-result v0\n    move/from16 v31, v0\n'),
     ('    :goto_6e\n',
      '    :goto_6e\n    move/from16 v4, v43\n    move/from16 v15, v99\n    invoke-static {v4, v15}, Lcom/starpilot/starview/ExitGuard;->side(II)I\n    move-result v4\n    move/from16 v99, v4\n'),
+    ('    :goto_7f\n    invoke-virtual {v0, v4}, Landroid/widget/TextView;->setVisibility(I)V\n',
+     '    :goto_7f\n    invoke-virtual {v0, v4}, Landroid/widget/TextView;->setVisibility(I)V\n    iget-object v0, v1, Lcom/starpilot/starview/MainActivity$uiTick$1;->this$0:Lcom/starpilot/starview/MainActivity;\n    invoke-virtual {v0}, Lcom/starpilot/starview/MainActivity;->hybWhereTick()V\n'),
   ],
   ('LaneBrain', 'answer()V'): [
     ('    return-void\n',
@@ -100,6 +102,18 @@ PATCHES = {
   ('MapPane', 'refreshBars()V'): [
     ('    move-result-object v17\n',
      '    move-result-object v17\n    invoke-static/range {v17 .. v17}, Lcom/starpilot/starview/NavEta;->remaining(Lkotlin/Pair;)Lkotlin/Pair;\n    move-result-object v17\n'),
+  ],
+  ('MapPane', 'fillRoutes(Landroid/widget/LinearLayout;)V'): [
+    ('    .line 475\n    invoke-virtual {v14}, Lcom/starpilot/starview/Nav$Route;->getVia()Ljava/lang/String;\n',
+     '    .line 475\n    invoke-static {v14}, Lcom/starpilot/starview/NavVia;->of(Lcom/starpilot/starview/Nav$Route;)Ljava/lang/String;\n'),
+    ('    if-eqz v0, :cond_20\n\n    invoke-virtual {v14}, Lcom/starpilot/starview/Nav$Route;->getVia()Ljava/lang/String;\n',
+     '    if-eqz v0, :cond_20\n\n    invoke-static {v14}, Lcom/starpilot/starview/NavVia;->of(Lcom/starpilot/starview/Nav$Route;)Ljava/lang/String;\n'),
+  ],
+  ('MapPane', 'fillLook(Landroid/widget/LinearLayout;)V'): [
+    ('    :cond_8\n    invoke-virtual {v9}, Lcom/starpilot/starview/Nav$Route;->getVia()Ljava/lang/String;\n',
+     '    :cond_8\n    invoke-static {v9}, Lcom/starpilot/starview/NavVia;->of(Lcom/starpilot/starview/Nav$Route;)Ljava/lang/String;\n'),
+    ('    if-eqz v1, :cond_a\n\n    invoke-virtual {v9}, Lcom/starpilot/starview/Nav$Route;->getVia()Ljava/lang/String;\n',
+     '    if-eqz v1, :cond_a\n\n    invoke-static {v9}, Lcom/starpilot/starview/NavVia;->of(Lcom/starpilot/starview/Nav$Route;)Ljava/lang/String;\n'),
   ],
   ('MapPane$Banner', 'onDraw(Landroid/graphics/Canvas;)V'): [
     ('    const v2, -0xfe891ba\n',

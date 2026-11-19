@@ -213,6 +213,15 @@ i = m.find(":goto_6e")
 k = max(x for x in instr_idx(m.lines) if x < i)
 assert m.lines[k].strip() == "const/16 v99, -0x1", m.lines[k]
 assert "sideLanes(I)Lkotlin/Pair;" in "".join(m.lines[i - 60:i]) and "move/from16 v99, v46" in "".join(m.lines[i - 12:i])
+# 2.90.9: the "Where to?" button stays with a route on and reads "End" (hybWhereTick, after its visibility was set;
+# v0 is written again right after - the map button)
+i = m.find(":goto_7f")
+k = min(x for x in instr_idx(m.lines) if x > i)
+assert m.lines[k].strip() == "invoke-virtual {v0, v4}, Landroid/widget/TextView;->setVisibility(I)V", m.lines[k]
+assert "access$getWhereBtn$p" in "".join(m.lines[i - 200:i])
+nxt = min(x for x in instr_idx(m.lines) if x > k)
+assert m.lines[nxt].strip() == f"iget-object v0, v1, {UT}->this$0:{MA}", m.lines[nxt]
+m.add(k + 1, k + 1, [f"    iget-object v0, v1, {UT}->this$0:{MA}\n", f"    invoke-virtual {{v0}}, {MA}->hybWhereTick()V\n"])
 # ---------------------------------------------------------------- LaneBrain
 # 2.87.0: the lane from the map lined up with the camera weighs in after the road model (hybAnswer)
 m = M("LaneBrain", "answer()V")
@@ -257,6 +266,13 @@ k = next(j for j in range(i + 1, len(m.lines)) if m.lines[j].strip())
 assert m.lines[k].strip() == "move-result-object v17"
 m.add(k + 1, k + 1, ["    invoke-static/range {v17 .. v17}, Lcom/starpilot/starview/NavEta;->remaining(Lkotlin/Pair;)Lkotlin/Pair;\n",
                      "    move-result-object v17\n"])
+# 2.90.9: a route's "via ..." from its steps when the router sent no summary (Google): NavVia.of in place of getVia
+for sig, reg, n in (("fillRoutes(Landroid/widget/LinearLayout;)V", "v14", 2), ("fillLook(Landroid/widget/LinearLayout;)V", "v9", 2)):
+  m = M("MapPane", sig)
+  line = f"invoke-virtual {{{reg}}}, Lcom/starpilot/starview/Nav$Route;->getVia()Ljava/lang/String;"
+  for nth in range(n):
+    m.replace_line(line, [f"invoke-static {{{reg}}}, Lcom/starpilot/starview/NavVia;->of(Lcom/starpilot/starview/Nav$Route;)Ljava/lang/String;"],
+                   nth=nth)
 m = M("MapPane$Banner", "onDraw(Landroid/graphics/Canvas;)V")
 m.replace_line("const v2, -0xfe891ba", ["sget-object v2, Lcom/starpilot/starview/NavOverlay;->INSTANCE:Lcom/starpilot/starview/NavOverlay;",
                                         "invoke-virtual {v2}, Lcom/starpilot/starview/NavOverlay;->getBG()I", "move-result v2"])

@@ -80,6 +80,35 @@ object NavOverlay {
     return if (m < 60) "$m min" else "${m / 60} h ${m % 60} min"
   }
 
+  private val ONTO = Regex("""\s(?:onto|to stay on|to take|to continue on)\s""", RegexOption.IGNORE_CASE)
+  private val ALONG = Regex("""^(?:head|drive|continue|go|keep going)\b.*?\s(?:on|along)\s""", RegexOption.IGNORE_CASE)
+  private val EXIT = Regex("""^take (?:the )?exit\s+(\S+)""", RegexOption.IGNORE_CASE)
+  private val TOWARD = Regex("""\s(?:toward|towards)\s""", RegexOption.IGNORE_CASE)
+
+  /**
+   * 2.90.9 (owner: "no need for turn onto, the arrow is enough ... where to should be bigger"): the street the comma's
+   * instruction leads onto, without the words the arrow already says - "Turn left onto 86th St" -> "86th St", "Take exit
+   * 7B toward JFK" -> "Exit 7B" + "toward JFK", "Merge onto Belt Pkwy toward Verrazzano Br" -> "Belt Pkwy" + "toward
+   * Verrazzano Br". An instruction with no street ("Keep right at the fork", "Make a U-turn") is kept as it is.
+   * Returns (big line, small line or "").
+   */
+  fun street(text: String): Pair<String, String> {
+    val first = text.lineSequence().firstOrNull()?.trim().orEmpty()
+    var big = when {
+      ONTO.containsMatchIn(first) -> first.substring(ONTO.findAll(first).last().range.last + 1)
+      EXIT.containsMatchIn(first) -> "Exit " + EXIT.find(first)!!.groupValues[1].trimEnd(',', '.')
+      ALONG.containsMatchIn(first) -> first.substring(ALONG.find(first)!!.range.last + 1)
+      else -> return first to ""
+    }.trim()
+    var small = ""
+    TOWARD.find(first)?.let { m ->
+      small = "toward " + first.substring(m.range.last + 1).trim()
+      big.indexOf(m.value.trim(), ignoreCase = true).takeIf { it > 0 }?.let { big = big.substring(0, it).trim() }
+    }
+    big = big.trimEnd('.', ',')
+    return if (big.isEmpty()) first to "" else big to small
+  }
+
   /** The turn card's content when there is no route and the screen editor is open. */
   val SAMPLE: JSONObject = JSONObject()
     .put("maneuverType", "turn").put("maneuverModifier", "right").put("maneuverPrimaryText", "Turn right onto Main St")
@@ -289,12 +318,22 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
     tp.typeface = Typeface.DEFAULT_BOLD; tp.textSize = distSize; tp.color = Color.WHITE
     var y = 12 * u + distSize * 0.92f
     c.drawText(if (arrived) "Arrived" else NavOverlay.dist(distM, metric), x, y, tp)
-    tp.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL); tp.textSize = textSize; tp.color = NavOverlay.SUB
-    val far = distM > NavOverlay.FAR_TURN_M
-    val text = if (arrived) nav.optString("destination") else nav.optString("maneuverPrimaryText")
+    if (arrived) {
+      tp.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL); tp.textSize = textSize; tp.color = NavOverlay.SUB
+      y += 6 * u
+      for (line in wrap(nav.optString("destination"), textW, 1)) { y += textSize; c.drawText(line, x, y, tp) }
+      return
+    }
+    // 2.90.9: the street big and white, without "Turn left onto" (the arrow says it); "toward ..." small on the
+    // distance's line (under the street there's no room on a card of the usual height)
+    val (big, small) = NavOverlay.street(nav.optString("maneuverPrimaryText"))
+    if (small.isNotEmpty()) {
+      val from = x + tp.measureText(NavOverlay.dist(distM, metric)) + 12 * u
+      tp.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL); tp.textSize = 16 * u; tp.color = NavOverlay.SUB
+      if (x + textW - from > 40 * u) wrap(small, x + textW - from, 1).firstOrNull()?.let { c.drawText(it, from, y, tp) }
+    }
     y += 6 * u
-    for (line in wrap(text, textW, if (far || lanes != null || arrived) 1 else 2)) { y += textSize; c.drawText(line, x, y, tp); y += 2 * u }
-    if (arrived) return
+    streetLines(c, big, x, y, textW, header - 4 * u, u)
 
     // bottom row: progress bar and ETA
     val right = w - pad
@@ -343,6 +382,25 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
         rect.right = rect.left + max(thick, (barRight - pad) * done)
         p.color = NavOverlay.FILL; c.drawRoundRect(rect, thick, thick, p)
       }
+    }
+  }
+
+  /**
+   * The street, as big as the distance above it (30 dp) when it fits on one line, shrinking to 20 dp; longer than that,
+   * two lines as big as fit above [bottom].
+   */
+  private fun streetLines(c: Canvas, big: String, x: Float, top: Float, maxW: Float, bottom: Float, u: Float) {
+    if (big.isEmpty() || maxW <= 0f) return
+    tp.typeface = Typeface.DEFAULT_BOLD; tp.color = Color.WHITE
+    var size = 30 * u
+    tp.textSize = size
+    while (size > 20 * u && (tp.measureText(big) > maxW || top + size > bottom)) { size -= u; tp.textSize = size }
+    var y = top
+    if (tp.measureText(big) <= maxW) {
+      y += size * 0.95f; c.drawText(big, x, y, tp)
+    } else {
+      size = min(24 * u, (bottom - top - 2 * u) / 2).coerceAtLeast(14 * u); tp.textSize = size
+      for (line in wrap(big, maxW, 2)) { y += size * 0.95f; c.drawText(line, x, y, tp); y += 2 * u }
     }
   }
 

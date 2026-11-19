@@ -7699,6 +7699,18 @@ public final class MainActivity extends AppCompatActivity {
         return c != null && t.getStarted() && t.s("nav_card") && !getMapOpen() && c.current(System.currentTimeMillis()) != null;
     }
 
+    /** Screen tick (MainActivity$uiTick$1), right after it set the "Where to?" button's visibility (2.84.1 hid it with a
+     *  route on): 2.90.9, it stays and reads "End" while a route is on (WhereEnd). */
+    final void hybWhereTick() {
+        TextView b = this.whereBtn;
+        DataClient d = this.data;
+        if (b == null || d == null) {
+            return;
+        }
+        boolean show = d.getConnected() && !getMapOpen() && this.hudEditor == null && this.maskEditor == null;
+        WhereEnd.tick(this, b, d, show, this.telemetry.navState() != null, () -> openDestinations());
+    }
+
     /** Screen tick (MainActivity$uiTick$1), right after the turn card: the see-through map and the speed limit sign. */
     final void hybNavMapTick() {
         hybMapTick();
