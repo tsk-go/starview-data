@@ -421,6 +421,11 @@ i = m.find("invoke-direct {v8, v13, v9}, Lcom/starpilot/starview/GalaxySettingsV
 k = min(x for x in instr_idx(m.lines) if x > i and "addView" in m.lines[x])
 assert m.lines[k].strip() == "invoke-virtual {v13, v0}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V", m.lines[k]
 m.add(k + 1, k + 1, [f"\n    invoke-static {{v13, v9}}, {GMIR}->learned(Landroid/widget/LinearLayout;{GROW})V\n"])
+# Nov 18 (2) sync: Galaxy's settings pages have a wiki guide link in their header - after the back bar (v9 = this,
+# v8 = the page's name)
+m = M("GalaxySettingsView", "draw(Lorg/json/JSONObject;)V")
+m.insert_after("invoke-direct/range {p0 .. p0}, Lcom/starpilot/starview/GalaxySettingsView;->backBar()V",
+               ["invoke-virtual {v9, v8}, Lcom/starpilot/starview/GalaxySettingsView;->hybGuide(Ljava/lang/String;)V"])
 
 # ---------------------------------------------------------------- checks + output
 for m in METHODS:

@@ -467,6 +467,14 @@ public final class GalaxySettingsView extends FrameLayout {
         this.col.addView(this.ui.note(text), CarUi.lp$default(this.ui, 0, 0, 3, null));
     }
 
+    /** Nov 18 (2) sync: Galaxy's settings pages have a wiki guide link in their header; the same here (GalaxyMirror) */
+    final void hybGuide(String page) {
+        try {
+            GalaxyMirror.INSTANCE.guide(this.col, page);
+        } catch (Throwable e) {
+        }
+    }
+
     private final void backBar() {
         String parent;
         if (this.stack.size() <= (this.root.getPage() != null ? 1 : 0)) {
@@ -837,6 +845,7 @@ public final class GalaxySettingsView extends FrameLayout {
             var10.put(var33, var22);
             this.col.removeAllViews();
             this.backBar();
+            this.hybGuide(var33);
             if (this.stack.size() > 1 || this.root.getPage() == null) {
                 LinearLayout var25 = this.col;
                 TextView var37 = new TextView(this.getContext());

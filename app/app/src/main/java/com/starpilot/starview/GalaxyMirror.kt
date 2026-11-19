@@ -72,4 +72,65 @@ object GalaxyMirror {
     } catch (e: Exception) {
     }
   }
+
+  // ------------------------------------------------------------------ Nov 18 (2): the wiki guide of a settings page
+  /** Galaxy's settings pages gained a guide link in their header (upstream `wiki-links.js` SETTINGS_WIKI_LINKS: the
+   *  API's page ids -> the wiki; a page without its own guide gets none, never the general one). StarView draws those
+   *  pages itself, so it shows the same link (GalaxySettingsView.hybGuide, after the back bar). */
+  private const val WIKI = "https://wiki.firestar.link/"
+  private const val SETTINGS = "usage/settings/"
+  private const val CAMERAS = "exclusive/cameras-and-monitoring/"
+  private val WIKI_PAGES = mapOf(
+    "hub" to SETTINGS,
+    "lateral" to SETTINGS + "#steering",
+    "longitudinal" to SETTINGS + "#driving-controls",
+    "driving_options" to SETTINGS + "#driving-controls",
+    "personalities" to SETTINGS + "#customize-driving-personalities",
+    "starport_options" to "exclusive/starport/",
+    "aol" to SETTINGS + "#always-on-lateral",
+    "conditional" to SETTINGS + "#conditional-experimental-mode-recommended",
+    "curve" to "usage/operation/#curve-speed-controller",
+    "slc" to "exclusive/speed-limit-controller/#vision-speed-limits",
+    "torque" to SETTINGS + "#lateral-tuning",
+    "profiles" to SETTINGS + "#customize-driving-personalities",
+    "aggressive" to SETTINGS + "#customize-driving-personalities",
+    "standard" to SETTINGS + "#customize-driving-personalities",
+    "relaxed" to SETTINGS + "#customize-driving-personalities",
+    "lane" to "exclusive/lane-centering/",
+    "lane_change" to SETTINGS + "#lane-changes",
+    "wheel" to SETTINGS + "#wheel-controls",
+    "sounds" to SETTINGS + "#alerts-and-sounds",
+    "sentry" to "exclusive/sentry-mode/#settings",
+    "pip" to CAMERAS + "#pip-blind-spot-camera-preview",
+  )
+
+  /** the guide for settings page [page] (Galaxy's own inheritance: "a/b" falls back to "a"), or null */
+  fun wikiLink(page: String?): String? {
+    var key = page ?: return null
+    while (key.isNotEmpty()) {
+      WIKI_PAGES[key]?.let { return WIKI + it }
+      key = key.substring(0, key.lastIndexOf('/').coerceAtLeast(0))
+    }
+    return null
+  }
+
+  /** adds the page's "Guide" link to [col] (right-aligned, the accent colour); opens the wiki in the tablet's browser */
+  fun guide(col: LinearLayout, page: String?) {
+    val url = wikiLink(page) ?: return
+    val c = col.context
+    val dp = c.resources.displayMetrics.density
+    val t = TextView(c)
+    t.text = "\uD83D\uDCD6  Guide"
+    t.setTextColor(CarUi.Companion.getACCENT())
+    t.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+    t.gravity = Gravity.END
+    t.setPadding((6 * dp).toInt(), 0, (10 * dp).toInt(), (2 * dp).toInt())
+    t.setOnClickListener {
+      try {
+        c.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))
+          .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK))
+      } catch (e: Throwable) { android.util.Log.w("StarView/Galaxy", "guide", e) }
+    }
+    col.addView(t)
+  }
 }

@@ -95,6 +95,8 @@ DECISIONS = {
   },
   "GalaxySettingsView": {
     "sliderRow(Lcom/starpilot/starview/GalaxyRow;)V": ("patch", "add69477ed90"),
+    # Nov 18 (2) sync: the wiki guide link after the back bar (hybGuide)
+    "draw(Lorg/json/JSONObject;)V": ("patch", "ffbd7674e8c5"),
   },
   "VoiceNote": {
     "start(Ljava/io/File;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": ("patch", "68e8f99ee3f0"),

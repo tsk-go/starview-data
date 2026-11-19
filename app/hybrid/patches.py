@@ -201,4 +201,8 @@ PATCHES = {
     ('    invoke-virtual {v13, v0}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V\n',
      '    invoke-virtual {v13, v0}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V\n\n    invoke-static {v13, v9}, Lcom/starpilot/starview/GalaxyMirror;->learned(Landroid/widget/LinearLayout;Lcom/starpilot/starview/GalaxyRow;)V\n'),
   ],
+  ('GalaxySettingsView', 'draw(Lorg/json/JSONObject;)V'): [
+    ('    invoke-direct/range {p0 .. p0}, Lcom/starpilot/starview/GalaxySettingsView;->backBar()V\n',
+     '    invoke-direct/range {p0 .. p0}, Lcom/starpilot/starview/GalaxySettingsView;->backBar()V\n    invoke-virtual {v9, v8}, Lcom/starpilot/starview/GalaxySettingsView;->hybGuide(Ljava/lang/String;)V\n'),
+  ],
 }
