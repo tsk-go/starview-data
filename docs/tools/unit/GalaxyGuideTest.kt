@@ -21,6 +21,9 @@ class GalaxyGuideTest {
     assertEquals("https://wiki.firestar.link/exclusive/speed-limit-controller/#vision-speed-limits", GalaxyMirror.wikiLink("slc/sources"))
     // a page without its own guide gets none (never the general one)
     assertNull(GalaxyMirror.wikiLink("device"))
+    // Nov 20 sync: "Longitudinal options" is part of Galaxy's new Developer page, which has no guide of its own
+    assertNull(GalaxyMirror.wikiLink("driving_options"))
+    assertNull(GalaxyMirror.wikiLink("developer"))
     assertNull(GalaxyMirror.wikiLink(""))
     assertNull(GalaxyMirror.wikiLink(null))
   }

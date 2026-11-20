@@ -219,4 +219,8 @@ PATCHES = {
     ('    invoke-direct/range {p0 .. p0}, Lcom/starpilot/starview/GalaxySettingsView;->backBar()V\n',
      '    invoke-direct/range {p0 .. p0}, Lcom/starpilot/starview/GalaxySettingsView;->backBar()V\n    invoke-virtual {v9, v8}, Lcom/starpilot/starview/GalaxySettingsView;->hybGuide(Ljava/lang/String;)V\n'),
   ],
+  ('FastUpdate', 'from70(Lorg/json/JSONObject;)Lorg/json/JSONObject;'): [
+    ('    :goto_a\n',
+     '    :goto_a\n    invoke-static {v6, v1}, Lcom/starpilot/starview/FastUpdate;->hybPct(Lorg/json/JSONObject;I)I\n    move-result v1\n'),
+  ],
 }

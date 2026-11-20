@@ -443,6 +443,12 @@ m = M("GalaxySettingsView", "draw(Lorg/json/JSONObject;)V")
 m.insert_after("invoke-direct/range {p0 .. p0}, Lcom/starpilot/starview/GalaxySettingsView;->backBar()V",
                ["invoke-virtual {v9, v8}, Lcom/starpilot/starview/GalaxySettingsView;->hybGuide(Ljava/lang/String;)V"])
 
+# ---------------------------------------------------------------- Nov 20 sync: the update's AGNOS step and its percent
+# right before from70 stores progressPercent (v1 = the percent, v6 = the updater's "fast" progress, never reassigned)
+FU = "Lcom/starpilot/starview/FastUpdate;"
+m = M("FastUpdate", "from70(Lorg/json/JSONObject;)Lorg/json/JSONObject;")
+m.insert_after(":goto_a", [f"invoke-static {{v6, v1}}, {FU}->hybPct(Lorg/json/JSONObject;I)I", "move-result v1"])
+
 # ---------------------------------------------------------------- checks + output
 for m in METHODS:
   for old, new in m.edits:

@@ -188,6 +188,12 @@
 "a|com/starpilot/starview/VoiceNote|start$lambda$2$lambda$1(Lcom/starpilot/starview/VoiceNote;)V": "7416cc634588",
 "a|com/starpilot/starview/VoiceNote|start$lambda$2(Ljava/io/File;Lcom/starpilot/starview/VoiceNote;Landroid/media/AudioRecord;I)V": "a02e28b31b2a",
 "a|com/starpilot/starview/VoiceNote|start(Ljava/io/File;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": "6bfa924c8711",
+"m|com/starpilot/starview/FastUpdate|<clinit>()V": "ad1063be47d1",
+"m|com/starpilot/starview/FastUpdate|<init>()V": "7bc70f2043bb",
+"m|com/starpilot/starview/FastUpdate|from70(Lorg/json/JSONObject;)Lorg/json/JSONObject;": "792cfe16a79c",
+"m|com/starpilot/starview/FastUpdate|running(Lorg/json/JSONObject;)Z": "862cc8422c29",
+"m|com/starpilot/starview/FastUpdate|str(Lorg/json/JSONObject;Ljava/lang/String;)Ljava/lang/String;": "0241c27c8897",
+"m|com/starpilot/starview/FastUpdate|summary(Lorg/json/JSONObject;)Ljava/lang/String;": "419f89b8a8b4",
 "m|com/starpilot/starview/GalaxyRow$Bounds|<init>(DDDZ)V": "7308170610c3",
 "m|com/starpilot/starview/GalaxyRow$Bounds|getAuto()Z": "44dcc0576881",
 "m|com/starpilot/starview/GalaxyRow$Bounds|getMax()D": "a9676752a496",
@@ -1450,6 +1456,22 @@
 "m|com/starpilot/starview/WheelButton|setT(Lcom/starpilot/starview/Telemetry;)V": "0b807113c0e6"
 },
 "members": {
+"com/starpilot/starview/FastUpdate": {
+"f": [
+"INSTANCE:Lcom/starpilot/starview/FastUpdate;",
+"STAGE_PCT:Ljava/util/Map;",
+"START:Ljava/lang/String;",
+"STATUS:Ljava/lang/String;"
+],
+"m": [
+"<clinit>()V",
+"<init>()V",
+"from70(Lorg/json/JSONObject;)Lorg/json/JSONObject;",
+"running(Lorg/json/JSONObject;)Z",
+"str(Lorg/json/JSONObject;Ljava/lang/String;)Ljava/lang/String;",
+"summary(Lorg/json/JSONObject;)Ljava/lang/String;"
+]
+},
 "com/starpilot/starview/GalaxyRow": {
 "f": [
 "Companion:Lcom/starpilot/starview/GalaxyRow$Companion;",

@@ -149,6 +149,8 @@ lane (but the card knows there's no exit lane), an exit lane left to the old way
 `SceneSeqTest`'s flag `exit=LAT:LON:SIDE:M` (the route's exit at that point plus M m) runs ExitTake on a recorded drive
 and logs its steps ("exit ..." lines).
 
+`SoftwareAgnosTest.kt` (Nov 20 sync): the Software page shows the update's new AGNOS step with its own percent (`FastUpdate.hybPct`, patched into 2.84.1's `from70`); the other steps as before.
+
 `LaneMapFetchTest.kt` (2.90.10): the Scene's map squares in time, with local stand-ins for the map servers - a server
 that takes long has the next one asked after 6 s (and the one that answered is asked first next time), one saying it's
 busy is passed at once, an answer the server broke off is never kept, the square nearest the car goes first and ones

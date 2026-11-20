@@ -33,6 +33,19 @@ public final class FastUpdate {
     }
 
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    /**
+     * Nov 20 sync: StarPilot's updater writes AGNOS (the comma's operating system) as a step of its own in an update,
+     * "agnos", with its own percent (Galaxy shows "Downloading and installing AGNOS" and that percent). StarView's fixed
+     * percent per stage had no "agnos" and showed 0 % for it. Now that step's own percent, else 78 (it comes between
+     * "applying" and "submodules"). [fast]: the updater's "fast" progress (stage, detail, percent). Patched into
+     * 2.84.1's from70 right before it stores progressPercent.
+     */
+    static int hybPct(JSONObject fast, int pct) {
+        if (fast == null || !"agnos".equals(fast.optString("stage"))) return pct;
+        double p = fast.optDouble("percent", Double.NaN);
+        return p >= 0.0 && p <= 100.0 ? (int) Math.round(p) : 78;
+    }
+
     public final JSONObject from70(JSONObject var1) {
         String var17 = null; Pair var18 = null; String var20 = null; // declarations Vineflower left out
         Intrinsics.checkNotNullParameter(var1, "r");
@@ -191,6 +204,7 @@ public final class FastUpdate {
         }
 
         label146: {
+            var2 = hybPct(var1, var2);
             var14.put("progressPercent", var2);
             if (var13 != null) {
                 var32 = INSTANCE.str(var13, "commit");

@@ -84,7 +84,6 @@ object GalaxyMirror {
     "hub" to SETTINGS,
     "lateral" to SETTINGS + "#steering",
     "longitudinal" to SETTINGS + "#driving-controls",
-    "driving_options" to SETTINGS + "#driving-controls",
     "personalities" to SETTINGS + "#customize-driving-personalities",
     "starport_options" to "exclusive/starport/",
     "aol" to SETTINGS + "#always-on-lateral",

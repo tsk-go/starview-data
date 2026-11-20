@@ -12,7 +12,7 @@ guard.py stops the build until the decision (and the patch) are looked at again.
 """
 
 METHOD_LEVEL = {"MainActivity", "SettingsActivity", "MapPane", "HudEditor", "WheelButton", "UiSettings", "LaneSuggest",
-                "VoiceNote", "LaneBrain", "GalaxyRow", "GalaxySettingsView"}
+                "VoiceNote", "LaneBrain", "GalaxyRow", "GalaxySettingsView", "FastUpdate"}
 
 DECISIONS = {
   "MainActivity": {
@@ -99,6 +99,10 @@ DECISIONS = {
     "sliderRow(Lcom/starpilot/starview/GalaxyRow;)V": ("patch", "add69477ed90"),
     # Nov 18 (2) sync: the wiki guide link after the back bar (hybGuide)
     "draw(Lorg/json/JSONObject;)V": ("patch", "ffbd7674e8c5"),
+  },
+  # Nov 20 sync: the update's AGNOS step shows its own percent (hybPct)
+  "FastUpdate": {
+    "from70(Lorg/json/JSONObject;)Lorg/json/JSONObject;": ("patch", "e392bb7d8a07"),
   },
   "VoiceNote": {
     "start(Ljava/io/File;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": ("patch", "68e8f99ee3f0"),
