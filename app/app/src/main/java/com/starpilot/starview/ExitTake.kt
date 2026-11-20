@@ -54,6 +54,7 @@ object ExitTake {
              val mx: Double = Double.NaN, val my: Double = Double.NaN)
 
   const val SIGNAL_S = 5.0
+  const val LANE_SURE = 0.9                  // our lane by the camera and the lane card, when the map's lanes are in doubt
   const val OPENING_M = 46.0                 // 150 ft: the opening on the owner's exit
   const val WINDOW_M = 122.0                 // 400 ft: the move may start from here ...
   const val LAST_M = 12.0                    // ... to 40 ft before the split
@@ -171,8 +172,16 @@ object ExitTake {
   /**
    * One step, on the screen's 5 Hz worker right after LaneAnchor: [f] LaneAnchor's fit (null: no place), [rtkGood] a fix
    * under 2 ft. Pure apart from the volatile fields the sender reads (tests call it directly).
+   *
+   * 2.90.11 (owner, Nov 19 evening at the same exit: "it didn't work"): [mapSure] false - the camera puts us elsewhere in
+   * our lane than the fix on the map (LaneAnchor's doubt). That evening the fix lay a steady 4 - 5 ft further right than
+   * on Nov 18 along the whole approach (same corrections, antenna not moved), the doubt held, and 2.90.7 took that as no
+   * fix at all: nothing happened. A sideways shift doesn't move the split along the road, and which lane we're in then
+   * comes from the camera and the lane card (LaneAnchor's belief): with it [laneSure] (90 % and more) the exit is taken
+   * the same way - the move still waits for the camera to see the room open.
    */
-  fun tick(b: LaneMap.Built, f: LaneFit.Fit?, rtkGood: Boolean, cam: LaneFit.Cam, s: Snap, now: Long) {
+  fun tick(b: LaneMap.Built, f: LaneFit.Fit?, rtkGood: Boolean, cam: LaneFit.Cam, s: Snap, now: Long,
+           mapSure: Boolean = true, laneSure: Double = 1.0) {
     decidedMs = now
     val m = f?.match
     val route = routeExit(s.nav)
@@ -187,7 +196,8 @@ object ExitTake {
     val v = s.v
     when (state) {
       St.IDLE -> {
-        if (e != null && e.opening && s.on && rtkGood && s.latActive && m != null && (if (e.side > 0) m.lane == m.of else m.lane == 1)) {
+        if (e != null && e.opening && s.on && rtkGood && (mapSure || laneSure >= LANE_SURE) && s.latActive && m != null &&
+          (if (e.side > 0) m.lane == m.of else m.lane == 1)) {
           exit = e; side = e.side; base.clear(); go(St.TRACK, now, "")
         }
       }
@@ -209,6 +219,7 @@ object ExitTake {
         val stop = when {
           !along.isFinite() || f == null -> "no place on the map"
           !rtkGood -> "no RTK fix under 2 ft"
+          !mapSure && laneSure < LANE_SURE -> "the map and the camera disagree on our lane"
           !routeSame -> "the route changed"
           !s.latActive -> "openpilot isn't steering"
           otherBlinker -> "the other blinker is on"

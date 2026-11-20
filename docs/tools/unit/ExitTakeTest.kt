@@ -63,7 +63,8 @@ class ExitTakeTest {
   /** drives north from y = -300 m in lane [lane] (0 = left) at [v] m/s; [room] (y) the camera's room on the right; [lc]
    *  when openpilot changes lanes (y) after the tablet said "lane"; [bsm] (y) a car in the right blind spot */
   private fun drive(lane: Int = 2, v: Double = 15.2, room: (Double) -> Double, lcAfter: Double = 0.6,
-                    bsm: (Double) -> Boolean = { false }, until: Double = split + 200): Run {
+                    bsm: (Double) -> Boolean = { false }, until: Double = split + 200, mapSure: Boolean = true,
+                    laneSure: Double = 1.0): Run {
     val run = Run()
     val st = LaneAnchor.State()
     var y = -300.0; var t = 0.0; var laneFrom = Double.NaN; var x = mid[lane]
@@ -76,7 +77,7 @@ class ExitTakeTest {
       val nav = JSONObject().put("valid", true).put("maneuverType", "off ramp").put("maneuverModifier", "right")
         .put("maneuverDistance", split + 34 - y)
       ExitTake.tick(b, f, true, c, ExitTake.Snap(v, false, ExitTake.heldSide > 0, false, bsm(y), true, if (lc) 1 else 0, true, nav),
-        (t * 1000).toLong() + 1000)
+        (t * 1000).toLong() + 1000, mapSure, laneSure)
       val s = ExitTake.state
       if (run.states.lastOrNull()?.second != s) run.states.add(y to s)
       if (s == ExitTake.St.SIGNAL && run.signalAt.isNaN()) run.signalAt = split - y
@@ -100,6 +101,23 @@ class ExitTakeTest {
     assertEquals("a signal only, then go: ${r.whys}", setOf("exit", "lane"), r.whys)
     assertTrue("done: ${r.states}", r.states.any { it.second == ExitTake.St.DONE })
     assertTrue("never missed: ${r.states}", r.states.none { it.second == ExitTake.St.MISSED })
+  }
+
+  @Test fun aFixShiftedSidewaysStillTakesTheExit() {
+    // 2.90.11 (Nov 19 evening): the fix 4 - 5 ft off to the side of the map's lanes all the way (LaneAnchor's doubt), our
+    // lane sure by the camera and the lane card: the exit is taken as with the map trusted
+    build()
+    val r = drive(room = owners, mapSure = false, laneSure = 1.0)
+    assertTrue("signalled: ${r.states}", r.signalAt in 100.0..125.0)
+    assertTrue("moved inside the opening: ${r.moveAt} ${r.states}", r.moveAt in 12.0..46.5)
+    assertTrue("done: ${r.states}", r.states.any { it.second == ExitTake.St.DONE })
+  }
+
+  @Test fun theMapInDoubtAndOurLaneUnsureNothingStarts() {
+    build()
+    val r = drive(room = owners, mapSure = false, laneSure = 0.6, until = split - 100)
+    assertTrue("never tracked: ${r.states}", r.states.all { it.second == ExitTake.St.IDLE })
+    assertEquals(0, ExitTake.heldSide)
   }
 
   @Test fun noRoomNoMove() {

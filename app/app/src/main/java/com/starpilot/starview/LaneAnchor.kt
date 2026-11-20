@@ -167,7 +167,10 @@ object LaneAnchor {
       if (f == null) null else LaneRibbon.update(b, live, ribbon, cam, odo, now)
     } catch (e: Throwable) { android.util.Log.w("StarView/LaneAnchor", "run", e); null }
     // 2.90.7: the route's exit taken from our lane - on our place in the lane (the fix on the map), not the drawn road
-    if (exit != null) try { ExitTake.tick(b, f, live.rtkGood && !live.doubt, cam, exit, now) } catch (e: Throwable) { android.util.Log.w("StarView/ExitTake", "tick", e) }
+    // 2.90.11: the map's lanes in doubt no longer stop it - our lane then comes from LaneAnchor's belief (see ExitTake.tick)
+    if (exit != null) try {
+      ExitTake.tick(b, f, live.rtkGood, cam, exit, now, !live.doubt, live.p.getOrElse(live.shown) { 0.0 })
+    } catch (e: Throwable) { android.util.Log.w("StarView/ExitTake", "tick", e) }
   }
 
   private class Cand(val wi: Int, val lane: LaneMap.MLane, val pr: Proj)
