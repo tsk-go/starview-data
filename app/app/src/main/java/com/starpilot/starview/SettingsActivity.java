@@ -8778,7 +8778,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi21 = null;
         }
         col.addView(header4, CarUi.lp$default(carUi21, 0, 0, 3, null));
-        toggleCard(col, "Automatic turn signals", "With a destination: signals before each left / right turn of the route - about 12 s ahead, after the last cross street, never under 100 ft - and holds it through red lights until the turn is done. Cancel on the blue card.", new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda35
+        toggleCard(col, "Automatic turn signals", "With a destination: signals before each left / right turn of the route - about 12 s ahead, after the last cross street, never under 100 ft - and holds it through red lights until the turn is done. Cancel on the blue card. The comma steers into the turn itself only with StarPilot's Automatic Turn Initiation on (Steering › Steering & Torque; off until you turn it on).", new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda35
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletBlinkerPage$lambda$318;
@@ -8804,7 +8804,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             }
             str = "";
         }
-        toggleCard(col, "Check the street map for turns (no route)", "StarPilot's Turn Signal Guidance (Steering › Steering and Torque, its on/off) makes your blinker under 20 mph a turn. With this on, the tablet checks its street map first: a turn only when there's a street to turn into on that side within 250 ft (not a one-way coming at you, not a driveway or parking lot) - signalling to pull over isn't a turn. Where the tablet has no map, the comma decides by itself. The blinker card shows \"turn kept\" while there's a street. Needs the comma update from the Oct 23 sync." + str, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda37
+        toggleCard(col, "Check the street map for turns (no route)", "StarPilot's Automatic Turn Initiation (Steering › Steering & Torque, its on/off; off until you turn it on) makes your blinker under 20 mph a turn. With this on, the tablet checks its street map first: a turn only when there's a street to turn into on that side within 250 ft (not a one-way coming at you, not a driveway or parking lot) - signalling to pull over isn't a turn. Where the tablet has no map, the comma decides by itself. The blinker card shows \"turn kept\" while there's a street. Needs the comma update from the Oct 23 sync." + str, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda37
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletBlinkerPage$lambda$320;

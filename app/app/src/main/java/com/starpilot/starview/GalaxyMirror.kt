@@ -19,8 +19,9 @@ import java.util.WeakHashMap
  *    beside the slider's value.
  *
  * Called from GalaxyRow's constructor (the row's JSON goes through [row] before anything reads it) and from
- * GalaxySettingsView.sliderRow (the slider's header, [learned]). Galaxy's other new row field, acceptedFindingValue,
- * only marks the FLM page's manual coordinates, which StarView doesn't draw.
+ * GalaxySettingsView.sliderRow (the slider's header, [learned]). Galaxy's other new row fields - acceptedFindingValue,
+ * and since the Nov 22 sync coordinateLocked / learningEligible (its "Manual override" / "Change confirmed" chip) -
+ * only mark the FLM page's manual coordinates, which StarView doesn't draw.
  */
 object GalaxyMirror {
   private const val PROFILE_DEFAULT = "StarPilot Default"

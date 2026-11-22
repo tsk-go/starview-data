@@ -60,7 +60,7 @@ class UiSettings(ctx: Context) {
       Item("lane_return", "Change lanes? - move back right after passing: asks once the passed car is behind you and the right lane ahead is clear (always waits for your nudge)", true, "Blinker"),
       Item("lane_ends_ask", "Change lanes? - lane ends ahead: asks to merge away from a lane that ends (the road data's lane count drops ahead; always waits for your nudge)", false, "Blinker"),
       Item("lane_auto", "Change lanes? - automatic: signals by itself after a 3 s countdown (No cancels)", false, "Blinker"),
-      Item("blinker_turn", "Check the street map for turns without a route (StarPilot's Turn Signal Guidance)", true, "Blinker"),
+      Item("blinker_turn", "Check the street map for turns without a route (StarPilot's Automatic Turn Initiation)", true, "Blinker"),
       Item("turn_signals", "Automatic turn signals before route turns (with a destination; Cancel on the card)", false, "Blinker"),
       Item("blink_card", "Blinker buttons - test (hold to signal through the relay box)", true, "Widgets"),
       Item("lane_card", "Lane tracker - test (which lane you're in and how many; tap it for the history)", true, "Widgets"),

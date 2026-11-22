@@ -55,7 +55,7 @@ DECISIONS = {
     "buildPageUnsafe(Ljava/lang/String;)Landroid/view/View;": ("patch", "9d894baf177d"),
     "catalogPage(Ljava/lang/String;Z)Landroid/view/View;": ("orig", "cc736eb6e3f0"),
     "tabletAboutPage()Landroid/view/View;": ("patch", "10cee18e6a78"),
-    "tabletBlinkerPage()Landroid/view/View;": ("orig", "2638fbace510"),
+    "tabletBlinkerPage()Landroid/view/View;": ("patch", "40ac20d7c029"),
     "tabletNavPage()Landroid/view/View;": ("patch", "4a2c842277c1"),
     "tabletNavPage$lambda$254(Lcom/starpilot/starview/UiSettings;)Z": ("patch", "4ac2bfb2b9bc"),
     "tabletNavPage$lambda$255(Lcom/starpilot/starview/UiSettings;Z)Lkotlin/Unit;": ("patch", "96487089a5bf"),

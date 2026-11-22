@@ -223,4 +223,10 @@ PATCHES = {
     ('    :goto_a\n',
      '    :goto_a\n    invoke-static {v6, v1}, Lcom/starpilot/starview/FastUpdate;->hybPct(Lorg/json/JSONObject;I)I\n    move-result v1\n'),
   ],
+  ('SettingsActivity', 'tabletBlinkerPage()Landroid/view/View;'): [
+    ('    const-string v3, "With a destination: signals before each left / right turn of the route - about 12 s ahead, after the last cross street, never under 100 ft - and holds it through red lights until the turn is done. Cancel on the blue card."\n',
+     '    const-string v3, "With a destination: signals before each left / right turn of the route - about 12 s ahead, after the last cross street, never under 100 ft - and holds it through red lights until the turn is done. Cancel on the blue card. The comma steers into the turn itself only with StarPilot\\\'s Automatic Turn Initiation on (Steering \\u203a Steering & Torque; off until you turn it on)."\n'),
+    ('    const-string v2, "StarPilot\\\'s Turn Signal Guidance (Steering \\u203a Steering and Torque, its on/off) makes your blinker under 20 mph a turn. With this on, the tablet checks its street map first: a turn only when there\\\'s a street to turn into on that side within 250 ft (not a one-way coming at you, not a driveway or parking lot) - signalling to pull over isn\\\'t a turn. Where the tablet has no map, the comma decides by itself. The blinker card shows \\"turn kept\\" while there\\\'s a street. Needs the comma update from the Oct 23 sync."\n',
+     '    const-string v2, "StarPilot\\\'s Automatic Turn Initiation (Steering \\u203a Steering & Torque, its on/off; off until you turn it on) makes your blinker under 20 mph a turn. With this on, the tablet checks its street map first: a turn only when there\\\'s a street to turn into on that side within 250 ft (not a one-way coming at you, not a driveway or parking lot) - signalling to pull over isn\\\'t a turn. Where the tablet has no map, the comma decides by itself. The blinker card shows \\"turn kept\\" while there\\\'s a street. Needs the comma update from the Oct 23 sync."\n'),
+  ],
 }

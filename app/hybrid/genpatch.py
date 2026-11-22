@@ -449,6 +449,19 @@ FU = "Lcom/starpilot/starview/FastUpdate;"
 m = M("FastUpdate", "from70(Lorg/json/JSONObject;)Lorg/json/JSONObject;")
 m.insert_after(":goto_a", [f"invoke-static {{v6, v1}}, {FU}->hybPct(Lorg/json/JSONObject;I)I", "move-result v1"])
 
+# ---------------------------------------------------------------- Nov 22 sync: automatic turns have their own switch
+# (upstream's Automatic Turn Initiation, off by default) - the blinker page's two texts name it
+m = M("SettingsActivity", "tabletBlinkerPage()Landroid/view/View;")
+line = next(l.strip() for l in m.lines if l.strip().startswith('const-string v3, "With a destination: signals before each'))
+assert line.endswith('Cancel on the blue card."')
+m.replace_line(line, [line[:-1] + " The comma steers into the turn itself only with StarPilot\\'s Automatic Turn Initiation on"
+                      " (Steering \\u203a Steering & Torque; off until you turn it on).\""])
+line = next(l.strip() for l in m.lines if l.strip().startswith('const-string v2, "StarPilot\\\'s Turn Signal Guidance'))
+old = "StarPilot\\'s Turn Signal Guidance (Steering \\u203a Steering and Torque, its on/off)"
+assert old in line
+m.replace_line(line, [line.replace(old, "StarPilot\\'s Automatic Turn Initiation (Steering \\u203a Steering & Torque, its on/off;"
+                                        " off until you turn it on)")])
+
 # ---------------------------------------------------------------- checks + output
 for m in METHODS:
   for old, new in m.edits:
