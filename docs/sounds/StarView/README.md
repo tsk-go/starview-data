@@ -16,5 +16,10 @@ under the engage chime, all in the voice alerts' key (A major). Made by `docs/to
 | dm_critical.wav | take control now (repeats) | the chord struck ten times a second, louder |
 | dm_critical_max.wav | the last, loudest step (repeats) | faster and brighter still |
 
-Install on the comma: the files go to `/data/themes/theme_packs/StarView/sounds/`, then choose "StarView" as the
+More packs, same alerts, key and echo, other instruments (`docs/tools/sounds/make_pack_variants.py`):
+`StarView-Marimba` (wooden bars), `StarView-Glass` (glass bells, wider echo), `StarView-Kalimba` (thumb piano),
+`StarView-Harp` (plucked strings; engage / disengage glide up / down), `StarView-Ambient` (the voice alerts'
+background chord up front under engage, disengage and the pre-alert). Each folder here is one pack.
+
+Install on the comma: a pack's files go to `/data/themes/theme_packs/<pack>/sounds/`, then choose it as the
 Sound Pack in Galaxy (Sounds & Alerts). Each alert's volume is still set in Galaxy.
