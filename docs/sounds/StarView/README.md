@@ -1,5 +1,13 @@
 # Sound packs for the comma
 
+**Comma-Signature** and **Comma-Signature-Night** (owner, Nov 22: "Come up with something amazing!!!",
+`docs/tools/sounds/make_signature_pack.py`): the comma's own four-note signature, D5 - A5 - E6 - F#6, that every
+alert is made from - engage plays it in full on FM brass over strings with a harp sweep, a shimmer and a smooth hall;
+disengage plays it falling; refuse is muted brass on a tritone; pre-alert a harp sweep up to its last note; the
+prompts two and three of its notes on an electric piano; "take control" its first two notes as a driving brass figure,
+faster at each step. Night: the one-shots warmer and softer (less brass edge, more strings, top rolled off), the
+prompts and warnings as by day.
+
 **Comma-Starship, Comma-GrandTourer, Comma-Neon** (owner, Nov 22: "Come up with something better"): layered,
 designed sounds (`docs/tools/sounds/make_device_packs_v2.py`). Starship (D): a rising whoosh blooming into a bright
 chord for engage, the chord powering down for disengage, holographic FM blips, a red-alert whoop for "take control".
