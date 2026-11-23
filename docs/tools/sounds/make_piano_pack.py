@@ -4,8 +4,9 @@ the first 5 minutes" of a Yanni collection - grand piano over lush strings, harp
 
 Instruments (downloaded on first run into CACHE, not kept in git):
   grand piano   Salamander Grand Piano by Alexander Holm, CC-BY 3.0 (the Tone.js mp3 set of it)
-  strings, harp VS Chamber Orchestra: Community Edition by Versilian Studios, CC0 (violin section sustain with
-                vibrato and tremolo, Kaleidoscope harp). Its string notes are named an octave low (VlnEns A2 is A3).
+  strings, harp VS Chamber Orchestra: Community Edition by Versilian Studios, CC0 (violin, viola and cello sections
+                sustained with vibrato, violin tremolo, Kaleidoscope harp). Its string notes are named an octave
+                low (VlnEns A2 is A3, cello D2 is D3).
 
 Key of D major. Nothing like the tablet: no sine beeps, bells, marimba, chirps, no synth pad.
 
@@ -42,7 +43,7 @@ NAMES = {"C": 0, "C#": 1, "Db": 1, "D": 2, "D#": 3, "Ds": 3, "Eb": 3, "E": 4, "F
 
 # (instrument, real MIDI note) -> (url, file name in the cache)
 PIANO = {nm: (TONE + f"{nm}.mp3", f"piano_{nm}.mp3")
-         for nm in ("A3", "C4", "Ds4", "Fs4", "A4", "C5", "Ds5", "Fs5", "A5", "C6", "Ds6", "Fs6", "A6", "C7", "Ds7",
+         for nm in ("A1", "C2", "Ds2", "Fs2", "A2", "C3", "Ds3", "Fs3", "A3", "C4", "Ds4", "Fs4", "A4", "C5", "Ds5", "Fs5", "A5", "C6", "Ds6", "Fs6", "A6", "C7", "Ds7",
                     "Fs7", "A7", "C8")}
 VIOLIN = {nm: (VSCO + f"Strings/Violin%20Section/susVib/VlnEns_susVib_{nm.replace('#', '%23')}_v2.wav",
                f"violin_{nm.replace('#', 's')}.wav") for nm in ("G2", "A2", "B2", "D3", "F#3", "A3", "C4", "E4", "G4", "B4", "D5")}
@@ -50,7 +51,12 @@ TREM = {nm: (VSCO + f"Strings/Violin%20Section/Trem/VlnEns_Trem_{nm}_v2.wav", f"
         for nm in ("G2", "A2", "B2", "D3", "A3", "C4", "E4", "G4", "B4", "D5")}
 HARP = {nm: (VSCO + f"Strings/Harp/KSHarp_{nm}_mf.wav", f"harp_{nm}.wav")
         for nm in ("G3", "B3", "D4", "F4", "A4", "C5", "E5", "G5", "B5", "D6", "F6", "A6", "B6")}
-OCTAVE_LOW = {"violin": 12, "trem": 12, "piano": 0, "harp": 0}  # VSCO's string names are an octave low
+CELLO = {nm: (VSCO + f"Strings/Cello%20Section/susvib/susvib_{nm}_v3_1.wav", f"cello_{nm}.wav")
+         for nm in ("G1", "B1", "D2", "F2", "A2", "C3", "E3", "G3")}
+VIOLA = {nm: (VSCO + f"Strings/Viola%20Section/susvib/ViolaEns_susvib_{nm}_v2_1.wav", f"viola_{nm}.wav")
+         for nm in ("G2", "B2", "D3", "F3", "A3", "C4", "E4", "G4")}
+OCTAVE_LOW = {"violin": 12, "trem": 12, "cello": 12, "viola": 12, "piano": 0, "harp": 0}  # VSCO's string names are an octave low
+KINDS = {"piano": PIANO, "violin": VIOLIN, "trem": TREM, "harp": HARP, "cello": CELLO, "viola": VIOLA}
 CACHE = Path("/tmp/comma-piano-samples")
 
 
@@ -66,7 +72,7 @@ def decode(path):
 
 @lru_cache(maxsize=None)
 def sample(kind, name):
-  url, fname = {"piano": PIANO, "violin": VIOLIN, "trem": TREM, "harp": HARP}[kind][name]
+  url, fname = KINDS[kind][name]
   path = CACHE / fname
   if not path.exists():
     CACHE.mkdir(parents=True, exist_ok=True)
@@ -77,7 +83,7 @@ def sample(kind, name):
 
 
 def table(kind):
-  return {"piano": PIANO, "violin": VIOLIN, "trem": TREM, "harp": HARP}[kind]
+  return KINDS[kind]
 
 
 def play(kind, note, length):
@@ -110,6 +116,17 @@ def violins(notes, length, attack=0.35, release=0.5, vel=1.0, skip=0.25):
   x = np.zeros(n)
   for nm in notes:
     x += play("violin", nm, length + skip)[int(skip * SR):][:n]
+  t = t_of(n)
+  env = np.minimum(1, t / attack) ** 2 * np.clip((length - t) / release, 0, 1) ** 1.5
+  return x * env * vel / len(notes) ** 0.5
+
+
+def section(kind, notes, length, attack=0.35, release=0.5, vel=1.0, skip=0.25):
+  """Any string section (violin, viola, cello) as a swell - see violins()."""
+  n = int(length * SR)
+  x = np.zeros(n)
+  for nm in notes:
+    x += play(kind, nm, length + skip)[int(skip * SR):][:n]
   t = t_of(n)
   env = np.minimum(1, t / attack) ** 2 * np.clip((length - t) / release, 0, 1) ** 1.5
   return x * env * vel / len(notes) ** 0.5

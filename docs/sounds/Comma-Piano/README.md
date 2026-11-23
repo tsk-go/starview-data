@@ -29,10 +29,16 @@ that pace and register, same instruments:
 
 The last "take control" step plays its burst twice per 0.8 s over quiet tremolo violins.
 
+**Comma-Piano-Grand-Full** (owner: "I like the Comma Piano Grand. Make it more full body"): Grand with the piano's
+left hand (a bass octave under every chord, and under the first note of every warning burst, each burst note doubled
+an octave down), chords spread over both hands, cello and viola sections under the violins, a warmer tone (+3.5 dB
+around 250 Hz, nothing under 110 Hz - the comma's speaker can't play it) and a bigger hall. The warnings keep
+StarPilot's pace, with +5.5 dB around 2 kHz so they stay as clear as Grand's on the small speaker.
+
 ## Credits
 
 - Grand piano: **Salamander Grand Piano** by Alexander Holm, licensed CC-BY 3.0
   (https://creativecommons.org/licenses/by/3.0/), the Tone.js mp3 set (github.com/Tonejs/audio). The notes are
   shifted in pitch, shortened, layered and processed here.
-- Violin section and harp: **VS Chamber Orchestra: Community Edition** by Versilian Studios (CC0;
+- Violin, viola and cello sections and harp: **VS Chamber Orchestra: Community Edition** by Versilian Studios (CC0;
   github.com/sgossner/VSCO-2-CE).
