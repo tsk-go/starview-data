@@ -1,4 +1,14 @@
-# StarView sound pack
+# Sound packs for the comma
+
+**Comma-Synth, Comma-Pulse, Comma-Retro** (owner, Nov 22: "it has to sound different than the ones on the app, I
+should know it's from the device"): no sine beeps, bells, marimba or chirps like the tablet's speed warning, no
+A-major bells and echo like its voice alerts - filtered saw stabs in D (Synth), gliding squares in F# with a
+two-tone siren for "take control" (Pulse), 8-bit arpeggios in G (Retro); no echo. Made by
+`docs/tools/sounds/make_device_packs.py`.
+
+The StarView* packs below sound like the tablet's voice alerts on purpose - kept, not for the comma.
+
+## StarView (bells)
 
 The comma's driving alerts in the style of StarView's voice alerts: soft bells with a short echo, the warm chord
 under the engage chime, all in the voice alerts' key (A major). Made by `docs/tools/sounds/make_starview_pack.py`
