@@ -55,8 +55,26 @@ CELLO = {nm: (VSCO + f"Strings/Cello%20Section/susvib/susvib_{nm}_v3_1.wav", f"c
          for nm in ("G1", "B1", "D2", "F2", "A2", "C3", "E3", "G3")}
 VIOLA = {nm: (VSCO + f"Strings/Viola%20Section/susvib/ViolaEns_susvib_{nm}_v2_1.wav", f"viola_{nm}.wav")
          for nm in ("G2", "B2", "D3", "F3", "A3", "C4", "E4", "G4")}
-OCTAVE_LOW = {"violin": 12, "trem": 12, "cello": 12, "viola": 12, "piano": 0, "harp": 0}  # VSCO's string names are an octave low
-KINDS = {"piano": PIANO, "violin": VIOLIN, "trem": TREM, "harp": HARP, "cello": CELLO, "viola": VIOLA}
+HORN = {nm: (VSCO + f"Brass/F%20Horn/sus/MOHorn_sus_{nm.replace('#', '%23')}_{v}_1.wav", f"horn_{nm.replace('#', 's')}.wav")
+        for nm, v in (("G1", "v2"), ("A#1", "v2"), ("D2", "v2"), ("F2", "v2"), ("A2", "v2"), ("C3", "v2"), ("D4", "v1"),
+                      ("F4", "v1"))}
+FLUTE = {nm: (VSCO + f"Woodwinds/Flute/susvib/LDFlute_susvib_{nm}_v1_1.wav", f"flute_{nm}.wav")
+         for nm in ("A3", "C4", "E4", "A4", "C5", "E5", "A5", "C6")}
+OBOE = {nm: (VSCO + f"Woodwinds/Oboe/Vib/Oboe_Vib_{nm.replace('#', '%23')}_v3_Main.wav", f"oboe_{nm.replace('#', 's')}.wav")
+        for nm in ("D3", "F3", "A#3", "D4", "F4", "A#4", "D5")}
+SOLOVLN = {nm: (VSCO + f"Strings/Solo%20Violin/Arco%20Vib/LLVln_ArcoVib_{nm}_f.wav", f"solovln_{nm}.wav")
+           for nm in ("G4", "A4", "C5", "E5", "G5", "A5", "C6", "E6", "G6", "A6")}
+# timpani: one drum each; their pitch read off the recordings (drums 2 and 3, rolls 3)
+TIMP = {"F#3": (VSCO + "Percussion/Timpani/Timpani2_Hit_v3_rr1_Sum.wav", "timp_hit2.wav"),
+        "G#3": (VSCO + "Percussion/Timpani/Timpani3_Hit_v3_rr1_Sum.wav", "timp_hit3.wav")}
+TIMPROLL = {"C#3": (VSCO + "Percussion/Timpani/Rolls/Timpani3_Roll_v3_rr1_Sum.wav", "timp_roll3.wav")}
+# VSCO names its strings, horns, flutes and oboes an octave low (VlnEns A2 is A3)
+OCTAVE_LOW = {"violin": 12, "trem": 12, "cello": 12, "viola": 12, "horn": 12, "flute": 12, "oboe": 12, "piano": 0,
+              "harp": 0, "solovln": 0, "timp": 0, "timproll": 0}
+KINDS = {"piano": PIANO, "violin": VIOLIN, "trem": TREM, "harp": HARP, "cello": CELLO, "viola": VIOLA, "horn": HORN,
+         "flute": FLUTE, "oboe": OBOE, "solovln": SOLOVLN, "timp": TIMP, "timproll": TIMPROLL}
+# the wind and solo recordings come at very different levels: each note brought to the same loudness
+EVEN = {"horn": 0.1, "flute": 0.1, "oboe": 0.1, "solovln": 0.1, "timp": 0.0, "timproll": 0.0}
 CACHE = Path("/tmp/comma-piano-samples")
 
 
@@ -79,7 +97,13 @@ def sample(kind, name):
     urllib.request.urlretrieve(url, path)
   x = decode(path)
   onset = max(0, int(np.argmax(np.abs(x) > 0.02 * np.max(np.abs(x)))) - int(0.002 * SR))
-  return x[onset:]
+  x = x[onset:]
+  if EVEN.get(kind):
+    body = x[int(0.2 * SR):int(1.2 * SR)]
+    x = x * EVEN[kind] / max(np.sqrt(np.mean(body * body)), 1e-6)
+  elif kind in EVEN:  # percussion: by its peak
+    x = x * 0.5 / max(np.max(np.abs(x)), 1e-6)
+  return x
 
 
 def table(kind):
