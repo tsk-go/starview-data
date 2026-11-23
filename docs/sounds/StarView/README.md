@@ -1,5 +1,11 @@
 # Sound packs for the comma
 
+**Comma-Starship, Comma-GrandTourer, Comma-Neon** (owner, Nov 22: "Come up with something better"): layered,
+designed sounds (`docs/tools/sounds/make_device_packs_v2.py`). Starship (D): a rising whoosh blooming into a bright
+chord for engage, the chord powering down for disengage, holographic FM blips, a red-alert whoop for "take control".
+GrandTourer (F): warm analog plucks and a soft major-ninth swell, resonant pulsing stabs for the warnings. Neon
+(E minor): detuned-saw arpeggios with a riser, gated chords that pump faster for the warnings.
+
 **Comma-Synth, Comma-Pulse, Comma-Retro** (owner, Nov 22: "it has to sound different than the ones on the app, I
 should know it's from the device"): no sine beeps, bells, marimba or chirps like the tablet's speed warning, no
 A-major bells and echo like its voice alerts - filtered saw stabs in D (Synth), gliding squares in F# with a
