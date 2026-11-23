@@ -16,6 +16,19 @@ instrument recordings it needs on first run).
 | dm_critical.wav | take control now (repeats) | the same, faster and higher |
 | dm_critical_max.wav | last step (repeats) | faster and higher still |
 
+## More, paced like StarPilot's own sounds (Nov 23)
+
+Owner: "I think the high is too fast check out Starpilot's sounds". StarPilot's built-in sounds are piano-like notes
+in the middle of the keyboard; their warnings are one quick burst that rings out, every 0.65 s (prompt), 0.75 s
+(distracted, take control) and 0.8 s (take control now). `docs/tools/sounds/make_piano_more.py` makes three packs at
+that pace and register, same instruments:
+
+- **Comma-Piano-Calm** (D major): engage D-A-D-F# rising slowly into strings; a soft dyad for the prompt.
+- **Comma-Piano-Romance** (B minor turning to D): engage B-D-F#, then the D chord opening, violins over it.
+- **Comma-Piano-Grand** (D major, chords): engage G/D to D like the opening of a theme, harp and strings.
+
+The last "take control" step plays its burst twice per 0.8 s over quiet tremolo violins.
+
 ## Credits
 
 - Grand piano: **Salamander Grand Piano** by Alexander Holm, licensed CC-BY 3.0
