@@ -99,6 +99,8 @@ DECISIONS = {
     "sliderRow(Lcom/starpilot/starview/GalaxyRow;)V": ("patch", "add69477ed90"),
     # Nov 18 (2) sync: the wiki guide link after the back bar (hybGuide)
     "draw(Lorg/json/JSONObject;)V": ("patch", "ffbd7674e8c5"),
+    # Nov 24 sync: Galaxy's link buttons under a readout row (GalaxyMirror.links)
+    "readoutRow(Lcom/starpilot/starview/GalaxyRow;)V": ("patch", "ce2392ca0869"),
   },
   # Nov 20 sync: the update's AGNOS step shows its own percent (hybPct)
   "FastUpdate": {

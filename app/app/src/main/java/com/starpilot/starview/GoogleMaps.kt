@@ -93,6 +93,7 @@ object GoogleMaps {
   // ---------------------------------------------------------------- settings (Tablet › Settings › Navigation map)
   @JvmStatic
   fun addTo(a: Activity, col: LinearLayout) {
+    TurnSlowdown.addTo(a, col)   // Galaxy's turn slowdown distance (Nov 24) goes on the same page, above Google's
     try {
       val ui = CarUi(a, false)
       col.addView(ui.header("Google maps"), ui.lp(0, ui.gap))

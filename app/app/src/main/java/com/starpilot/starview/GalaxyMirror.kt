@@ -1,5 +1,7 @@
 package com.starpilot.starview
 
+import android.content.Intent
+import android.net.Uri
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
@@ -18,8 +20,13 @@ import java.util.WeakHashMap
  *  - learnedValue (Developer Parameters: steering delay, torque factor / friction / ratio): the learned value, shown
  *    beside the slider's value.
  *
- * Called from GalaxyRow's constructor (the row's JSON goes through [row] before anything reads it) and from
- * GalaxySettingsView.sliderRow (the slider's header, [learned]). Galaxy's other new row fields - acceptedFindingValue,
+ *  - status (Nov 24 sync: a read-only status, like Tesla's "CAN add-on cable: Detected"): Galaxy never grays it out, so
+ *    it counts as available here (its icon isn't the crossed-out one, and it doesn't ask to park).
+ *  - links (Nov 24 sync): buttons under the row that open a web page (https only), [links].
+ *
+ * Called from GalaxyRow's constructor (the row's JSON goes through [row] before anything reads it), from
+ * GalaxySettingsView.sliderRow (the slider's header, [learned]) and from GalaxySettingsView.readoutRow ([links]; the
+ * status rows that carry links are readouts). Galaxy's other new row fields - acceptedFindingValue,
  * and since the Nov 22 sync coordinateLocked / learningEligible (its "Manual override" / "Change confirmed" chip) -
  * only mark the FLM page's manual coordinates, which StarView doesn't draw.
  */
@@ -27,6 +34,7 @@ object GalaxyMirror {
   private const val PROFILE_DEFAULT = "StarPilot Default"
   private const val PROFILE_SHOWN = "Normal"
   private val learnedOf = WeakHashMap<GalaxyRow, String>()
+  private val linksOf = WeakHashMap<GalaxyRow, List<Pair<String, String>>>()
 
   /** the row's JSON as Galaxy presents it (a copy when it changes anything); remembers [r]'s learned value */
   @JvmStatic
@@ -34,8 +42,14 @@ object GalaxyMirror {
     try {
       val learned = o.optString("learnedValue", "")
       synchronized(learnedOf) { if (learned.isNotEmpty() && learned != "null") learnedOf[r] = learned else learnedOf.remove(r) }
-      if (o.optString("displayScale", "") != "selected-profile") return o
+      val links = linksIn(o)
+      synchronized(linksOf) { if (links.isNotEmpty()) linksOf[r] = links else linksOf.remove(r) }
+      val status = o.optBoolean("status", false) && !o.optBoolean("available", false)
+      if (o.optString("displayScale", "") != "selected-profile") {
+        return if (status) JSONObject(o.toString()).put("available", true) else o
+      }
       val c = JSONObject(o.toString())
+      if (status) c.put("available", true)
       val value = o.optString("value", "")
       val initial = if (o.isNull("defaultValue")) null else o.optString("defaultValue", "")
       fun shown(v: String) = if (v == PROFILE_DEFAULT) PROFILE_SHOWN else v
@@ -53,6 +67,42 @@ object GalaxyMirror {
       return c
     } catch (e: Exception) {
       return o
+    }
+  }
+
+  /** Galaxy's row.links: [label, https URL] pairs (anything else is left out, as Galaxy does) */
+  fun linksIn(o: JSONObject): List<Pair<String, String>> {
+    val a = o.optJSONArray("links") ?: return emptyList()
+    val out = ArrayList<Pair<String, String>>()
+    for (i in 0 until a.length()) {
+      val l = a.optJSONObject(i) ?: continue
+      val label = l.optString("label", "").trim()
+      val url = l.optString("url", "")
+      if (label.isNotEmpty() && url.startsWith("https://")) out.add(label.take(60) to url)
+    }
+    return out.take(4)
+  }
+
+  /** the row's link buttons, under the row (Galaxy's gx-row__links: tonal buttons that open the page) */
+  @JvmStatic
+  fun links(col: LinearLayout, r: GalaxyRow) {
+    val links = synchronized(linksOf) { linksOf[r] } ?: return
+    try {
+      val ctx = col.context
+      val ui = CarUi(ctx, false)
+      val line = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL; setPadding(ui.dp(16), 0, ui.dp(16), 0) }
+      for ((i, link) in links.withIndex()) {
+        if (i > 0) line.addView(android.view.View(ctx), LinearLayout.LayoutParams(ui.dp(10), 1))
+        line.addView(ui.button("\u2197 ${link.first}", false) {
+          try {
+            ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link.second)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+          } catch (e: Exception) {
+            android.util.Log.w("StarView/Galaxy", "link", e)
+          }
+        })
+      }
+      col.addView(line, ui.lp(0, ui.gap))
+    } catch (e: Exception) {
     }
   }
 

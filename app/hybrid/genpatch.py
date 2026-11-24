@@ -462,6 +462,14 @@ assert old in line
 m.replace_line(line, [line.replace(old, "StarPilot\\'s Automatic Turn Initiation (Steering \\u203a Steering & Torque, its on/off;"
                                         " off until you turn it on)")])
 
+# ---------------------------------------------------------------- Nov 24 sync: Galaxy's row links (Tesla's add-on cable
+# status row): the buttons go under a readout row, after it is added (p1 = the row; v1 is free after the addView)
+m = M("GalaxySettingsView", "readoutRow(Lcom/starpilot/starview/GalaxyRow;)V")
+m.insert_after("invoke-virtual {v1, v4, v2}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;"
+               "Landroid/view/ViewGroup$LayoutParams;)V",
+               ["iget-object v1, p0, Lcom/starpilot/starview/GalaxySettingsView;->col:Landroid/widget/LinearLayout;",
+                f"invoke-static {{v1, p1}}, {GMIR}->links(Landroid/widget/LinearLayout;{GROW})V"])
+
 # ---------------------------------------------------------------- checks + output
 for m in METHODS:
   for old, new in m.edits:

@@ -1510,6 +1510,7 @@ public final class GalaxySettingsView extends FrameLayout {
             row.addView($this$readoutRow_u24lambda_u2462);
         }
         this.col.addView(row, CarUi.lp$default(this.ui, 0, 0, 3, null));
+        GalaxyMirror.links(this.col, r);   // Galaxy's link buttons under the row (hybrid patch)
     }
 
     private final String viewId() {
