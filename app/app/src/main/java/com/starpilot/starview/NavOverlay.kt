@@ -298,6 +298,13 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
     val arrived = type == "arrive" && (distM < 40 || (!remaining.isNaN() && remaining < 40))
     val pad = 16 * u
 
+    // 2.90.14: arriving - from 500 ft before the destination the address, with the house number big
+    Arrival.of(nav, Nav.INSTANCE.destination)?.let { arr ->
+      arrivalCard(c, arr, w, h, u, pad, metric)
+      bottom(c, nav, nowMs, w, h, u, pad, metric, null, distM, remaining, remainingS, h * 0.62f, false)
+      return
+    }
+
     // lanes: from the tablet's own copy of the route, for this turn, once it is close
     val lanes = if (arrived || distM > NavOverlay.LANES_SHOW_M) null else Nav.INSTANCE.nextLanes()?.let { (step, d) ->
       if (abs(d - distM) < 150 && step.lanes.size >= 2) step.lanes else null
@@ -334,8 +341,12 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
     }
     y += 6 * u
     streetLines(c, big, x, y, textW, header - 4 * u, u)
+    bottom(c, nav, nowMs, w, h, u, pad, metric, lanes, distM, remaining, remainingS, header, true)
+  }
 
-    // bottom row: progress bar and ETA
+  /** the bottom row: progress bar and ETA, and (not when arriving) the lane strip or the "Then" chip and the trip left */
+  private fun bottom(c: Canvas, nav: JSONObject, nowMs: Long, w: Float, h: Float, u: Float, pad: Float, metric: Boolean,
+                     lanes: List<Nav.Lane>?, distM: Double, remaining: Double, remainingS: Double, header: Float, extras: Boolean) {
     val right = w - pad
     val barCenter = h - 17 * u
     var barRight = right
@@ -346,7 +357,9 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
       c.drawText(eta, right - ew, barCenter + 7 * u, tp)
       barRight -= ew + 14 * u
     }
-    if (lanes != null) {
+    if (!extras) {
+      // arriving: only the progress bar and the ETA
+    } else if (lanes != null) {
       laneStrip(c, lanes, pad, header + 4 * u, right, barCenter - 14 * u)
     } else {
       thenChip(c, nav, distM, pad, header + 2 * u, u)
@@ -384,6 +397,62 @@ class NavCardView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) 
       }
     }
   }
+
+  /**
+   * 2.90.14: arriving. Top: how far ("Arrived" within 40 ft) and which side the destination is on; then the house
+   * number big (a place without one: its name), the street under it, the town small - with a saved place's own name
+   * ("Home") in front of the town. The bottom row stays (progress, ETA).
+   */
+  private fun arrivalCard(c: Canvas, arr: Arrival.Now, w: Float, h: Float, u: Float, pad: Float, metric: Boolean) {
+    val header = h * 0.62f
+    val iconS = min(64 * u, header - 12 * u)
+    // a destination pin where the turn arrow was: navigation blue, a white dot
+    val pr = iconS * 0.27f; val pcx = pad + iconS / 2; val pcy = header / 2 - pr * 0.35f
+    p.style = Paint.Style.FILL; p.color = NavOverlay.FILL
+    c.drawCircle(pcx, pcy, pr, p)
+    pin.rewind(); pin.moveTo(pcx - pr * 0.8f, pcy + pr * 0.55f); pin.lineTo(pcx + pr * 0.8f, pcy + pr * 0.55f); pin.lineTo(pcx, pcy + pr * 2.0f); pin.close()
+    c.drawPath(pin, p)
+    p.color = Color.WHITE; c.drawCircle(pcx, pcy, pr * 0.38f, p)
+    val x = pad + iconS + 14 * u
+    val textW = w - pad - x
+    if (textW <= 10 * u) return
+    tp.textAlign = Paint.Align.LEFT
+    tp.typeface = Typeface.DEFAULT_BOLD; tp.textSize = 20 * u; tp.color = Color.WHITE
+    var y = 10 * u + 20 * u * 0.95f
+    val lead = if (arr.arrived) "Arrived" else NavOverlay.dist(arr.distM, metric)
+    c.drawText(lead, x, y, tp)
+    val sideText = when (arr.side) { 1 -> "on the right"; -1 -> "on the left"; else -> "" }
+    if (sideText.isNotEmpty()) {
+      val from = x + tp.measureText(lead)
+      tp.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL); tp.textSize = 18 * u; tp.color = NavOverlay.SUB
+      val s = "  ·  $sideText"
+      if (tp.measureText(s) <= x + textW - from) c.drawText(s, from, y, tp)
+    }
+    val a = arr.addr
+    val big = a.number.ifEmpty { a.name.ifEmpty { a.street } }
+    var size = (if (a.number.isNotEmpty()) 44 else 30) * u
+    tp.typeface = BLACK; tp.color = Color.WHITE; tp.textSize = size
+    while (size > 18 * u && tp.measureText(big) > textW) { size -= u; tp.textSize = size }
+    y += 4 * u + size * 0.78f
+    wrap(big, textW, 1).firstOrNull()?.let { c.drawText(it, x, y, tp) }
+    val second = if (big == a.street) "" else a.street
+    if (second.isNotEmpty()) {
+      var s2 = 22 * u
+      tp.typeface = Typeface.DEFAULT_BOLD; tp.color = Color.WHITE; tp.textSize = s2
+      while (s2 > 15 * u && tp.measureText(second) > textW) { s2 -= u; tp.textSize = s2 }
+      y += 8 * u + s2 * 0.78f
+      wrap(second, textW, 1).firstOrNull()?.let { c.drawText(it, x, y, tp) }
+    }
+    val third = listOf(if (big == a.name) "" else a.name, a.town).filter { it.isNotEmpty() }.joinToString("  ·  ")
+    if (third.isNotEmpty()) {
+      tp.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL); tp.textSize = 15 * u; tp.color = NavOverlay.SUB
+      y += 6 * u + 15 * u * 0.78f
+      if (y < h - 28 * u) wrap(third, textW, 1).firstOrNull()?.let { c.drawText(it, x, y, tp) }
+    }
+  }
+
+  private val pin = Path()
+  private val BLACK: Typeface by lazy { Typeface.create("sans-serif-black", Typeface.NORMAL) ?: Typeface.DEFAULT_BOLD }
 
   /**
    * The street, as big as the distance above it (30 dp) when it fits on one line, shrinking to 20 dp; longer than that,

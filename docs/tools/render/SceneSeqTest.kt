@@ -118,6 +118,10 @@ class SceneSeqTest {
         // (the route puts its point on the ramp): ExitTake runs on LaneAnchor's place (2.90.7)
         val exitAt = p.firstOrNull { it.startsWith("exit=") }?.substring(5)?.split(':')?.map { it.toDouble() }
         ExitTake.reset(); ExitTake.commaHasExit = true
+        // "arrive=M:SIDE:LABEL" (2.90.14): the destination M metres ahead at the film's start on SIDE (1 right, -1 left),
+        // its house number LABEL: the Scene's label at the curb, coming closer as the car drives
+        val arriveP = p.firstOrNull { it.startsWith("arrive=") }?.substring(7)?.split(':')
+        var arriveFrom = Double.NaN
         var lastExit = ""
         val rst = LaneRibbon.State()
         val trace = ArrayList<String>()
@@ -284,6 +288,12 @@ class SceneSeqTest {
           val nowNs = ((t - (t0 - 30)) * 1e9).toLong() + 1_000_000_000L
           val fr = v.frameOf(m, if (anchored) afit else fit, odo, nowNs, things, true, false, false, marks, lanes, vEgo)
           v.frame = fr
+          if (arriveP != null) {
+            if (arriveFrom.isNaN() && t >= t0) arriveFrom = fr.travelled
+            val ahead = arriveP[0].toDouble() - (if (arriveFrom.isNaN()) 0.0 else fr.travelled - arriveFrom)
+            v.arrivalForTest = Arrival.Now(ahead, ahead < Arrival.ARRIVED_M, arriveP[1].toInt(),
+              Arrival.Address(arriveP.getOrElse(2) { "1525" }, "", "", ""), Double.NaN, Double.NaN)
+          }
           if (t >= t0) {
             v.draw(cv)
             FileOutputStream(File(od, String.format("%04d.png", n))).use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }

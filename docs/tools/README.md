@@ -124,6 +124,16 @@ route's main roads from its steps), then draws the turn card at the owner's size
 `btn_end.png`) and the route list through MapPane's own `fillRoutes` (`routes.png`). Set up like PicTest, then
 `PIC_OUT=OUT ./gradlew :app:testDebugUnitTest --offline --rerun --tests com.starpilot.starview.NavCardPicTest`.
 
+## `render/ArrivalPicTest.kt`: the arrival card (2.90.14)
+
+The turn card from 500 ft before the destination - the house number big, the street, the town, which side - drawn by
+the real NavCardView for six made-up places (a saved "Home", a plain address, arrived, a business, a long street, a place
+without a house number), at the owner's size and the default one: `OUT/arrive_*_owner.png`, `arrive_*_default.png`. Set
+up like PicTest, then `PIC_OUT=OUT ./gradlew :app:testDebugUnitTest --offline --rerun --tests
+com.starpilot.starview.ArrivalPicTest`. The Scene's house-number label on a recorded drive: `SceneSeqTest`'s flag
+`arrive=M:SIDE:LABEL` (the destination M metres ahead at the stretch's start, SIDE 1 right / -1 left). The address
+reading itself: `unit/ArrivalTest.kt`.
+
 ## `unit/`: plain JVM tests of single pieces
 
 `SceneSteadyTest.kt`, `LaneAnchorTest.kt`, `LaneRibbonTest.kt` (2.90.0, the Scene view; Robolectric as for PicTest, no
