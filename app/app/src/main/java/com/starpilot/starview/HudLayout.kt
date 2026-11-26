@@ -44,6 +44,9 @@ class HudLayout(ctx: Context) {
     Item(R.id.egpu, "egpu", "eGPU status", Anchor(Gravity.TOP or Gravity.END, 24, 188)),
     Item(R.id.navCard, "navCard", "Navigation - turn card", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 72)),
     Item(R.id.navMap, "navMap", "Navigation - see-through map", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 228), free = true, defW = 250, defH = 440),
+    // 2.90.14: drawn on the road in the Scene and the camera view, not a box of its own: only on / off here, its own settings
+    // in the editor (RoadArrowPanel)
+    Item(R.id.roadArrow, "roadArrow", "Navigation - road arrow", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 0)),
     Item(R.id.nudgeHint, "nudgeHint", "Exit nudge prompt", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 100)),
     Item(R.id.slowCard, "slowCard", "Why it's slowing", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 200)),
     Item(R.id.laneCard, "laneCard", "Lane tracker (test)", Anchor(Gravity.TOP or Gravity.END, 24, 250)),
@@ -123,6 +126,7 @@ class HudLayout(ctx: Context) {
 
   fun restore(raw: String?) {
     states.clear()
+    RoadArrowStyle.on = enabled("roadArrow")
     if (raw == null) return
     runCatching {
       val o = JSONObject(raw)
@@ -130,6 +134,7 @@ class HudLayout(ctx: Context) {
         e.optDouble("cw", Double.NaN).toFloat(), e.optDouble("ch", Double.NaN).toFloat(),
         e.optDouble("w", Double.NaN).toFloat(), e.optDouble("h", Double.NaN).toFloat(), e.optDouble("z", 1.0).toFloat()) }
     }
+    RoadArrowStyle.on = enabled("roadArrow")
   }
 
   fun save() { prefs.edit().putString(KEY, snapshot()).apply() }
@@ -192,6 +197,7 @@ class HudLayout(ctx: Context) {
 
   /** Apply positions / scales to the views. Call after layout (sizes must be known) - cheap enough for every tick. */
   fun apply(root: FrameLayout) {
+    RoadArrowStyle.on = enabled("roadArrow")
     val rw = root.width; val rh = root.height
     if (rw == 0 || rh == 0) return
     for (it in items) {

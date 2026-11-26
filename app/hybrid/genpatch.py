@@ -368,7 +368,11 @@ k = min(x for x in range(i, len(m.lines)) if m.lines[x].strip() ==
 assert any("CarUi;->lp$default" in l for l in m.lines[k - 14:k]), "not the Size row's addView"
 a, b = m.context(k, k + 1)
 old = "".join(m.lines[a:b])
-m.edits.append((old, old + f"    invoke-virtual {{v0, v1, v2}}, {HE}->hybFreeSize(Lcom/starpilot/starview/HudLayout$Item;{ST})V\n"))
+# 2.90.14: a widget with its own settings (the road arrow) stops after them (:cond_1 is the method's return-void)
+assert m.lines[[x for x in instr_idx(m.lines) if x > m.find(":cond_1")][0]].strip() == "return-void"
+m.edits.append((old, old + f"    invoke-virtual {{v0, v1, v2}}, {HE}->hybFreeSize(Lcom/starpilot/starview/HudLayout$Item;{ST})V\n"
+                f"    invoke-virtual {{v0, v1, v2}}, {HE}->hybOwnPanel(Lcom/starpilot/starview/HudLayout$Item;{ST})Z\n"
+                "    move-result v4\n    if-nez v4, :cond_1\n"))
 m = M("HudEditor$Preview", "onTouchEvent(Landroid/view/MotionEvent;)Z")
 m.insert_after(f"iput v7, v0, {PV}->startW:F", [f"invoke-virtual {{v0, v3}}, {PV}->hybStartH(Landroid/graphics/RectF;)V"])
 i = m.find(":cond_7")

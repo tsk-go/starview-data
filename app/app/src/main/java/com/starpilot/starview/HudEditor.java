@@ -584,6 +584,22 @@ public final class HudEditor extends FrameLayout {
         freeControls(it, s);
     }
 
+    /** Hybrid build: 2.84.1's editTab() calls it right after hybFreeSize() and stops there when it says so. 2.90.14: the
+     *  road arrow is drawn on the road, not a box on the screen - its own settings (RoadArrowPanel) instead of the size
+     *  and the position. */
+    final boolean hybOwnPanel(HudLayout.Item it, HudLayout.State s) {
+        if (it.getId() != R.id.roadArrow) {
+            return false;
+        }
+        int n = this.content.getChildCount();
+        if (n >= 2) {
+            this.content.removeViewAt(n - 1);
+            this.content.removeViewAt(n - 2);
+        }
+        RoadArrowPanel.INSTANCE.build(this.content, this.ui, () -> { refresh(); return Unit.INSTANCE; }, () -> { remove(it); return Unit.INSTANCE; });
+        return true;
+    }
+
     private final void editTab() {
         final HudLayout.Item it = this.selected;
         if (it == null) {
@@ -627,6 +643,9 @@ public final class HudEditor extends FrameLayout {
         }));
         this.content.addView(size, CarUi.lp$default(this.ui, 0, this.ui.dp(12), 1, null));
         hybFreeSize(it, s);
+        if (hybOwnPanel(it, s)) {
+            return;
+        }
         this.content.addView(this.ui.header("Position"));
         this.content.addView(CarUi.button$default(this.ui, "Center it left to right", false, new Function0() { // from class: com.starpilot.starview.HudEditor$$ExternalSyntheticLambda7
             @Override // kotlin.jvm.functions.Function0

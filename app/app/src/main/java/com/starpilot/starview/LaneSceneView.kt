@@ -494,6 +494,13 @@ class LaneSceneView(ctx: Context) : View(ctx) {
       drawLaneTints(c, m, fr, pal)
       drawPath(c, m, fr, pal)
     }
+    // 2.90.14: the road arrow lies on the road, under the cars and poles, fading into the fog like the road
+    try {
+      drawRoadArrow(c, fr)
+    } catch (e: Exception) {
+      val now = System.currentTimeMillis()
+      if (now - arrowFailAt > 10_000) { arrowFailAt = now; android.util.Log.w("StarView/Scene2", "road arrow", e) }
+    }
     // fog: everything fades into the horizon
     val y0 = yAt(110.0); val y1 = yAt(270.0)
     pFill.color = -0x1000000
@@ -505,73 +512,41 @@ class LaneSceneView(ctx: Context) : View(ctx) {
   }
 
   // ---------------------------------------------------------------- 2.90.14: arriving - the house number at the curb
-  private val pTag = Paint(Paint.ANTI_ALIAS_FLAG)
-  private val tagRect = RectF()
-  private val tagFont: android.graphics.Typeface by lazy {
-    android.graphics.Typeface.create("sans-serif-black", android.graphics.Typeface.NORMAL) ?: android.graphics.Typeface.DEFAULT_BOLD
-  }
+  private val tag by lazy { ArrivalTag(resources.displayMetrics.density) }
   /** tests: an arrival to draw instead of the comma's */
   var arrivalForTest: Arrival.Now? = null
 
-  /**
-   * From 500 ft before the destination ([Arrival]): the house number in a blue label on a thin stick, standing at the
-   * curb on the destination's side as far along our road as the route says the destination is - on the generated road
-   * (LaneRibbon) at its kerb, without it beside our path. The side is the arrival step's ("on the right"), else where the
-   * destination's point lies against our road; not known - no label (the card still shows the address).
-   */
+  /** From 500 ft before the destination: the house number at the curb (ArrivalTag) */
   private fun drawArrival(c: Canvas, fr: Frame) {
     val arr = arrivalForTest ?: t?.let { Arrival.of(it.navCard(System.currentTimeMillis())?.first, Nav.INSTANCE.destination) } ?: return
-    val label = arr.addr.tag()
-    val ahead = arr.distM
-    if (label.isEmpty() || ahead < 2.0 || ahead > Arrival.SHOW_M + 5) return
-    val fit = fr.fit; val pose = fr.pose
-    var side = arr.side
-    if (side == 0 && fit != null && pose != null && arr.lat.isFinite() && arr.lon.isFinite()) {
-      val p = fit.built.xy(arr.lat, arr.lon)
-      val rr = pose.right(p[0], p[1])
-      if (abs(rr) > 3.0) side = if (rr > 0) 1 else -1
-    }
-    if (side == 0) return
-    var r = side * 7.0; var f = ahead
-    val geo = if (steady && anchor) fit?.ribbon else null
-    if (geo != null && fit != null && pose != null && fr.mapAlpha >= 0.5f) {
-      val adv = fr.travelled - (fit.odo.getOrNull(3) ?: fr.travelled)
-      val e = geo.edges(adv + ahead)
-      geo.place(adv + ahead, if (side > 0) e[4] + 1.2 else e[3] - 1.2)?.let { r = pose.right(it[0], it[1]); f = pose.fwd(it[0], it[1]) }
-    }
-    if (!proj(r, f, 0.0)) return
+    val spot = ArrivalTag.spot(arr, fr.fit, fr.pose, fr.travelled, steady && anchor && fr.mapAlpha >= 0.5f) ?: return
+    if (!proj(spot[0], spot[1], 0.0)) return
     val gx = px; val gy = py; val gz = pz
-    if (!proj(r, f, 3.4)) return
-    val tx = px; val ty = py; val tz = pz
-    val dp = resources.displayMetrics.density
-    val fade = ((Arrival.SHOW_M + 5 - ahead) / 25.0).coerceIn(0.0, 1.0)
-    fun argb(a: Double, r: Int, g: Int, b: Int) = android.graphics.Color.argb((a * fade).toInt().coerceIn(0, 255), r, g, b)
-    // a soft spot of light where it stands, and the stick
-    pTag.style = Paint.Style.FILL
-    val rx = (F * 0.5 / gz).toFloat().coerceIn(4 * dp, 40 * dp)
-    pTag.color = argb(110.0, 40, 140, 255)
-    tagRect.set(gx - rx, gy - rx * 0.32f, gx + rx, gy + rx * 0.32f); c.drawOval(tagRect, pTag)
-    pTag.style = Paint.Style.STROKE; pTag.strokeWidth = (F * 0.06 / gz).toFloat().coerceIn(1.5f * dp, 4 * dp)
-    pTag.color = argb(170.0, 255, 255, 255)
-    c.drawLine(gx, gy, tx, ty, pTag)
-    // the label: as tall as 1 m there, but always readable and never huge
-    val hPx = (F * 1.0 / tz).toFloat().coerceIn(30 * dp, 58 * dp)
-    pTag.style = Paint.Style.FILL; pTag.typeface = tagFont; pTag.textSize = hPx * 0.62f; pTag.textAlign = Paint.Align.CENTER
-    val tw = pTag.measureText(label) + hPx * 0.7f
-    val ptr = hPx * 0.22f
-    tagRect.set(tx - tw / 2, ty - ptr - hPx, tx + tw / 2, ty - ptr)
-    val rad = hPx * 0.28f
-    pTag.color = argb(70.0, 60, 160, 255)                                     // a little glow around it
-    c.drawRoundRect(tagRect.left - 5 * dp, tagRect.top - 5 * dp, tagRect.right + 5 * dp, tagRect.bottom + 5 * dp, rad + 5 * dp, rad + 5 * dp, pTag)
-    pTag.color = argb(240.0, 30, 110, 245)
-    c.drawRoundRect(tagRect, rad, rad, pTag)
-    path.rewind(); path.moveTo(tx - ptr, ty - ptr - 1); path.lineTo(tx + ptr, ty - ptr - 1); path.lineTo(tx, ty); path.close()
-    c.drawPath(path, pTag)
-    pTag.style = Paint.Style.STROKE; pTag.strokeWidth = 2 * dp; pTag.color = argb(235.0, 255, 255, 255)
-    c.drawRoundRect(tagRect, rad, rad, pTag)
-    pTag.style = Paint.Style.FILL; pTag.color = argb(255.0, 255, 255, 255)
-    val fm = pTag.fontMetrics
-    c.drawText(label, tx, tagRect.centerY() - (fm.ascent + fm.descent) / 2, pTag)
+    if (!proj(spot[0], spot[1], ArrivalTag.STICK)) return
+    tag.paint(c, arr.addr.tag(), gx, gy, px, py, F / gz, F / pz, ArrivalTag.fade(arr))
+  }
+
+  // ---------------------------------------------------------------- 2.90.14: the road arrow
+  /** tests: a route instead of the comma's */
+  var roadArrowForTest: RoadArrow.Input? = null
+  /** tests: the running light's place (0..1 of its trip); NaN = by the clock */
+  var arrowPhaseForTest = Double.NaN
+  private var arrowFailAt = 0L
+  private val arrowT0 = System.nanoTime()
+  private val arrowPainter by lazy { RoadArrowPainter(resources.displayMetrics.density) }
+  private val arrowProj = RoadArrowPainter.Proj { r, f, h, out -> if (proj(r, f, h)) { out[0] = px; out[1] = py; true } else false }
+
+  /** Where the arrow goes is RoadArrow's, its look RoadArrowPainter's. Only on the Scene's own road (no map: no arrow). */
+  private fun drawRoadArrow(c: Canvas, fr: Frame) {
+    RoadArrowStyle.load(context)
+    if (!RoadArrowStyle.scene) return
+    val inp = roadArrowForTest ?: RoadArrow.live(t) ?: return
+    val fit = fr.fit ?: return
+    val pose = fr.pose ?: return
+    if (!(steady && anchor) || fr.mapAlpha < 0.5f) return
+    val shape = RoadArrow.shapeOn(inp, fit, pose, fr.travelled) ?: return
+    val ph = if (arrowPhaseForTest.isNaN()) ((System.nanoTime() - arrowT0) / 0.5e9) % 1.0 else arrowPhaseForTest
+    arrowPainter.paint(c, shape, arrowProj, ph)
   }
 
   // ---------------------------------------------------------------- the map

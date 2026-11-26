@@ -210,6 +210,8 @@ public final class MainActivity extends AppCompatActivity {
     private TextView saverPill;
     SceneView scene;
     LaneSceneView laneScene;
+    /** 2.90.14: the road arrow and the house number on the camera's picture */
+    RoadArrowCameraView arrowCam;
     private TextView sceneBtn;
     boolean sceneOn;
     private boolean searching;
@@ -7635,6 +7637,14 @@ public final class MainActivity extends AppCompatActivity {
             hudLate.adoptLate(this.favBar, R.id.hudFavBar);
             hudLate.adoptLate(this.ideasChip, R.id.hudIdeas);
         }
+        // 2.90.14: the road arrow and the house number on the camera's picture, just over the road view's own drawing
+        FrameLayout rootLate = this.root;
+        OverlayView ovLate = this.overlay;
+        if (rootLate != null && ovLate != null) {
+            this.arrowCam = new RoadArrowCameraView(this, ovLate);
+            this.arrowCam.setT(this.telemetry);
+            rootLate.addView(this.arrowCam, rootLate.indexOfChild(ovLate) + 1, new FrameLayout.LayoutParams(-1, -1));
+        }
     }
 
     /** onNewIntent, after setIntent; true = done (2.85.12: reopened behind another app after an update). */
@@ -7739,6 +7749,14 @@ public final class MainActivity extends AppCompatActivity {
         if (newStyle && this.scene != null) {
             r.removeView(this.scene);
             this.scene = null;
+        }
+        // 2.90.14: the camera view's road arrow only while the camera's picture shows
+        RoadArrowCameraView ac = this.arrowCam;
+        if (ac != null) {
+            int acVis = this.sceneOn ? 8 : 0;
+            if (ac.getVisibility() != acVis) {
+                ac.setVisibility(acVis);
+            }
         }
         boolean want = this.sceneOn && newStyle;
         LaneSceneView v = this.laneScene;

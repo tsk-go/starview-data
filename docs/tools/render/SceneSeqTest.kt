@@ -109,6 +109,37 @@ class SceneSeqTest {
         b.yaw = yaw; b.ox = a.ox + d * cos(yaw); b.oy = a.oy + d * sin(yaw); b.dist = a.dist + d
       }
       recs[0].yaw = recs[1].yaw
+      // "turn=FILE" (2.90.14): a route for the Scene's road arrow - FILE (in laneData) holds {"type", "mod", "turnM",
+      // "lat": [...], "lon": [...]}: the route's line and its next step, a type / mod maneuver ("turn" / "right", "off
+      // ramp" / "slight right") turnM metres along it. Where we are on it: the car's place (the RTK fix where recorded)
+      // put on the line. Drive data never goes in git, nor these files.
+      val turnF = p.firstOrNull { it.startsWith("turn=") }?.substring(5)?.let { JSONObject(File(dir, it).readText()) }
+      val trLat = ArrayList<Double>(); val trLon = ArrayList<Double>(); val trCum = ArrayList<Double>()
+      if (turnF != null) {
+        val la = turnF.getJSONArray("lat"); val lo = turnF.getJSONArray("lon")
+        for (i in 0 until la.length()) {
+          if (trLat.isNotEmpty()) {
+            val dx = (lo.getDouble(i) - trLon.last()) * 111320.0 * cos(Math.toRadians(la.getDouble(i)))
+            val dy = (la.getDouble(i) - trLat.last()) * 110540.0
+            trCum.add(trCum.last() + hypot(dx, dy))
+          } else trCum.add(0.0)
+          trLat.add(la.getDouble(i)); trLon.add(lo.getDouble(i))
+        }
+      }
+      /** the car's place put on the route's line: metres along it */
+      fun trAlong(lat: Double, lon: Double): Double {
+        var best = Double.MAX_VALUE; var at = Double.NaN
+        val kx = 111320.0 * cos(Math.toRadians(lat))
+        for (i in 0 until trLat.size - 1) {
+          val ax = (trLon[i] - lon) * kx; val ay = (trLat[i] - lat) * 110540.0
+          val bx = (trLon[i + 1] - lon) * kx; val by = (trLat[i + 1] - lat) * 110540.0
+          val vx = bx - ax; val vy = by - ay
+          val u = (-(ax * vx + ay * vy) / max(1e-9, vx * vx + vy * vy)).coerceIn(0.0, 1.0)
+          val d = hypot(ax + vx * u, ay + vy * u)
+          if (d < best) { best = d; at = trCum[i] + (trCum[i + 1] - trCum[i]) * u }
+        }
+        return at
+      }
       val log = StringBuilder()
       for (mode in (System.getenv("SEQ_MODES") ?: "before,after,anchor").split(',')) {
         val steady = mode != "before"
@@ -288,6 +319,14 @@ class SceneSeqTest {
           val nowNs = ((t - (t0 - 30)) * 1e9).toLong() + 1_000_000_000L
           val fr = v.frameOf(m, if (anchored) afit else fit, odo, nowNs, things, true, false, false, marks, lanes, vEgo)
           v.frame = fr
+          if (turnF != null && trLat.size >= 2) {
+            val k = rtk[ri]
+            val now = trAlong(k[0], k[1])
+            v.roadArrowForTest = RoadArrow.Input(trLat.toDoubleArray(), trLon.toDoubleArray(), trCum.toDoubleArray(), now,
+              turnF.getString("type"), turnF.optString("mod"), turnF.getDouble("turnM") - now)
+            // ARROW_PHASE: the running light held at that place (0..1), or "replay": running by the drive's own clock
+            System.getenv("ARROW_PHASE")?.let { v.arrowPhaseForTest = if (it == "replay") (t / 0.5) % 1.0 else it.toDouble() }
+          }
           if (arriveP != null) {
             if (arriveFrom.isNaN() && t >= t0) arriveFrom = fr.travelled
             val ahead = arriveP[0].toDouble() - (if (arriveFrom.isNaN()) 0.0 else fr.travelled - arriveFrom)

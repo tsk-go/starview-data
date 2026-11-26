@@ -65,7 +65,7 @@ DECISIONS = {
   },
   "HudEditor": {
     "<init>(Landroid/content/Context;Landroid/widget/FrameLayout;Lcom/starpilot/starview/HudLayout;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)V": ("patch", "587342b3ec1d"),
-    "editTab()V": ("patch", "d688234c6cd0"),
+    "editTab()V": ("patch", "6adb955b3e04"),   # 2.90.14: + hybOwnPanel (the road arrow)
     "editTab$lambda$43(Lcom/starpilot/starview/HudEditor;Lcom/starpilot/starview/HudLayout$State;)Lkotlin/Unit;": ("patch", "e0e8718256a3"),
     "panel(Landroid/content/Context;)Landroid/view/View;": ("patch", "a0136263f62a"),
   },

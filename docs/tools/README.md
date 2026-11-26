@@ -134,6 +134,21 @@ com.starpilot.starview.ArrivalPicTest`. The Scene's house-number label on a reco
 `arrive=M:SIDE:LABEL` (the destination M metres ahead at the stretch's start, SIDE 1 right / -1 left). The address
 reading itself: `unit/ArrivalTest.kt`.
 
+## The road arrow (2.90.14)
+
+- On a recorded drive in the Scene: `SceneSeqTest`'s flag `turn=FILE`, FILE in the data folder holding the route as
+  `{"type", "mod", "turnM", "lat": [...], "lon": [...]}` (Mapbox's maneuver type and modifier, the instruction's place
+  in metres along that line). `ARROW_PHASE=0.55` holds the running light still, `ARROW_PHASE=replay` runs it by the
+  drive's own clock (for a film).
+- In the camera view: `render/RoadArrowCameraPicTest.kt` draws it with RoadArrowPainter as the camera view does (its
+  stretch along the road far off, `RoadArrowCameraView.inPicture`'s trim, the house-number label) on still frames of
+  the owner's camera (`DIR/cam_city.jpg`, `cam_hwy.jpg`, never in git) with a camera fitted to each by hand:
+  `PIC_OUT=OUT LANE_DATA=DIR ./gradlew :app:testDebugUnitTest --offline --rerun --tests
+  com.starpilot.starview.RoadArrowCameraPicTest` -> `OUT/cam_*.png`; `CAM_PHASES=0,0.05,...` for a film's frames.
+- The screen editor's card: `render/RoadArrowPanelPicTest.kt` draws the editor with "Navigation - road arrow" picked
+  (top and scrolled to the bottom, a few colours) and the widget list: `OUT/editor_arrow*.png`.
+- The numbers: `unit/RoadArrowTest.kt` (which instructions get one, a turn's shape, the camera view's trim, a car ahead).
+
 ## `unit/`: plain JVM tests of single pieces
 
 `SceneSteadyTest.kt`, `LaneAnchorTest.kt`, `LaneRibbonTest.kt` (2.90.0, the Scene view; Robolectric as for PicTest, no
