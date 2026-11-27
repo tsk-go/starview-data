@@ -18,7 +18,7 @@ screens) runs on the tablet; the comma only shares its data.
 
 | Part | What it's for |
 | --- | --- |
-| comma four | runs StarPilot, from [tsk-go/openpilot](https://github.com/tsk-go/openpilot) branch `Dom` |
+| comma four | runs StarPilot, from [tsk-go/openpilot](https://github.com/tsk-go/openpilot) branch `testing` |
 | Chestnut eGPU | external AMD GPU over USB that runs StarPilot's big driving model |
 | [RSHTECH 7-port powered USB-C 3.2 hub (RSH-H7C)](https://www.amazon.com/dp/B0GTYVWT4R) | 7 USB-C ports, 10 Gbps; everything below plugs into it |
 | [Czepa 12 V car DC power cord](https://www.amazon.com/dp/B091PM893V) | powers the hub from one of the car's 12 V outlets (only live while the car is on) |
@@ -34,10 +34,12 @@ screens) runs on the tablet; the comma only shares its data.
 
 ## The software
 
-- **comma:** tsk-go/openpilot `Dom` is firestar's StarPilot (`Dom` branch) plus our patches. Every patch and why it
-  exists is listed in that repo's `CLAUDE.md` ("Fork history"). It's installed like any openpilot fork
-  (installer URL `installer.comma.ai/tsk-go/Dom`) and updated through the device's own Software update. The patches
-  include **starviewd**, the bridge the tablet and the phone talk to (`starpilot/system/starview/`).
+- **comma:** tsk-go/openpilot `testing` is firestar's StarPilot ([StarPilotHQ/StarPilot](https://github.com/StarPilotHQ/StarPilot),
+  `testing` branch; both were called `Dom` until Nov 2026) plus our patches. Every patch and why it exists is listed in
+  that repo's `CLAUDE.md` ("Fork history"). Our code lives mostly in files of its own, with one-line hooks in upstream's, so
+  each update from upstream merges with few conflicts. It's installed like any openpilot fork (installer URL
+  `installer.comma.ai/tsk-go/testing`) and updated through the device's own Software update. The patches include
+  **starviewd**, the bridge the tablet and the phone talk to (`starpilot/system/starview/`).
 - **Tablet:** StarView, the Android app in `app/` here. Install the first APK from this repo's Releases page; after
   that it updates itself.
 - **Phone:** StarLock, the lock / unlock app (`app/starlock`, releases named `starlock-v…`).
@@ -52,7 +54,9 @@ the radio and the Pico all ran off the car battery until the comma's low-voltage
 restarting. Now the comma switches its own USB port's 5 V (the power chip's OTG regulator): on as soon as the car
 starts, off a set time after it turns off (default 5 minutes, 1 minute to 5 hours), and at once when the battery runs
 low. The setting is in StarView › Device › System › **Power management**, on the same page as StarPilot's own
-Parked Power settings. While the port is off, door activity on the car's CAN wakes it early.
+Parked Power settings. While the port is off, door activity on the car's CAN wakes it early. A drive copy still
+running to the USB stick keeps the port on until it's done (at most 20 minutes more), and when the comma wakes up
+with the car already off, the port goes off again within a minute.
 
 **Lessons**
 - The comma's GPS dropped from ~10 satellites to ~3 whenever the tablet was plugged in. Cables and hub were fine;
@@ -69,6 +73,10 @@ comma's kernel supports RNDIS out of the box (a phone's tethering didn't work, t
 sudo nmcli connection modify "Wired connection 1" ipv4.never-default yes ipv6.never-default yes
 ```
 
+From AGNOS 20.5.2 on, NetworkManager leaves the tablet's link alone (it stays down by itself). The comma reads the
+tablet's tethering address over adb and brings the link up on its own, without a default route, so the command
+above only matters on older AGNOS.
+
 **Automatic tethering.** Android drops the cable to charging-only whenever it's replugged or its power comes back.
 The comma turns tethering back on over adb, so it needs adb access to the tablet once: on the tablet, turn on
 Developer options › USB debugging, then on the comma run `HOME=/data/starview/adbhome adb devices` and accept the
@@ -81,6 +89,7 @@ replug. Off with `/data/starview/no_auto_tether`.
 **What the comma does for the tablet:**
 - Car on: wakes the tablet and opens StarView, unless StarView is already in front (so it never closes a StarView
   screen you have open). Car off: tablet screen off after 30 s.
+- StarView gone while driving (a crash, an update): the comma opens it again, but never over another app you're using.
 - While the tablet shows the driving screen, the comma's own screen goes quiet ("tablet mode").
 - Battery saver (a tile in StarView's Quick menu): over adb, other apps are stopped and kept from running in the background,
   Wi-Fi and Bluetooth scanning are switched off, and StarView stays on the "don't optimize" list. Switching it off puts
@@ -98,32 +107,43 @@ adb -d shell appops set com.starpilot.starview SYSTEM_ALERT_WINDOW allow
 (or the Allow button in StarView › Settings › Tablet › About). How it works is in `docs/STARVIEW-APP.md`.
 
 **What's in StarView**, in short: the driving screen as movable, resizable cards (screen editor: hold the road view);
-camera view or a "Scene" view drawn from an object detector that runs on the tablet; navigation (StarPilot's Mapbox
-routing, with a turn card, a see-through map and full-screen routes, search and favourites); a lane tracker ("lane N
-of M"); automatic turn signals and lane-change prompts; offline street maps and US road lane data
-(HPMS, release `hpms-2024` here) stored on the tablet; spoken alerts with the Piper "Amy" voice; Toyota diagnostics
-(TechStream: trouble codes, live data, hidden settings); all of StarPilot's Galaxy settings drawn natively; and the
-pages for the hardware below.
+camera view or a Tesla-like "Scene" view: the road built lane by lane from OpenStreetMap's lane data, held in place
+by GPS (best with the RTK fix below), with the cars, people and lights from an object detector that runs on the tablet; navigation
+(StarPilot's routing, Mapbox or Galaxy's Google option, with a turn card, a see-through map, full-screen routes,
+search and favourites); a road arrow painted on the road for turns and the lane to take, and the destination's house
+number when arriving; a lane tracker ("lane N of M"); automatic turn signals, lane-change prompts and taking the
+route's exits; a speed-limit sign with your own over-the-limit warnings; offline street maps, OpenStreetMap lane data
+and US road lane data (HPMS, release `hpms-2024` here), all stored on the tablet; spoken alerts with the Piper "Amy"
+voice; Toyota diagnostics (TechStream: trouble codes, live data, hidden settings); all of StarPilot's Galaxy settings
+drawn natively; and the pages for the hardware below.
 
 ## 3. Drive archive on a USB stick
 
 Format the stick ext4 with the label `EXTDATA` (on a PC: `mkfs.ext4 -L EXTDATA /dev/sdX1`) and plug it into the hub.
 
-openpilot keeps recording to the comma's internal storage as usual. While the car is parked, starviewd copies
-finished drives to the stick every few minutes (mounting it only for the copy), at most 20 MB/s, and stops within
-1 MB when the car starts. It deletes the stick's oldest drives to keep about 10 % free. Progress and space are in
-StarView › Settings › Tablet › **Storage**. Off with `/data/starview/no_log_archive`.
+openpilot keeps recording to the comma's internal storage as usual. starviewd copies finished drives to the stick
+15 seconds after the car turns off (or is forced offroad), then every 5 minutes while it stays off, mounting the stick
+only for the copy, and stops within 1 MB when the car starts. The logs and the small video of every drive go first,
+oldest drive first, and the full-size videos after, so the logs reach the stick before the comma makes room. The hub stays on until the copy is done (at most 20 minutes past the hub's delay). It deletes the stick's
+oldest drives to keep about 10 % free. Progress and space are in StarView › Settings › Tablet › **Storage**. Off
+with `/data/starview/no_log_archive`.
 
-**Lesson:** the first version mounted the stick in place of the internal log folder so openpilot recorded straight
-onto it. Whenever the stick paused (busy or hot), recording stalled and openpilot showed take-over alerts. Copying
-while parked has none of that.
+**Lessons**
+- The first version mounted the stick in place of the internal log folder so openpilot recorded straight onto it.
+  Whenever the stick paused (busy or hot), recording stalled and openpilot showed take-over alerts. Copying while
+  parked has none of that.
+- Copying only every few minutes at 20 MB/s fell far behind: the copy often started just as the hub switched off,
+  and a drive got deleted on the comma before it reached the stick. Hence the quick start, no speed cap, logs first
+  and the hub held on.
 
 ## 4. RTK GPS (ZED-F9R)
 
 The SparkFun kit plugs into the hub, with the magnetic antenna on the roof. starviewd reads it, and the tablet shows
-it under StarView › Settings › Tablet › **RTK GPS** (fix, accuracy, satellites, sensor fusion and tools). It feeds the
-tablet's lane locator and map arrow 10 times a second. It also stands in for navigation (StarPilot's "phone GPS"
-input) while the comma's own GPS and the car's have no fix, which can take minutes after a reboot. openpilot's own
+it under StarView › Settings › Tablet › **RTK GPS** (fix, accuracy, satellites, sensor fusion and tools). It goes
+to the tablet 10 times a second, where it holds the Scene's road in place, tells the lane card which lane we're in,
+and places the road arrow (in the camera view only with a fix under 2 ft). It also stands in for navigation and map
+speed limits (StarPilot's "phone GPS" input) while the comma's own GPS and the car's have no fix, which can take
+minutes after a reboot; with Galaxy's GPS source set to "Prefer phone GPS" it's used all the time. openpilot's own
 localization doesn't use it.
 
 **Firmware.** The module shipped with HPS 1.00, on which the IMU never started (sensor fusion "initializing"
@@ -170,7 +190,8 @@ The program is `starpilot/tools/pico/main.py` in tsk-go/openpilot (load it with 
   sees the blinker on the car's CAN about 0.1 s after the relay closes. StarView uses it for hold-to-blink buttons,
   for lane changes you confirm on the tablet (a tap, or a light nudge of the wheel toward that side), for signalling
   before the route's turns and exits (held through red lights, off once the car has turned), and for passing slower
-  cars. It waits while the blind spot is occupied.
+  cars. It waits while the blind spot is occupied. The comma steers into a turn by itself only with Galaxy's
+  **Automatic Turn Initiation** on (Steering › Steering & Torque, off until you turn it on).
 - **Window close.** With the car off, holding the driver's door key on "lock" makes the Sienna close every window
   and the sunroof (with its own anti-pinch) and lock the doors. Relay 3 does that for StarLock's "close windows" and
   for a long press on the key fob (below). It refuses while openpilot is running.
@@ -227,6 +248,8 @@ parked with no GPS and no time servers, it once fell months behind, and every se
 - **New ideas** (StarView): the tablet watches for speed bumps, potholes, cut-ins and lights, and may only make
   openpilot gentler (a lower speed cap, a longer following distance, a small offset in the lane), never faster.
 - **Drive replay** on the tablet, and a terminal to the comma.
+- **Low Speed Smoothing** (Galaxy › Driving controls, on by default): calms the Sienna's steering wheel swinging back
+  and forth in stop-and-go traffic. 4th-gen Sienna only.
 
 ## What we learned
 
@@ -243,6 +266,10 @@ parked with no GPS and no time servers, it once fell months behind, and every se
 | Fob presses detected seconds late or not at all | wideband noise in the van near 312 MHz looked like presses | each fob channel compared with the bands beside it |
 | Clock months behind in offline mode | time servers blocked | let the time servers through, fix the clock from a web server's date |
 | StarView didn't reopen after updating itself | Android blocks background apps from opening their screen | a one-pixel window while it starts, with "display over other apps" |
+| The comma couldn't switch the hub's port | the power switch is root only, starviewd runs as the comma user | starviewd uses sudo for it |
+| After AGNOS 20.5.2: Pico, RTK and USB stick "not connected", tethering link down | AGNOS dropped the rules that opened those devices to the comma user, and the by-id / by-label links | starviewd takes over its own devices and finds them without the links; it brings the tablet's link up itself |
+| After AGNOS 20.5.2: drive copy and doors & belts scan killed | AGNOS caps every service at 128 MB | starviewd raises its own limit to 320 MB |
+| Map speed limits stayed unknown on the RTK fix | StarPilot's map speed limits didn't know the phone GPS source | the source added (fork fix, until upstream has it) |
 
 ## Where the details are
 
